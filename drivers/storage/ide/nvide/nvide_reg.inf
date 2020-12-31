@@ -1,0 +1,8 @@
+; nVidia IDE Minidriver
+[AddReg]
+HKLM,"SYSTEM\CurrentControlSet\Services\nvide","ErrorControl",0x00010001,0x00000000
+HKLM,"SYSTEM\CurrentControlSet\Services\nvide","Group",0x00000000,"System Bus Extender"
+HKLM,"SYSTEM\CurrentControlSet\Services\nvide","ImagePath",0x00020000,"system32\drivers\nvide.sys"
+HKLM,"SYSTEM\CurrentControlSet\Services\nvide","Start",0x00010001,0x00000000
+HKLM,"SYSTEM\CurrentControlSet\Services\nvide","Type",0x00010001,0x00000001
+HKLM,"SYSTEM\CurrentControlSet\Services\nvide","Tag",0x00010001,0x00000010

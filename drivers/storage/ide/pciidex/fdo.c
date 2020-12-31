@@ -283,12 +283,20 @@ PciIdeXFdoQueryBusRelations(
 
     PAGED_CODE();
 
-    DeviceRelations = ExAllocatePoolWithTag(PagedPool,
-                                            FIELD_OFFSET(DEVICE_RELATIONS,
-                                                         Objects[MAX_IDE_CHANNEL]),
-                                            TAG_PCIIDEX);
-    if (!DeviceRelations)
-        return STATUS_INSUFFICIENT_RESOURCES;
+	for (i = 0; i < 1; i++)
+	{
+		if (DeviceExtension->Pdo[i])
+		{
+			PDOs++;
+			continue;
+		}
+		ChannelState = DeviceExtension->Properties.PciIdeChannelEnabled(
+			DeviceExtension->MiniControllerExtension, i);
+		if (ChannelState == ChannelDisabled)
+		{
+			DPRINT("Channel %lu is disabled\n", i);
+			continue;
+		}
 
     DeviceRelations->Count = 0;
 
@@ -307,9 +315,15 @@ PciIdeXFdoQueryBusRelations(
                 PdoExtension->ReportedMissing = TRUE;
             }
 
-            DPRINT("Channel %lu is disabled\n", i);
-            continue;
-        }
+	DeviceRelations->Count = PDOs;
+	for (i = 0, j = 0; i < 1; i++)
+	{
+		if (DeviceExtension->Pdo[i])
+		{
+			ObReferenceObject(DeviceExtension->Pdo[i]);
+			DeviceRelations->Objects[j++] = DeviceExtension->Pdo[i];
+		}
+	}
 
         /* Need to create a PDO */
         if (!PdoExtension)
