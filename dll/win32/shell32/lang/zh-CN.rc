@@ -6,6 +6,7 @@
  * TRANSLATORS: 2008        zhangbing <e_zb@21cn.com, ezb@mail.gywb.cn>
                 2011        Elton Chung aka MfldElton <elton328@gmail.com>
                 2018, 2019  Luo Yufan <njlyf2011@hotmail.com>
+                2021        Wu Haotian <rigoligo03@gmail.com>
  */
 
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
@@ -508,11 +509,11 @@ FONT 9, "宋体"
 BEGIN
     CONTROL IDB_DLG_BG, IDC_STATIC, "STATIC", SS_BITMAP | SS_REALSIZECONTROL, 0, 0, 208, 122
     CONTROL IDB_REACTOS_FLAG, IDC_STATIC, "STATIC", SS_BITMAP, 180, 2, 32, 26
-    PUSHBUTTON "&Switch User", IDC_SWITCH_USER_BUTTON, 57, 46, 19, 19, BS_OWNERDRAW | WS_DISABLED | WS_GROUP
+    PUSHBUTTON "切换用户(&S)", IDC_SWITCH_USER_BUTTON, 57, 46, 19, 19, BS_OWNERDRAW | WS_DISABLED | WS_GROUP
     PUSHBUTTON "注销(&L)", IDC_LOG_OFF_BUTTON, 134, 46, 19, 19, BS_OWNERDRAW
     PUSHBUTTON "取消", IDCANCEL, 162, 103, 40, 12, WS_GROUP | BS_FLAT
     LTEXT "注销 ReactOS", IDC_LOG_OFF_TEXT_STATIC, 4, 9, 130, 20
-    CTEXT "Switch User", IDC_SWITCH_USER_STATIC, 41, 70, 51, 11
+    CTEXT "切换用户", IDC_SWITCH_USER_STATIC, 41, 70, 51, 11
     CTEXT "注销", IDC_LOG_OFF_STATIC, 118, 70, 51, 11
 END
 
@@ -653,7 +654,7 @@ CAPTION "警告"
 FONT 9, "宋体"
 BEGIN
     ICON IDI_SHELL_SYSTEM_FILE, IDI_SHELL_SYSTEM_FILE, 5, 5, 21, 20
-    LTEXT "由操作系统或另一个应用程序，也可以使用此文件。\n修改此文件可能会损坏您的系统，\n或者使它的功能变弱。\n\n\
+    LTEXT "由操作系统或另一个应用程序，也可以使用此文件。\n修改此文件可能会损坏您的系统，\n或者使它的功能不正常。\n\n\
 你确定您想要打开此文件？", IDC_STATIC, 35, 5, 230, 60
     DEFPUSHBUTTON "是", IDYES, 125, 55, 50, 14
     PUSHBUTTON "否", IDNO, 180, 55, 50, 14
@@ -731,17 +732,17 @@ BEGIN
 END
 
 IDD_LINK_PROBLEM DIALOGEX 0, 0, 250, 140
-CAPTION "Problem with Shortcut"
+CAPTION "快捷方式出错"
 STYLE DS_SHELLFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-FONT 8, "MS Shell Dlg"
+FONT 9, "宋体"
 BEGIN
     ICON 0, IDC_LINK_PROBLEM_ICON, 5, 5, 0, 0
-    LTEXT "The item '%s' that this shortcut refers to has been changed or moved, so this shortcut will no longer work properly.", IDC_LINK_PROBLEM_LABEL1, 35, 5, 210, 35
-    LTEXT "Nearest match based on name, type, size, and date:", IDC_LINK_PROBLEM_LABEL2, 35, 45, 210, 35
-    LTEXT "Do you want to fix this shortcut to point to this target or do you just want to delete it?", -1, 35, 85, 210, 30
-    DEFPUSHBUTTON "&Fix it", IDOK, 55, 120, 60, 15, WS_DISABLED
-    PUSHBUTTON "&Delete it", IDYES, 120, 120, 60, 15
-    PUSHBUTTON "Cancel", IDCANCEL, 185, 120, 60, 15
+    LTEXT "快捷方式所指向的目标 '%s' 已被更改或移动，所以此快捷方式不能正常工作。", IDC_LINK_PROBLEM_LABEL1, 35, 5, 210, 35
+    LTEXT "基于名称、类型、大小和修改日期确定了最接近的匹配文件：", IDC_LINK_PROBLEM_LABEL2, 35, 45, 210, 35
+    LTEXT "您想要让快捷方式指向该目标来修复这个问题，还是想删除该快捷方式？", -1, 35, 85, 210, 30
+    DEFPUSHBUTTON "修复(&F)", IDOK, 55, 120, 60, 15, WS_DISABLED
+    PUSHBUTTON "删除(&D)", IDYES, 120, 120, 60, 15
+    PUSHBUTTON "取消", IDCANCEL, 185, 120, 60, 15
 END
 
 STRINGTABLE
@@ -803,16 +804,16 @@ BEGIN
     IDS_PASTE "贴上"
     IDS_EJECT "弹出"
     IDS_DISCONNECT "断开"
-    IDS_OPENFILELOCATION "Open f&ile location"
-    IDS_SENDTO_MENU "Se&nd To"
+    IDS_OPENFILELOCATION "打开文件所在位置(&I)"
+    IDS_SENDTO_MENU "发送到...(&N)"
 
-    IDS_MOVEERRORTITLE "Error Moving File or Folder"
-    IDS_COPYERRORTITLE "Error Copying File or Folder"
-    IDS_MOVEERRORSAMEFOLDER "Cannot move '%s': The destination folder is the same as the source folder."
-    IDS_MOVEERRORSAME "Cannot move '%s': The source and destination file names are the same."
-    IDS_COPYERRORSAME "Cannot copy '%s': The source and destination file names are the same."
-    IDS_MOVEERRORSUBFOLDER "Cannot move '%s': The destination folder is a subfolder of the source folder."
-    IDS_COPYERRORSUBFOLDER "Cannot copy '%s': The destination folder is a subfolder of the source folder."
+    IDS_MOVEERRORTITLE "移动文件或文件夹时出错"
+    IDS_COPYERRORTITLE "复制文件或文件夹时出错"
+    IDS_MOVEERRORSAMEFOLDER "无法移动 '%s'：源文件夹与目标文件夹相同。"
+    IDS_MOVEERRORSAME "无法移动 '%s'：源文件与目标文件名称相同。"
+    IDS_COPYERRORSAME "无法复制 '%s'：源文件与目标文件名称相同。"
+    IDS_MOVEERRORSUBFOLDER "无法移动 '%s'：目标文件夹是源文件夹的子文件夹。"
+    IDS_COPYERRORSUBFOLDER "无法复制 '%s'：目标文件夹是源文件夹的子文件夹。"
 
     IDS_CREATEFOLDER_DENIED "无法创建文件夹 '%1'"
     IDS_CREATEFOLDER_CAPTION "无法创建文件夹"
@@ -848,8 +849,8 @@ BEGIN
     IDS_FORMAT_COMPLETE "格式化完成"
 
     /* Warning format system drive dialog strings */
-    IDS_NO_FORMAT_TITLE "Cannot format this volume"
-    IDS_NO_FORMAT "This volume cannot be formatted! It contains important system files in order for ReactOS to run."
+    IDS_NO_FORMAT_TITLE "无法格式化此磁盘"
+    IDS_NO_FORMAT "此磁盘不能被格式化！它对包含 ReactOS 运行至关重要的文件。"
 
     /* Run File dialog */
     IDS_RUNDLG_ERROR "无法显示运行文件对话框 (内部错误)"
@@ -959,7 +960,7 @@ BEGIN
     IDS_EDIT_VERB "编辑"
     IDS_FIND_VERB "查找"
     IDS_PRINT_VERB "打印"
-    IDS_CMD_VERB "Command Prompt here"
+    IDS_CMD_VERB "在此处打开命令提示符。"
 
     IDS_FILE_FOLDER "%u 个文件，%u 个文件夹"
     IDS_PRINTERS "打印机"
@@ -1024,21 +1025,21 @@ BEGIN
     IDS_EDITING_ACTION "编辑操作类型: "
     IDS_NO_ICONS "文件 '%s' 不包含图标\n\n从列表中选择一个图标或指定其他文件。"
     IDS_FILE_NOT_FOUND "无法找到文件 '%s'。"
-    IDS_LINK_INVALID "The item '%s' that this shortcut refers to has been changed or moved, so this shortcut will no longer work properly."
-    IDS_COPYTOMENU "Copy to &folder..."
-    IDS_COPYTOTITLE "Select the place where you want to copy '%s'. Then click the Copy button."
-    IDS_COPYITEMS "Copy Items"
-    IDS_COPYBUTTON "Copy"
-    IDS_MOVETOMENU "Mo&ve to folder..."
-    IDS_MOVETOTITLE "Select the place where you want to move '%s' to. Then click the Move button."
-    IDS_MOVEITEMS "Move Items"
-    IDS_MOVEBUTTON "Move"
+    IDS_LINK_INVALID "快捷方式所指向的目标 '%s' 已被更改或移动，所以此快捷方式不能正常工作。"
+    IDS_COPYTOMENU "复制到文件夹...(&F)"
+    IDS_COPYTOTITLE "选择您想将 '%s' 复制到的位置，然后单击 复制 按钮。"
+    IDS_COPYITEMS "复制项目"
+    IDS_COPYBUTTON "复制"
+    IDS_MOVETOMENU "移动到文件夹...(&V)"
+    IDS_MOVETOTITLE "选择您想将 '%s' 移动到的位置，然后单击 移动 按钮。"
+    IDS_MOVEITEMS "移动项目"
+    IDS_MOVEBUTTON "移动"
 
-    IDS_SYSTEMFOLDER "System Folder"
+    IDS_SYSTEMFOLDER "系统文件夹"
 
     /* For IDD_LOG_OFF_FANCY */
-    IDS_LOG_OFF_DESC "Closes your programs and ends your ReactOS session."
-    IDS_SWITCH_USER_DESC "Lets another user log on while your programs and files remain open.\r\n\r\n(You can also switch users by pressing the Windows logo key + L.)"
+    IDS_LOG_OFF_DESC "关闭您的程序并结束您的 ReactOS 会话。"
+    IDS_SWITCH_USER_DESC "可以让另一个用户登录而不影响您已经打开的程序和文件。\r\n\r\n（您也可以按下 Windows 徽标键 + L 来切换用户。）"
     IDS_LOG_OFF_TITLE "注销"
-    IDS_SWITCH_USER_TITLE "Switch User"
+    IDS_SWITCH_USER_TITLE "切换用户"
 END

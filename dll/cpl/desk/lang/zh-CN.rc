@@ -4,20 +4,21 @@
  * by zhangbing 2008 <e_zb@21cn.com, ezb@mail.gywb.cn>
  * Updated: 2009-04-26 Jingjing Fu <jingjingf AT 188.com>
  *          2018-01-05 Luo Yufan <njlyf2011@hotmail.com>
+ *          2021-08-24 Wu Haotian <rigoligo03@gmail.com>
  */
 
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 
 IDD_THEMES DIALOGEX 0, 0, 246, 210
-CAPTION "Themes"
+CAPTION "主题"
 STYLE DS_SHELLFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
-FONT 8, "MS Shell Dlg"
+FONT 9, "宋体"
 BEGIN
-    LTEXT "A theme is a background plus a set of sounds, icons, and other elements to help you personalize your computer with one click.", IDC_STATIC, 5, 5, 235, 30
-    LTEXT "Theme:", IDC_STATIC, 5, 42, 55, 10
+    LTEXT "主题是一个壁纸加上一组音效、图标和其他可以一键自定义您的计算机的其他元素。", IDC_STATIC, 5, 5, 235, 30
+    LTEXT "主题：", IDC_STATIC, 5, 42, 55, 10
     COMBOBOX IDC_THEMES_COMBOBOX, 5, 52, 160, 300, CBS_HASSTRINGS | CBS_AUTOHSCROLL | CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON "Save &As...", IDC_THEMES_SAVE_AS, 170, 52, 70, 14
-    PUSHBUTTON "&Delete", IDC_THEMES_DELETE, 170, 70, 70, 14
+    PUSHBUTTON "另存为(&A)...", IDC_THEMES_SAVE_AS, 170, 52, 70, 14
+    PUSHBUTTON "删除(&D)", IDC_THEMES_DELETE, 170, 70, 70, 14
     CONTROL "", IDC_THEMES_PREVIEW, "STATIC", SS_BITMAP, 5, 90, 235, 115, WS_EX_CLIENTEDGE
 END
 
@@ -84,7 +85,7 @@ CAPTION "高级外观"
 FONT 9, "宋体"
 BEGIN
     CONTROL "", IDC_APPEARANCE_PREVIEW, "PreviewWndClass", WS_VISIBLE | WS_BORDER, 7, 7, 232, 120
-    LTEXT "If you select a theme other than ReactOS classic, it will override the following settings, except in some older programs.", IDC_ADVAPPEARANCE_DISCLAIMER, 7, 133, 232, 30, BS_MULTILINE
+    LTEXT "如果您选择 ReactOS 经典 之外的其他主题，它会覆盖下面的设置，某些老旧的程序除外。", IDC_ADVAPPEARANCE_DISCLAIMER, 7, 133, 232, 30, BS_MULTILINE
     LTEXT "项目:", 8, 5, 160, 50, 9
     COMBOBOX IDC_ADVAPPEARANCE_ELEMENT, 5, 170, 130, 90, CBS_DROPDOWNLIST |
              CBS_HASSTRINGS | CBS_SORT | WS_CHILD | WS_VSCROLL | WS_TABSTOP

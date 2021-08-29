@@ -1,4 +1,5 @@
 /* Simplified Chinese translation by Jingjing Fu (jingjingf AT 188.com) 2009-05-02 */
+/* Improved by Wu Haotian <rigoligo03@gmail.com> 2021 */
 
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 
@@ -127,13 +128,13 @@ END
 
 IDD_SAVEPOWERSCHEME DIALOGEX 0, 0, 190, 62
 STYLE DS_SHELLFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Save Scheme"
-FONT 8, "MS Shell Dlg"
+CAPTION "保存方案"
+FONT 9, "宋体"
 BEGIN
-    LTEXT "Save this power scheme as:", -1, 7, 7, 104, 8
+    LTEXT "将该电源方案保存为：", -1, 7, 7, 104, 8
     EDITTEXT IDC_SCHEMENAME, 7, 18, 176, 14, ES_AUTOHSCROLL | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP
-    DEFPUSHBUTTON "OK", IDOK, 79, 40, 50, 14
-    PUSHBUTTON "Cancel", IDCANCEL, 133, 40, 50, 14
+    DEFPUSHBUTTON "确定", IDOK, 79, 40, 50, 14
+    PUSHBUTTON "取消", IDCANCEL, 133, 40, 50, 14
 END
 
 STRINGTABLE
@@ -173,5 +174,5 @@ BEGIN
     IDS_TIMEOUT16 "从不"
     IDS_DEL_SCHEME "您确定要删除电源使用方案吗: ""%s""?"
     IDS_DEL_SCHEME_TITLE "删除方案"
-    IDS_DEL_SCHEME_ERROR "Unable to delete power scheme"
+    IDS_DEL_SCHEME_ERROR "无法删除电源方案"
 END

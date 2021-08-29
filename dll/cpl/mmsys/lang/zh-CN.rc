@@ -4,6 +4,7 @@
  * by zhangbing 2008 <e_zb@21cn.com, ezb@mail.gywb.cn>
  * Updated: 2009-05-02 Jingjing Fu <jingjingf AT 188.com>
  *          2018-01-06 Luo Yufan <njlyf2011@hotmail.com>
+ *          2021-08-24 Wu Haotian <rigoligo03@gmail.com>
  */
 
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
@@ -242,13 +243,13 @@ BEGIN
     IDS_CPLDESCRIPTION "更改计算机的声音方案，或配置扬声器和录音设备的设置。"
     IDS_NO_SOUND "(无)"
     IDS_NO_DEVICES "没有设备"
-    IDS_SPEAKER_VOLUME "Speaker Volume"
-    IDS_SPEAKER_LEFT "&Left:"
-    IDS_SPEAKER_RIGHT "&Right:"
-    IDS_SPEAKER_CENTER "&Center:"
-    IDS_SPEAKER_BACK_LEFT "&Back left:"
-    IDS_SPEAKER_BACK_RIGHT "B&ack right:"
-    IDS_SPEAKER_LOW_FREQUENCY "Low &Frequency:"
+    IDS_SPEAKER_VOLUME "扬声器音量"
+    IDS_SPEAKER_LEFT "左(&L)："
+    IDS_SPEAKER_RIGHT "右(&R)："
+    IDS_SPEAKER_CENTER "中(&C)："
+    IDS_SPEAKER_BACK_LEFT "左后(&B)："
+    IDS_SPEAKER_BACK_RIGHT "右后(&A)："
+    IDS_SPEAKER_LOW_FREQUENCY "低音(&F)："
     5825 "程序出错"
     5826 "关闭程序"
     5827 "电池严重短缺警报"

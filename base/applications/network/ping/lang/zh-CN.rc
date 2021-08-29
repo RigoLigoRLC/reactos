@@ -2,6 +2,7 @@
  * FILE:        base/applications/network/ping/lang/zh-CN.rc
  * PURPOSE:     Chinese (Simplified) translations for ReactOS Ping Command
  * TRANSLATORS: 2018 Luo Yufan (njlyf2011@hotmail.com)
+                2021 Wu Haotian (rigoligo03@gmail.com)
  */
 
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
@@ -39,8 +40,8 @@ BEGIN
     IDS_BAD_VALUE "选项 %s 的值有误，有效范围从 %u 到 %u。\n"
     IDS_WRONG_FAMILY "选项 %s 只支持 %s。\n"
     IDS_UNKNOWN_HOST "Ping 无法找到主机 %s. 请检查该名称，然后重试。\n"
-    IDS_PINGING_ADDRESS "\nPinging %s "
-    IDS_PINGING_HOSTNAME "\nPinging %s [%s] "
+    IDS_PINGING_ADDRESS "\n正在 Ping %s "
+    IDS_PINGING_HOSTNAME "\n正在 Ping %s [%s] "
     IDS_SOURCE_ADDRESS "从 %s %s"
     IDS_PING_SIZE "具有 %lu 字节的数据:\n\n"
     IDS_REPLY_FROM "来自 %s 的回复: "

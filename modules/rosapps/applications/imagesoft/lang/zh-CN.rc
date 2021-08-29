@@ -75,12 +75,12 @@ BEGIN
   END
   POPUP "窗口(&W)"
   BEGIN
-    MENUITEM "&Cascade",           ID_WINDOW_CASCADE
-    MENUITEM "Tile &Horizontally", ID_WINDOW_TILE_HORZ
-    MENUITEM "Tile &Vertically",   ID_WINDOW_TILE_VERT
-    MENUITEM "&Arrange Icons",     ID_WINDOW_ARRANGE
+    MENUITEM "层叠排列(&C)",           ID_WINDOW_CASCADE
+    MENUITEM "横向排列(&H)", ID_WINDOW_TILE_HORZ
+    MENUITEM "纵向排列(&V)",   ID_WINDOW_TILE_VERT
+    MENUITEM "排列图标(&A)",     ID_WINDOW_ARRANGE
     MENUITEM SEPARATOR
-    MENUITEM "Nex&t\tCtrl+F6",     ID_WINDOW_NEXT
+    MENUITEM "下一个(&T)\tCtrl+F6",     ID_WINDOW_NEXT
   END
   POPUP "帮助(&H)"
   BEGIN
@@ -103,16 +103,16 @@ FONT 9,"宋体", 0, 0
 STYLE DS_SHELLFONT | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | DS_MODALFRAME
 BEGIN
   LTEXT      "", IDC_PICPREVIEW, 0, 1, 132, 96, SS_OWNERDRAW | SS_SUNKEN
-  LTEXT      "Color form:", IDC_STATIC, 135, 5, 36, 9
+  LTEXT      "色彩形式：", IDC_STATIC, 135, 5, 36, 9
   GROUPBOX   "", IDC_BRI_GROUP, 138 ,30, 50, 48
-  CONTROL    "Full (RGB)", IDC_BRI_FULL, "Button", BS_AUTORADIOBUTTON, 138, 18, 46, 9
-  CONTROL    "Red", IDC_BRI_RED, "Button", BS_AUTORADIOBUTTON, 142, 38, 42, 9
-  CONTROL    "Green", IDC_BRI_GREEN, "Button", BS_AUTORADIOBUTTON, 142, 51, 42, 9
-  CONTROL    "Blue", IDC_BRI_BLUE, "Button", BS_AUTORADIOBUTTON, 142, 64, 42, 9
+  CONTROL    "全色（RGB）", IDC_BRI_FULL, "Button", BS_AUTORADIOBUTTON, 138, 18, 46, 9
+  CONTROL    "红", IDC_BRI_RED, "Button", BS_AUTORADIOBUTTON, 142, 38, 42, 9
+  CONTROL    "绿", IDC_BRI_GREEN, "Button", BS_AUTORADIOBUTTON, 142, 51, 42, 9
+  CONTROL    "蓝", IDC_BRI_BLUE, "Button", BS_AUTORADIOBUTTON, 142, 64, 42, 9
   EDITTEXT   IDC_BRI_EDIT, 98, 103, 28, 13
   CONTROL    "", IDC_BRI_TRACKBAR, "msctls_trackbar32", TBS_BOTH | TBS_NOTICKS | WS_TABSTOP, 2, 105, 90, 11
-  PUSHBUTTON "OK", IDOK, 142, 88, 48, 13
-  PUSHBUTTON "Cancel", IDCANCEL, 142, 105, 48, 13
+  PUSHBUTTON "确定", IDOK, 142, 88, 48, 13
+  PUSHBUTTON "取消", IDCANCEL, 142, 105, 48, 13
 END
 
 IDD_ABOUTBOX DIALOGEX 22,16,210,182
@@ -170,15 +170,15 @@ END
 /* imageprop.c */
 STRINGTABLE DISCARDABLE
 BEGIN
-  IDS_IMAGE_MONOCHROME  "Monochrome (1 bit)"
-  IDS_IMAGE_GREYSCALE   "Grayscale (8 bit)"
-  IDS_IMAGE_PALETTE     "Palette or 256 color (8 bit)"
-  IDS_IMAGE_TRUECOLOR   "True color (24 bit)"
+  IDS_IMAGE_MONOCHROME  "单色（1位色）"
+  IDS_IMAGE_GREYSCALE   "灰阶（8位色）"
+  IDS_IMAGE_PALETTE     "使用调色板的 256 色（8位色）"
+  IDS_IMAGE_TRUECOLOR   "真彩色（24位色）"
 
-  IDS_UNIT_PIXELS       "Pixels"
-  IDS_UNIT_CM           "Cm"
-  IDS_UNIT_INCHES       "Inches"
-  IDS_UNIT_DOTSCM       "Dots / Cm"
+  IDS_UNIT_PIXELS       "像素"
+  IDS_UNIT_CM           "厘米"
+  IDS_UNIT_INCHES       "英寸"
+  IDS_UNIT_DOTSCM       "点 / 厘米"
   IDS_UNIT_DPI          "DPI"
   IDS_UNIT_KB           "%d KB"
   IDS_UNIT_MB           "%d MB"
@@ -220,8 +220,8 @@ BEGIN
   IDS_HINT_HISTORY      " 显示或隐藏历史浮动窗口。"
   IDS_HINT_STATUS       " 显示或隐藏状态栏。"
 
-  IDS_HINT_CASCADE      " Arrange windows so they overlap."
-  IDS_HINT_TILE_HORZ    " Arrange windows as non-overlapping tiles."
+  IDS_HINT_CASCADE      " 排列窗口使其重叠。"
+  IDS_HINT_TILE_HORZ    " 将窗口排列为不重叠的Arrange windows as non-overlapping tiles."
   IDS_HINT_TILE_VERT    " Arrange windows as non-overlapping tiles."
   IDS_HINT_ARRANGE      " Arrange icons at the bottom of the window."
   IDS_HINT_NEXT         " Activates the next window."

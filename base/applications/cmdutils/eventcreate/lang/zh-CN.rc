@@ -1,4 +1,5 @@
 /* Translated by Li Keqing <auroracloud4096@gmail.com> */
+/* Improved by Wu Haotian <rigoligo03@gmail.com> 2021 */
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 
 STRINGTABLE
@@ -9,7 +10,7 @@ EVENTCREATE [/S computer [/U [domain\\]user [/P password]]] /ID EventID\n\
             {[/L logname] | [/SO source]} /T type /C category /D description\n\
 \n\
 描述：\n\
-    该工具是管理员能够创建一个自定义事件于某制定事件日志里。\n\
+    该工具使管理员能够在一个指定的事件日志里创建一个自定义事件。\n\
 \n\
 参数列表：\n\
     /S  computer          指定要连接的远程计算机。\n\
@@ -18,7 +19,7 @@ EVENTCREATE [/S computer [/U [domain\\]user [/P password]]] /ID EventID\n\
 \n\
     /P  [password]        指定给定用户的密码。如果省略则提示输入。\n\
 \n\
-    /L  logname           指定要在其中创建事件事件日志。有效的日志是：\n\
+    /L  logname           指定要在哪种事件日志中创建事件。有效的日志是：\n\
                           Application，System，Security\n\
                           （最后一项仅为 SYSTEM 账户保留）。\n\
 \n\

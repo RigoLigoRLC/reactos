@@ -13,10 +13,10 @@ BEGIN
     IDS_HELP "显示或者修改文件的访问控制表\n\n\
 CACLS filename [/T] [/E] [/C] [/G user:perm [...]] [/R user [...]]\n\
                [/P user:perm [...]] [/D user [...]]\n\
-   filename      显示 ACLs。\n\
+   filename      显示访问控制表。\n\
    /T            更改当前目录及其所有子目录中\n\
                  指定文件的 ACL。\n\
-   /E            编辑 ACL 而不替换。\n\
+   /E            编辑访问控制表而不替换。\n\
    /C            在出现拒绝访问错误时继续。\n\
    /G user:perm  赋予指定用户访问权限。\n\
                  Perm 可以是: R  读取\n\

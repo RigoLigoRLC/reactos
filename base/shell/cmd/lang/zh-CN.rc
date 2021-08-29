@@ -1,5 +1,6 @@
 /* Simplified Chinese translation by Song Fuchang (0xfc) <sfc_0@yahoo.com.cn> 2011 */
 /* Improved by He Yang (@kernel.bin) <1160386205@qq.com> 2020 */
+/* Improved by Wu Haotian <rigoligo03@gmail.com> */
 
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 
@@ -196,19 +197,19 @@ FOR /L %变量 IN (start,step,end) DO 命令 [参数]\n\
 FOR /D %变量 IN (集合) DO 命令 [参数]\n\
 FOR /R [[drive:]path] IN (集合) DO 命令 [参数]\n\
 FOR /F [""options""] IN (集合) DO 命令 [参数]\n\n\
-  /L    Generates a number sequence from start to end incrementing by step.\n\
-  /D    Modifies the set to refer to directories instead of files.\n\
-  /R    Executes command for files in the set in the specified path (or current\n\
-        working directory if not specified) and every directory below.\n\
-  /F    Modifies the set to refer to the contents of the files in the set.\n\n\
+  /L    生成一个从 start 开始、以 step 递增、到 end 结束的数字序列。\n\
+  /D    修改指定的集合，使其只匹配目录而不匹配文件。\n\
+  /R    对指定路径（如不指定，则默认为当前目录）和它包含的所有目录中，集合所能匹配\n\
+        的文件执行一个命令。\n\
+  /F    修改指定的集合，使其匹配集合所指文件的内容。\n\n\
   %变量       指定一个可被替换的参数。\n\
   (集合)      指定一个含有一个或多个文件的集合。可以使用通配符。\n\
   命令        指定要为每个文件执行的命令。\n\
   参数        为指定的命令指定参数或开关。\n\
-  options    Supported options are: eol, skip, delims, tokens, and usebackq.\n\n\
-Replacable parameters can be modified by adding a ~ and an optional qualifier\n\
-after the % and before the name (e.g. %~X). Supported qualifiers are:\n\
-f,d,p,n,x,s,a,t,z.\n\n\
+  选项        支持的选项有： eol, skip, delims, tokens 和 usebackq.\n\n\
+可以通过在变量名和 % 之间添加一个 ~ 符号及一个可选的修饰符来变更该变量使用的值，\n\
+例如 %~X。支持的修饰符有：\n\
+f,d,p,n,x,s,a,t,z。\n\n\
 在批处理文件中使用 FOR 命令时，使用 %%变量 而不是 %变量。\n"
     STRING_FREE_HELP1 "\n驱动器 %s 中的卷是 %-11s\n\
  序列号为 %s\n\
@@ -293,7 +294,7 @@ PROMPT [文本]\n\n\
   $N   当前驱动器\n\
   $P   当前驱动器和路径\n\
   $Q   = (等于号)\n\
-  $S   (space)\n\
+  $S   (空格)\n\
   $T   当前时间\n\
   $V   操作系统版本号\n\
   $_    回车和换行符\n\
@@ -316,7 +317,7 @@ REN [/E /N /P /Q /S /T] 旧名称 ... 新名称\n\n\
   /Q    安静模式。\n\
   /S    重命名子目录。\n\
   /T    显示被重命名文件的总数。\n\n\
-记住您不能在目的地里指定新的驱动器或路径。使用 MOVE 命令来达成这个目的。\n"
+请记住，不能在新名称里指定新的驱动器或路径。使用 MOVE 命令来达成这个目的。\n"
     STRING_REN_HELP2 "    %lu 文件已重命名\n"
     STRING_REN_HELP3 "    %lu 个文件已重命名\n"
     STRING_REPLACE_HELP1 "替换文件。\n\n\
@@ -352,18 +353,17 @@ SET [变量[=][字符串]]\n\n\
   字符串      指定要赋给该环境变量的一系列字符。\n\n\
 执行不带参数的 SET 将会显示当前所有环境变量。\n"
     STRING_START_HELP1 "启动一个命令。\n\n\
-START [""title""] [/D path] [/I] [/B] [/MIN] [/MAX] [/WAIT]\n\
-      [command/program] [parameters]\n\n\
-  ""title""     Title of the window.\n\
-  path        Specifies the startup directory.\n\
-  I           Uses the original environment given to cmd.exe,\n\
-              instead of the current environment.\n\
-  B           Starts the command or program without creating any window.\n\
-  MIN         Starts with a minimized window.\n\
-  MAX         Starts with a maximized window.\n\
-  WAIT        Starts the command or program and waits for its termination.\n\
+START [""标题""] [/D 路径] [/I] [/B] [/MIN] [/MAX] [/WAIT]\n\
+      [命令/程序名] [参数]\n\n\
+  ""标题""     窗口的标题。\n\
+  路径         指定程序或命令启动时所在的目录。\n\
+  I           使用 cmd.exe 原本的环境，而不是当前的环境。\n\
+  B           启动程序时不创建新的窗口。\n\
+  MIN         启动程序时使窗口最小化。\n\
+  MAX         启动程序时使窗口最大化。\n\
+  WAIT        启动程序并等待它终止。\n\
   命令         要启动的命令。\n\
-  parameters  Specifies the parameters to be given to the command or program.\n"
+  参数         指定传递给要启动的程序或命令的参数。\n"
     STRING_TITLE_HELP "设置命令提示符窗口的标题。\n\n\
 TITLE [字符串]\n\n\
 字符串         指定命令提示符窗口的标题。\n"
@@ -398,18 +398,15 @@ VER [/C][/R][/W]\n\n\
   /C  显示作者。\n\
   /R  显示再发布信息。\n\
   /W  显示保证信息。"
-    STRING_VERSION_HELP2 " comes with ABSOLUTELY NO WARRANTY; for details\n\
-type: `ver /w'. This is free software, and you are welcome to redistribute\n\
-it under certain conditions; type `ver /r' for details. Type `ver /c' for a\n\
-listing of credits."
-    STRING_VERSION_HELP3 "\n This program is distributed in the hope that it will be useful,\n\
- but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
- GNU General Public License for more details."
-    STRING_VERSION_HELP4 "\n This program is free software; you can redistribute it and/or modify\n\
- it under the terms of the GNU General Public License as published by\n\
- the Free Software Foundation; either version 2 of the License, or\n\
- (at your option) any later version.\n"
+    STRING_VERSION_HELP2 " 不承诺 *任何品质保证* ；请输入 `ver /w' 查看详情。\n\
+本软件为自由软件，您可以在一定的条件下自由传播该软件；\n\
+请输入 `ver /r' 查看详情。输入 `ver /c' 可查看制作人员的列表。"
+    STRING_VERSION_HELP3 "\n 传播本程序时，我们希望它对其他人有用，但不承诺 *任何品质保证*；\n\
+ 甚至不包括任何隐含的适售性或对某个目的的适用性。\n\
+ 请参阅 GNU 通用公共许可证获悉详情。"
+    STRING_VERSION_HELP4 "\n 本程序是一个自由软件，您可以在自由软件基金会发布的 GNU 通用公共许可证\n\
+ 第二版（如果您自己愿意，也可以是任何一个新的版本）规定的条款下自由地\n\
+ 传播和/或修改本软件。\n"
     STRING_VERSION_HELP5 "\nBug 报告发送到 <ros-dev@reactos.org>。\n\
 更新可在 http://www.reactos.org 查看。"
     STRING_VERSION_HELP6 "\nFreeDOS 版本作者：\n"
@@ -478,7 +475,7 @@ RESTORE       恢复窗口\n\
     STRING_WINDOW_ERROR1 "未找到窗口"
     STRING_ERROR_PARAMETERF_ERROR "参数格式不正确 - %c\n"
     STRING_ERROR_INVALID_SWITCH "无效开关 - /%c\n"
-    STRING_ERROR_TOO_MANY_PARAMETERS "太多参数 - %s\n"
+    STRING_ERROR_TOO_MANY_PARAMETERS "参数太多 - %s\n"
     STRING_ERROR_PATH_NOT_FOUND "路径未找到\n"
     STRING_ERROR_FILE_NOT_FOUND "文件未找到\n"
     STRING_ERROR_REQ_PARAM_MISSING "所需参数缺失\n"

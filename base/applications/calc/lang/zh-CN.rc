@@ -1,4 +1,5 @@
 /* Simplified Chinese translation for calc. By Song Fuchang (0xfc) <sfc_0@yahoo.com.cn> */
+/* Improved by Wu Haotian <rigoligo03@gmail.com> 2021 */
 
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 
@@ -431,8 +432,8 @@ END
 /* Angles */
 STRINGTABLE
 BEGIN
-    IDS_ANGLE_ARCMINUTES "Minute of arc"
-    IDS_ANGLE_ARCSECONDS "Second of arc"
+    IDS_ANGLE_ARCMINUTES "分"
+    IDS_ANGLE_ARCSECONDS "秒"
     IDS_ANGLE_DEGREES "角度"
     IDS_ANGLE_GRADIANS "梯度"
     IDS_ANGLE_RADIANS "弧度"

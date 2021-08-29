@@ -1,4 +1,5 @@
 /* Translation has been changed by Luo Yufan on 2018-12-05 (njlyf2011@hotmail.com) */
+/* Improved by Wu Haotian <rigoligo03@gmail.com> 2021 */
 
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 
@@ -26,7 +27,7 @@ BEGIN
     POPUP "文件(&F)"
     BEGIN
         MENUITEM "新建(&N)\tCtrl+N", CMD_NEW
-        MENUITEM "&New Window\tCtrl+Shift+N", CMD_NEW_WINDOW
+        MENUITEM "打开新窗口(&N)\tCtrl+Shift+N", CMD_NEW_WINDOW
         MENUITEM "打开(&O)...\tCtrl+O", CMD_OPEN
         MENUITEM "保存(&S)\tCtrl+S", CMD_SAVE
         MENUITEM "另存为(&A)...", CMD_SAVE_AS
@@ -66,7 +67,7 @@ BEGIN
     BEGIN
         MENUITEM "内容(&C)", CMD_HELP_CONTENTS
         MENUITEM SEPARATOR
-        MENUITEM "About Notepad (&A)", CMD_HELP_ABOUT_NOTEPAD
+        MENUITEM "关于记事本 (&A)", CMD_HELP_ABOUT_NOTEPAD
     END
 END
 
@@ -155,7 +156,7 @@ BEGIN
     STRING_NOTSAVED "文件 '%s'\n已经被更改\n\n \
 是否保存更改？"
     STRING_NOTFOUND "找不到文件 '%s'"
-    STRING_OUT_OF_MEMORY "没有足够的内存可以用来完成此项任务。 \
+    STRING_OUT_OF_MEMORY "内存不足，无法完成此操作。 \
 \n请关闭一些程序释放内存后再试。"
     STRING_CANNOTFIND "找不到 '%s'"
     STRING_ANSI "ANSI"
