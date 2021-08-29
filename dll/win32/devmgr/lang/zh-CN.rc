@@ -49,7 +49,7 @@ BEGIN
     IDS_DEV_BOOT_CONFIG_CONFLICT "另一个设备正在使用此设备所需的资源。"
     IDS_DEV_FAILED_FILTER "此设备的驱动程序需要重新安装。"
     IDS_DEV_DEVLOADER_NOT_FOUND "此设备工作不正常，因为 ReactOS 不能加载为此设备加载驱动程序的文件 %1。"
-    IDS_DEV_DEVLOADER_NOT_FOUND2 "此设备工作不正常，因为为此设备加载驱动程序的文件 %1 已损坏。
+    IDS_DEV_DEVLOADER_NOT_FOUND2 "此设备工作不正常，因为为此设备加载驱动程序的文件 %1 已损坏。"
     IDS_DEV_DEVLOADER_NOT_FOUND3 "设备故障: 请尝试更换此设备的驱动程序。如果无法正常工作，请参阅硬件文档。"
     IDS_DEV_INVALID_DATA "此设备工作不正常，因为您的计算机中的 BIOS 错误地报告了设备的资源。"
     IDS_DEV_INVALID_DATA2 "此设备工作不正常，因为设备的 BIOS 错误地报告设备了的资源。"
