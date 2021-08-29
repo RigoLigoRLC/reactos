@@ -1,4 +1,5 @@
 /* Translated by Luo Yufan 2019 <njlyf2011@hotmail.com> */
+/* Improved by Wu Haotian <rigoligo03@gmail.com> */
 
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 
@@ -80,7 +81,7 @@ BEGIN
     MENUITEM "纵向排列(&V)",   ID_WINDOW_TILE_VERT
     MENUITEM "排列图标(&A)",     ID_WINDOW_ARRANGE
     MENUITEM SEPARATOR
-    MENUITEM "下一个(&T)\tCtrl+F6",     ID_WINDOW_NEXT
+    MENUITEM "下一个窗口(&T)\tCtrl+F6",     ID_WINDOW_NEXT
   END
   POPUP "帮助(&H)"
   BEGIN
@@ -221,10 +222,10 @@ BEGIN
   IDS_HINT_STATUS       " 显示或隐藏状态栏。"
 
   IDS_HINT_CASCADE      " 排列窗口使其重叠。"
-  IDS_HINT_TILE_HORZ    " 将窗口排列为不重叠的Arrange windows as non-overlapping tiles."
-  IDS_HINT_TILE_VERT    " Arrange windows as non-overlapping tiles."
-  IDS_HINT_ARRANGE      " Arrange icons at the bottom of the window."
-  IDS_HINT_NEXT         " Activates the next window."
+  IDS_HINT_TILE_HORZ    " 将窗口排列为不重叠的方格。"
+  IDS_HINT_TILE_VERT    " 将窗口排列为不重叠的方格。"
+  IDS_HINT_ARRANGE      " 排列窗口底部的图标。"
+  IDS_HINT_NEXT         " 激活下一个窗口。"
 
   IDS_HINT_SYS_RESTORE  " 将此窗口恢复为正常大小。"
   IDS_HINT_SYS_MOVE     " 移动此窗口。"
