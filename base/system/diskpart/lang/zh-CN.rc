@@ -137,8 +137,8 @@ END
 /* Common Error Messages */
 STRINGTABLE
 BEGIN
-    IDS_ERROR_MSG_NO_SCRIPT "打开脚本时出错: %s\n"
-    IDS_ERROR_MSG_BAD_ARG "处理参数时出错: %s\n"
+    IDS_ERROR_MSG_NO_SCRIPT "打开脚本时出错：%s\n"
+    IDS_ERROR_MSG_BAD_ARG "处理参数时出错：%s\n"
     IDS_ERROR_INVALID_ARGS "无效的参数\n"
 END
 

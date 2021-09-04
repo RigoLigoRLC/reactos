@@ -73,7 +73,7 @@ BEGIN
     IDS_NO "否"
     IDS_ERRORTITLE "压缩文件夹错误"
     IDS_CANTSTARTTHREAD "无法启动压缩线程。"
-    IDS_NOFILES "指定的目录“%s” 为空，压缩文件夹无法将其添加到归档内。"
+    IDS_NOFILES "指定的目录“%s”为空，压缩文件夹无法将其添加到归档内。"
     IDS_CANTCREATEZIP "无法创建压缩文件夹“%s”（错误码：%d）。"
     IDS_CANTREADFILE "无法读取文件“%s”。"
     IDS_EXTRACTING "正在解压..."
