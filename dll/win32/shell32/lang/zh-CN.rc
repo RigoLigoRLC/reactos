@@ -654,7 +654,7 @@ CAPTION "警告"
 FONT 9, "宋体"
 BEGIN
     ICON IDI_SHELL_SYSTEM_FILE, IDI_SHELL_SYSTEM_FILE, 5, 5, 21, 20
-    LTEXT "由操作系统或另一个应用程序，也可以使用此文件。\n修改此文件可能会损坏您的系统，\n或者使它的功能不正常。\n\n\
+    LTEXT "操作系统或其他应用程序可能会使用此文件。\n修改此文件可能会损坏您的系统，\n或者使它的功能不正常。\n\n\
 你确定您想要打开此文件？", IDC_STATIC, 35, 5, 230, 60
     DEFPUSHBUTTON "是", IDYES, 125, 55, 50, 14
     PUSHBUTTON "否", IDNO, 180, 55, 50, 14
