@@ -49,5 +49,5 @@ MORE [/E] [选项] [文件]\n\
     IDS_CONTINUE_PERCENT " (%d%%)"
     IDS_CONTINUE_LINE_AT " [第 %d 行]"
     IDS_CONTINUE_OPTIONS " [选项：psfq=<空格><回车>]"
-    IDS_CONTINUE_LINES   " 行数: "
+    IDS_CONTINUE_LINES   " 行数："
 END
