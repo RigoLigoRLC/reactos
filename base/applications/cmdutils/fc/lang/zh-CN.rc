@@ -4,7 +4,7 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 
 STRINGTABLE
 BEGIN
-    IDS_USAGE "对比两个或两组文件的内容,并显示它们之间的不同。\n\
+    IDS_USAGE "对比两个或两组文件的内容，并显示它们之间的不同。\n\
 \n\
 FC [/A] [/C] [/L] [/LBn] [/N] [/OFF[LINE]] [/T] [/U] [/W] [/nnnn]\n\
    [drive1:][path1]filename1 [drive2:][path2]filename2\n\
