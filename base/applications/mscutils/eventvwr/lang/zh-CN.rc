@@ -159,7 +159,7 @@ BEGIN
     IDS_SAVE_FILTER "事件日志 (*.evt)\0*.evt\0"
     IDS_CLEAREVENTS_MSG "你想要在清除之前保存此事件日志吗？"
     IDS_RESTOREDEFAULTS "你想要将这个日志的所有设置恢复为默认值吗？"
-    IDS_EVENTSTRINGIDNOTFOUND "来源 ( %s ) 中的事件 ID ( %lu ) 的描述无法找到。本地计算机可能没有显示来自远程计算机消息所必需的注册表信息或消息 DLL 文件。\n\nThe following information is part of the event:\n\n"
+    IDS_EVENTSTRINGIDNOTFOUND "无法找到来源（%s）中的事件 ID（%lu）的描述。本地计算机可能没有显示来自远程计算机的消息所必需的注册表信息或消息 DLL 文件。\n\n下面的信息是事件的一部分：\n\n"
 END
 
 STRINGTABLE
