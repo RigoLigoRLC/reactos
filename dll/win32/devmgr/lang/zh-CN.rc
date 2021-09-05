@@ -67,8 +67,8 @@ BEGIN
     IDS_DEV_DISABLED "此设备未启动。"
     IDS_DEV_DISABLED2 "此设备已被禁用。"
     IDS_DEV_DEVLOADER_NOT_READY "此设备无法加载必需的驱动程序。"
-    IDS_DEV_DEVLOADER_NOT_READY2 ""
-    IDS_DEV_DEVLOADER_NOT_READY3 ""
+    IDS_DEV_DEVLOADER_NOT_READY2 "" /* unused */
+    IDS_DEV_DEVLOADER_NOT_READY3 "" /* unused */
     IDS_DEV_DEVICE_NOT_THERE "此设备可能不存在，工作不正常，或者没有安装所有的驱动程序。"
     IDS_DEV_MOVED "ReactOS 正在设置此设备。"
     IDS_DEV_TOO_EARLY "ReactOS 正在设置此设备。"
