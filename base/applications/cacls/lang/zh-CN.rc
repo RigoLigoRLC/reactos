@@ -19,7 +19,7 @@ CACLS filename [/T] [/E] [/C] [/G user:perm [...]] [/R user [...]]\n\
    /E            编辑访问控制表而不替换。\n\
    /C            在出现拒绝访问错误时继续。\n\
    /G user:perm  赋予指定用户访问权限。\n\
-                 Perm 可以是: R  读取\n\
+                 perm 可以是：R  读取\n\
                               W  写入\n\
                               C  更改(写入)\n\
                               F  完全控制\n\

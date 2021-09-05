@@ -81,7 +81,7 @@ BEGIN
     IDS_DEV_TRANSLATION_FAILED "此设备对驱动程序没有响应。"
     IDS_DEV_NO_SOFTCONFIG "ReactOS 不能确定此设备的设置。请参考此设备附带的文档，使用资源选项卡来设置配置。"
     IDS_DEV_BIOS_TABLE "您的计算机的系统固件提供的信息不足以正确配置和使用此设备。\n若要使用此设备，请联系计算机制造商以获取固件或 BIOS 更新。"
-    IDS_DEV_IRQ_TRANSLATION_FAILED "该设备正在请求 PCI 中断但被配置为 ISA 中断 (或反之)。\n请使用计算机的系统设置程序重新配置此设备的中断。"
+    IDS_DEV_IRQ_TRANSLATION_FAILED "该设备正在请求 PCI 中断，但被配置为 ISA 中断（或反之）。\n请使用计算机的系统设置程序重新配置此设备的中断。"
     IDS_DEV_FAILED_DRIVER_ENTRY "ReactOS 无法初始化这个硬件的设备驱动程序。"
     IDS_DEV_DRIVER_FAILED_PRIOR_UNLOAD "由于设备驱动程序的前一个实例仍在内存中，ReactOS 无法加载这个硬件的设备驱动程序。"
     IDS_DEV_DRIVER_FAILED_LOAD "ReactOS 无法加载这个硬件的设备驱动程序。驱动程序可能已损坏或丢失。"
@@ -325,7 +325,7 @@ BEGIN
   IDS_HINT_DISABLE      " 禁用所选的设备。"
   IDS_HINT_UPDATE       " 启动所选设备的更新驱动程序软件向导。"
   IDS_HINT_UNINSTALL    " 卸载所选设备的驱动程序。"
-  IDS_HINT_ADD          " 将一个旧的 (非即插即用) 设备添加到计算机。" 
+  IDS_HINT_ADD          " 将一个旧的（非即插即用）设备添加到计算机。" 
   IDS_HINT_ABOUT        " 关于 ReactOS 设备管理器。"
   IDS_HINT_EXIT         " 退出程序。"
 

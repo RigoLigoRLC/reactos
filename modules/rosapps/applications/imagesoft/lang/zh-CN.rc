@@ -171,10 +171,10 @@ END
 /* imageprop.c */
 STRINGTABLE DISCARDABLE
 BEGIN
-  IDS_IMAGE_MONOCHROME  "单色（1位色）"
-  IDS_IMAGE_GREYSCALE   "灰阶（8位色）"
-  IDS_IMAGE_PALETTE     "使用调色板的 256 色（8位色）"
-  IDS_IMAGE_TRUECOLOR   "真彩色（24位色）"
+  IDS_IMAGE_MONOCHROME  "单色（1 位色）"
+  IDS_IMAGE_GREYSCALE   "灰阶（8 位色）"
+  IDS_IMAGE_PALETTE     "使用调色板的 256 色（8 位色）"
+  IDS_IMAGE_TRUECOLOR   "真彩色（24 位色）"
 
   IDS_UNIT_PIXELS       "像素"
   IDS_UNIT_CM           "厘米"

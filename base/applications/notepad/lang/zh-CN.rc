@@ -156,7 +156,7 @@ BEGIN
     STRING_NOTSAVED "文件 '%s'\n已经被更改\n\n \
 是否保存更改？"
     STRING_NOTFOUND "找不到文件 '%s'"
-    STRING_OUT_OF_MEMORY "内存不足，无法完成此操作。 \
+    STRING_OUT_OF_MEMORY "内存不足，无法完成此操作。\
 \n请关闭一些程序释放内存后再试。"
     STRING_CANNOTFIND "找不到 '%s'"
     STRING_ANSI "ANSI"

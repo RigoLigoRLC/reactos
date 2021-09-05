@@ -738,7 +738,7 @@ FONT 9, "宋体"
 BEGIN
     ICON 0, IDC_LINK_PROBLEM_ICON, 5, 5, 0, 0
     LTEXT "快捷方式所指向的目标 '%s' 已被更改或移动，所以此快捷方式不能正常工作。", IDC_LINK_PROBLEM_LABEL1, 35, 5, 210, 35
-    LTEXT "基于名称、类型、大小和修改日期确定了最接近的匹配文件：", IDC_LINK_PROBLEM_LABEL2, 35, 45, 210, 35
+    LTEXT "基于名称、类型、大小和修改日期，最接近的匹配文件是：", IDC_LINK_PROBLEM_LABEL2, 35, 45, 210, 35
     LTEXT "您想要让快捷方式指向该目标来修复这个问题，还是想删除该快捷方式？", -1, 35, 85, 210, 30
     DEFPUSHBUTTON "修复(&F)", IDOK, 55, 120, 60, 15, WS_DISABLED
     PUSHBUTTON "删除(&D)", IDYES, 120, 120, 60, 15

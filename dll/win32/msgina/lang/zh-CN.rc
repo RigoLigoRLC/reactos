@@ -235,7 +235,7 @@ BEGIN
     IDS_PASSWORDEXPIRED "您的密码已过期，必须更改。"
     IDS_ACCOUNTEXPIRED "您的帐户已过期。请咨询您的系统管理员。"
     IDS_ACCOUNTLOCKED "您的账户已被锁定，无法登录。请咨询您的系统管理员。"
-    IDS_INVALIDLOGONHOURS "您的账户具有时间限制，阻止了您现在登录。请稍后再试。"
+    IDS_INVALIDLOGONHOURS "您的账户具有的时间限制阻止您现在登录。请稍后再试。"
     IDS_INVALIDWORKSTATION "您的账户被设为不能在这台计算机登录。请在另一台计算机尝试登录。"
     IDS_ACCOUNTRESTRICTION "您的账户由于账户限制而不能登录。"
 END
