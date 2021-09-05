@@ -317,7 +317,7 @@ REN [/E /N /P /Q /S /T] 旧名称 ... 新名称\n\n\
   /Q    安静模式。\n\
   /S    重命名子目录。\n\
   /T    显示被重命名文件的总数。\n\n\
-请记住，不能在新名称里指定新的驱动器或路径。使用 MOVE 命令来达成这个目的。\n"
+注意，您不能在新名称里指定新的驱动器或路径。请使用 MOVE 命令来达成这个目的。\n"
     STRING_REN_HELP2 "    %lu 文件已重命名\n"
     STRING_REN_HELP3 "    %lu 个文件已重命名\n"
     STRING_REPLACE_HELP1 "替换文件。\n\n\
@@ -475,7 +475,7 @@ RESTORE       恢复窗口\n\
     STRING_WINDOW_ERROR1 "未找到窗口"
     STRING_ERROR_PARAMETERF_ERROR "参数格式不正确 - %c\n"
     STRING_ERROR_INVALID_SWITCH "无效开关 - /%c\n"
-    STRING_ERROR_TOO_MANY_PARAMETERS "参数太多 - %s\n"
+    STRING_ERROR_TOO_MANY_PARAMETERS "参数过多 - %s\n"
     STRING_ERROR_PATH_NOT_FOUND "路径未找到\n"
     STRING_ERROR_FILE_NOT_FOUND "文件未找到\n"
     STRING_ERROR_REQ_PARAM_MISSING "所需参数缺失\n"

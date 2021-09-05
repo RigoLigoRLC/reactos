@@ -1039,7 +1039,7 @@ BEGIN
 
     /* For IDD_LOG_OFF_FANCY */
     IDS_LOG_OFF_DESC "关闭您的程序并结束您的 ReactOS 会话。"
-    IDS_SWITCH_USER_DESC "可以让另一个用户登录而不影响您已经打开的程序和文件。\r\n\r\n（您也可以按下 Windows 徽标键 + L 来切换用户。）"
+    IDS_SWITCH_USER_DESC "让另一个用户登录而不影响您已经打开的程序和文件。\r\n\r\n（您也可以按下 Windows 徽标键 + L 来切换用户。）"
     IDS_LOG_OFF_TITLE "注销"
     IDS_SWITCH_USER_TITLE "切换用户"
 END

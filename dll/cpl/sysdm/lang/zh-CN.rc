@@ -333,7 +333,7 @@ BEGIN
     IDS_USERPROFILE_CONFIRM_DELETE_TITLE "确认删除"
     IDS_USERPROFILE_ACCOUNT_UNKNOWN "未知账户"
     IDS_USERPROFILE_ACCOUNT_DELETED "已删除的账户"
-    IDS_USERPROFILE_TYPE_TEXT "当 %s 登录到该计算机上时，操作系统应该使用漫游配置文件还是漫游配置文件的本地缓存副本？"
+    IDS_USERPROFILE_TYPE_TEXT "当 %s 登录到该计算机上时，系统应该使用漫游配置文件还是漫游配置文件的本地缓存副本？"
     IDS_MESSAGEBOXTITLE "系统控制面板小程序"
     IDS_WARNINITIALSIZE "为分页文件的初始大小输入一个数字值。"
     IDS_WARNMAXIMUMSIZE "为分页文件的最大大小输入一个数字值。"

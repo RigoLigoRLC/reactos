@@ -41,7 +41,7 @@ BEGIN
     MSG_WSAEALREADY "操作已经在进行。\n"
     MSG_WSAENOTSOCK "在非套接字上进行套接字操作。\n"
     MSG_WSAEDESTADDRREQ "需要目标地址。\n"
-    MSG_WSAEMSGSIZE "消息太长了。\n"
+    MSG_WSAEMSGSIZE "消息过长。\n"
     MSG_WSAEPROTOTYPE "套接字使用错误类型的协议。\n"
     MSG_WSAENOPROTOOPT "错误的协议选项。\n"
     MSG_WSAEPROTONOTSUPPORT "不受支持的协议。\n"

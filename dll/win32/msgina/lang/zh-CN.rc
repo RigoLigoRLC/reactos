@@ -80,7 +80,7 @@ FONT 9, "宋体", 400, 0, 1
 BEGIN
     CONTROL IDI_ROSLOGO, IDC_ROSLOGO, "Static", SS_BITMAP, 0, 0, 275, 54
     ICON IDI_LOCKICON, IDC_STATIC, 7, 59, 20, 20
-    LTEXT "此计算机正在使用，已被锁定。", IDC_STATIC, 36, 61, 232, 8
+    LTEXT "此计算机正在被使用，并已经锁定。", IDC_STATIC, 36, 61, 232, 8
     LTEXT "<Message>", IDC_UNLOCK_MESSAGE, 36, 75, 232, 26
     LTEXT "用户名:", IDC_STATIC, 36, 107, 40, 8
     EDITTEXT IDC_UNLOCK_USERNAME, 84, 104, 119, 14, ES_AUTOHSCROLL
@@ -236,7 +236,7 @@ BEGIN
     IDS_ACCOUNTEXPIRED "您的帐户已过期。请咨询您的系统管理员。"
     IDS_ACCOUNTLOCKED "您的账户已被锁定，无法登录。请咨询您的系统管理员。"
     IDS_INVALIDLOGONHOURS "您的账户具有的时间限制阻止您现在登录。请稍后再试。"
-    IDS_INVALIDWORKSTATION "您的账户被设为不能在这台计算机登录。请在另一台计算机尝试登录。"
+    IDS_INVALIDWORKSTATION "您的账户设置阻止了您在这台计算机登录。请在另一台计算机尝试登录。"
     IDS_ACCOUNTRESTRICTION "您的账户由于账户限制而不能登录。"
 END
 
