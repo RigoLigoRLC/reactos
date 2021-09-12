@@ -6,6 +6,7 @@
 extern void func_LdrEnumResources(void);
 extern void func_load_notifications(void);
 extern void func_NtAcceptConnectPort(void);
+extern void func_NtAdjustPrivilegesToken(void);
 extern void func_NtAllocateVirtualMemory(void);
 extern void func_NtApphelpCacheControl(void);
 extern void func_NtCompareTokens(void);
@@ -15,6 +16,7 @@ extern void func_NtCreateKey(void);
 extern void func_NtCreateThread(void);
 extern void func_NtDeleteKey(void);
 extern void func_NtDuplicateObject(void);
+extern void func_NtDuplicateToken(void);
 extern void func_NtFreeVirtualMemory(void);
 extern void func_NtImpersonateAnonymousToken(void);
 extern void func_NtLoadUnloadKey(void);
@@ -90,6 +92,7 @@ const struct test winetest_testlist[] =
     { "LdrEnumResources",               func_LdrEnumResources },
     { "load_notifications",             func_load_notifications },
     { "NtAcceptConnectPort",            func_NtAcceptConnectPort },
+    { "NtAdjustPrivilegesToken",        func_NtAdjustPrivilegesToken },
     { "NtAllocateVirtualMemory",        func_NtAllocateVirtualMemory },
     { "NtApphelpCacheControl",          func_NtApphelpCacheControl },
     { "NtCompareTokens",                func_NtCompareTokens },
@@ -99,6 +102,7 @@ const struct test winetest_testlist[] =
     { "NtCreateThread",                 func_NtCreateThread },
     { "NtDeleteKey",                    func_NtDeleteKey },
     { "NtDuplicateObject",              func_NtDuplicateObject },
+    { "NtDuplicateToken",               func_NtDuplicateToken },
     { "NtFreeVirtualMemory",            func_NtFreeVirtualMemory },
     { "NtImpersonateAnonymousToken",    func_NtImpersonateAnonymousToken },
     { "NtLoadUnloadKey",                func_NtLoadUnloadKey },
