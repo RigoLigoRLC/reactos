@@ -237,6 +237,10 @@ typedef struct tagCANDIDATEINFO {
 #define NI_SETCANDIDATE_PAGESIZE        0x0017
 #define NI_IMEMENUSELECTED              0x0018
 
+/* dwSystemInfoFlags bits */
+#define IME_SYSINFO_WINLOGON            0x0001
+#define IME_SYSINFO_WOW16               0x0002
+
 BOOL  WINAPI ImmUnlockIMC(HIMC);
 DWORD WINAPI ImmGetIMCLockCount(HIMC);
 HIMCC  WINAPI ImmCreateIMCC(DWORD);
@@ -627,9 +631,12 @@ BOOL WINAPI ImmConfigureIMEW(_In_ HKL, _In_ HWND, _In_ DWORD, _In_ LPVOID);
 #define ImmConfigureIME WINELIB_NAME_AW(ImmConfigureIME)
 
 HIMC WINAPI ImmCreateContext(void);
+BOOL WINAPI ImmSetActiveContext(HWND hwnd, HIMC hIMC, BOOL fFlag);
 BOOL WINAPI ImmDestroyContext(_In_ HIMC hIMC);
 BOOL WINAPI ImmDisableIME(_In_ DWORD idThread);
 BOOL WINAPI ImmEnumInputContext(_In_ DWORD, _In_ IMCENUMPROC, _In_ LPARAM);
+BOOL WINAPI ImmLoadIME(HKL hKL);
+BOOL WINAPI CtfImmIsTextFrameServiceDisabled(VOID);
 
 UINT
 WINAPI

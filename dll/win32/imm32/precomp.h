@@ -23,6 +23,7 @@
 #include <winuser.h>
 #include <winnls.h>
 #include <winreg.h>
+#include <winnls32.h>
 
 #include <imm.h>
 #include <ddk/imm.h>
@@ -49,6 +50,7 @@
 #define IMM_INVALID_CANDFORM    ULONG_MAX
 #define INVALID_HOTKEY_ID       0xFFFFFFFF
 #define MAX_CANDIDATEFORM       4
+#define MAX_IMM_FILENAME        80
 
 #define LANGID_CHINESE_SIMPLIFIED   MAKELANGID(LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED)
 #define LANGID_CHINESE_TRADITIONAL  MAKELANGID(LANG_CHINESE, SUBLANG_CHINESE_TRADITIONAL)
@@ -71,10 +73,19 @@ BOOL Imm32GetSystemLibraryPath(LPWSTR pszPath, DWORD cchPath, LPCWSTR pszFileNam
 VOID APIENTRY LogFontAnsiToWide(const LOGFONTA *plfA, LPLOGFONTW plfW);
 VOID APIENTRY LogFontWideToAnsi(const LOGFONTW *plfW, LPLOGFONTA plfA);
 PWND FASTCALL ValidateHwndNoErr(HWND hwnd);
+LPVOID FASTCALL ValidateHandleNoErr(HANDLE hObject, UINT uType);
+BOOL APIENTRY Imm32CheckImcProcess(PIMC pIMC);
+
 LPVOID APIENTRY Imm32HeapAlloc(DWORD dwFlags, DWORD dwBytes);
+#define Imm32HeapFree(lpData) HeapFree(g_hImm32Heap, 0, (lpData))
+
 LPWSTR APIENTRY Imm32WideFromAnsi(LPCSTR pszA);
 LPSTR APIENTRY Imm32AnsiFromWide(LPCWSTR pszW);
+DWORD APIENTRY IchWideFromAnsi(DWORD cchAnsi, LPCSTR pchAnsi, UINT uCodePage);
+DWORD APIENTRY IchAnsiFromWide(DWORD cchWide, LPCWSTR pchWide, UINT uCodePage);
 PIMEDPI APIENTRY ImmLockOrLoadImeDpi(HKL hKL);
+LPINPUTCONTEXT APIENTRY Imm32LockIMCEx(HIMC hIMC, BOOL fSelect);
+BOOL APIENTRY Imm32ReleaseIME(HKL hKL);
 
 static inline BOOL Imm32IsCrossThreadAccess(HIMC hIMC)
 {
@@ -89,6 +100,13 @@ static inline BOOL Imm32IsCrossProcessAccess(HWND hWnd)
             (DWORD_PTR)NtCurrentTeb()->ClientId.UniqueProcess);
 }
 
+BOOL WINAPI Imm32IsImcAnsi(HIMC hIMC);
+
+#define ImeDpi_IsUnicode(pImeDpi)   ((pImeDpi)->ImeInfo.fdwProperty & IME_PROP_UNICODE)
+#define Imm32IsImmMode()            (g_psi && (g_psi->dwSRVIFlags & SRVINFO_IMM32))
+#define Imm32IsCiceroMode()         (g_psi && (g_psi->dwSRVIFlags & SRVINFO_CICERO_ENABLED))
+#define Imm32Is16BitMode()          (GetWin32ClientInfo()->dwTIFlags & TIF_16BIT)
+
 DWORD APIENTRY
 CandidateListWideToAnsi(const CANDIDATELIST *pWideCL, LPCANDIDATELIST pAnsiCL, DWORD dwBufLen,
                         UINT uCodePage);
@@ -101,3 +119,18 @@ Imm32NotifyAction(HIMC hIMC, HWND hwnd, DWORD dwAction, DWORD_PTR dwIndex, DWORD
                   DWORD_PTR dwCommand, DWORD_PTR dwData);
 
 DWORD APIENTRY Imm32AllocAndBuildHimcList(DWORD dwThreadId, HIMC **pphList);
+
+INT APIENTRY
+Imm32ImeMenuAnsiToWide(const IMEMENUITEMINFOA *pItemA, LPIMEMENUITEMINFOW pItemW,
+                       UINT uCodePage, BOOL bBitmap);
+INT APIENTRY
+Imm32ImeMenuWideToAnsi(const IMEMENUITEMINFOW *pItemW, LPIMEMENUITEMINFOA pItemA,
+                       UINT uCodePage);
+
+PIME_STATE APIENTRY Imm32FetchImeState(LPINPUTCONTEXTDX pIC, HKL hKL);
+PIME_SUBSTATE APIENTRY Imm32FetchImeSubState(PIME_STATE pState, HKL hKL);
+
+BOOL APIENTRY
+Imm32LoadImeStateSentence(LPINPUTCONTEXTDX pIC, PIME_STATE pState, HKL hKL);
+BOOL APIENTRY
+Imm32SaveImeStateSentence(LPINPUTCONTEXTDX pIC, PIME_STATE pState, HKL hKL);

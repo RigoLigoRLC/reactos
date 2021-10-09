@@ -488,14 +488,19 @@ co_IntSetScrollInfo(PWND Window, INT nBar, LPCSCROLLINFO lpsi, BOOL bRedraw)
    UINT new_flags;
    INT action = 0;
    PSBDATA pSBData;
-   DWORD OldPos = 0;
+   DWORD OldPos = 0, CurrentPos = 0;
    BOOL bChangeParams = FALSE; /* Don't show/hide scrollbar if params don't change */
    UINT MaxPage;
    int MaxPos;
+   /* [0] = SB_HORZ, [1] = SB_VERT, [2] = SB_CTL */
+   static PWND PrevHwnd[3] = { 0 };
+   static DWORD PrevPos[3] = { 0 };
+   static DWORD PrevMax[3] = { 0 };
+   static INT PrevAction[3] = { 0 };
 
    ASSERT_REFS_CO(Window);
 
-   if(!SBID_IS_VALID(nBar))
+   if(!SBID_IS_VALID(nBar)) /* Assures nBar is 0, 1, or 2 */
    {
       EngSetLastError(ERROR_INVALID_PARAMETER);
       ERR("Trying to set scrollinfo for unknown scrollbar type %d", nBar);
@@ -634,6 +639,16 @@ co_IntSetScrollInfo(PWND Window, INT nBar, LPCSCROLLINFO lpsi, BOOL bRedraw)
    }
 
 //done:
+   if ((Window != PrevHwnd[nBar]) || (action != PrevAction[nBar]))
+   {
+      if ((action == SA_SSI_SHOW) && (PrevAction[nBar] == SA_SSI_HIDE))
+      {
+         co_UserShowScrollBar(Window, nBar, TRUE, TRUE);
+      }
+   }
+   if ((action != PrevAction[nBar]) && action != 0)
+      PrevAction[nBar] = action;
+
    if ( action & SA_SSI_HIDE )
    {
       co_UserShowScrollBar(Window, nBar, FALSE, FALSE);
@@ -686,7 +701,16 @@ co_IntSetScrollInfo(PWND Window, INT nBar, LPCSCROLLINFO lpsi, BOOL bRedraw)
                   UpdateRect.bottom -= psbi->dxyLineButton;
                }
             }
-            co_UserRedrawWindow(Window, &UpdateRect, 0, RDW_INVALIDATE | RDW_FRAME);
+            CurrentPos = lpsi->fMask & SIF_PREVIOUSPOS ? OldPos : pSBData->pos;
+            /* Check for changes to Window or CurrentPos or lpsi->nMax */
+            if ((Window != PrevHwnd[nBar]) || (CurrentPos != PrevPos[nBar]) ||
+               (lpsi->nMax != PrevMax[nBar]))
+            {
+                co_UserRedrawWindow(Window, &UpdateRect, 0, RDW_INVALIDATE | RDW_FRAME);
+                PrevHwnd[nBar] = Window;
+                PrevPos[nBar] = CurrentPos;
+                PrevMax[nBar] = lpsi->nMax;
+            }
          }
       } // FIXME: Arrows
 /*      else if( action & SA_SSI_REPAINT_ARROWS )

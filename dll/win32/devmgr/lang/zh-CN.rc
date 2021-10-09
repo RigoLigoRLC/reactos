@@ -229,7 +229,7 @@ BEGIN
     ICON "", IDC_DEVICON, 7, 7, 20, 20
     LTEXT "", IDC_DEVNAME, 37, 9, 174, 16, SS_NOPREFIX
     LTEXT "资源设置:", -1, 7, 36, 204, 8
-    CONTROL "", IDC_DRIVERRESOURCES, "SysListView32", LVS_REPORT | 
+    CONTROL "", IDC_DRIVERRESOURCES, "SysListView32", LVS_REPORT |
             LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | LVS_SORTASCENDING |
             LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP, 7, 46, 238, 80
 END
@@ -291,8 +291,8 @@ STRINGTABLE DISCARDABLE
 BEGIN
   IDS_APPNAME               "ReactOS 设备管理器"
   IDS_APP_AUTHORS           "Copyright 2015 Ged Murphy"
-  IDS_CONFIRM_DISABLE       "禁用此设备会使其停止运行。\r\n你真的想要禁用它吗?"
-  IDS_CONFIRM_UNINSTALL     "警告: 您将要从系统中卸载此设备。\r\n你想要继续吗?"
+  IDS_CONFIRM_DISABLE       "禁用此设备会使其停止运行。\n你真的想要禁用它吗?"
+  IDS_CONFIRM_UNINSTALL     "警告: 您将要从系统中卸载此设备。\n你想要继续吗?"
 END
 STRINGTABLE DISCARDABLE
 BEGIN

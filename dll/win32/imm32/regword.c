@@ -51,10 +51,8 @@ Imm32EnumWordProcA2W(LPCSTR pszReadingA, DWORD dwStyle, LPCSTR pszRegisterA, LPV
     lpEnumData->ret = ret;
 
 Quit:
-    if (pszReadingW)
-        HeapFree(g_hImm32Heap, 0, pszReadingW);
-    if (pszRegisterW)
-        HeapFree(g_hImm32Heap, 0, pszRegisterW);
+    Imm32HeapFree(pszReadingW);
+    Imm32HeapFree(pszRegisterW);
     return ret;
 }
 
@@ -83,10 +81,8 @@ Imm32EnumWordProcW2A(LPCWSTR pszReadingW, DWORD dwStyle, LPCWSTR pszRegisterW, L
     lpEnumData->ret = ret;
 
 Quit:
-    if (pszReadingA)
-        HeapFree(g_hImm32Heap, 0, pszReadingA);
-    if (pszRegisterA)
-        HeapFree(g_hImm32Heap, 0, pszRegisterA);
+    Imm32HeapFree(pszReadingA);
+    Imm32HeapFree(pszRegisterA);
     return ret;
 }
 
@@ -110,7 +106,7 @@ ImmEnumRegisterWordA(HKL hKL, REGISTERWORDENUMPROCA lpfnEnumProc,
     if (!pImeDpi)
         return 0;
 
-    if (!(pImeDpi->ImeInfo.fdwProperty & IME_PROP_UNICODE))
+    if (!ImeDpi_IsUnicode(pImeDpi))
     {
         ret = pImeDpi->ImeEnumRegisterWord(lpfnEnumProc, lpszReading, dwStyle,
                                            lpszRegister, lpData);
@@ -140,10 +136,8 @@ ImmEnumRegisterWordA(HKL hKL, REGISTERWORDENUMPROCA lpfnEnumProc,
     ret = EnumDataW2A.ret;
 
 Quit:
-    if (pszReadingW)
-        HeapFree(g_hImm32Heap, 0, pszReadingW);
-    if (pszRegisterW)
-        HeapFree(g_hImm32Heap, 0, pszRegisterW);
+    Imm32HeapFree(pszReadingW);
+    Imm32HeapFree(pszRegisterW);
     ImmUnlockImeDpi(pImeDpi);
     return ret;
 }
@@ -168,7 +162,7 @@ ImmEnumRegisterWordW(HKL hKL, REGISTERWORDENUMPROCW lpfnEnumProc,
     if (!pImeDpi)
         return 0;
 
-    if (pImeDpi->ImeInfo.fdwProperty & IME_PROP_UNICODE)
+    if (ImeDpi_IsUnicode(pImeDpi))
     {
         ret = pImeDpi->ImeEnumRegisterWord(lpfnEnumProc, lpszReading, dwStyle,
                                            lpszRegister, lpData);
@@ -198,10 +192,8 @@ ImmEnumRegisterWordW(HKL hKL, REGISTERWORDENUMPROCW lpfnEnumProc,
     ret = EnumDataA2W.ret;
 
 Quit:
-    if (pszReadingA)
-        HeapFree(g_hImm32Heap, 0, pszReadingA);
-    if (pszRegisterA)
-        HeapFree(g_hImm32Heap, 0, pszRegisterA);
+    Imm32HeapFree(pszReadingA);
+    Imm32HeapFree(pszRegisterA);
     ImmUnlockImeDpi(pImeDpi);
     return ret;
 }
@@ -224,7 +216,7 @@ UINT WINAPI ImmGetRegisterWordStyleA(HKL hKL, UINT nItem, LPSTYLEBUFA lpStyleBuf
     if (!pImeDpi)
         return 0;
 
-    if (!(pImeDpi->ImeInfo.fdwProperty & IME_PROP_UNICODE))
+    if (!ImeDpi_IsUnicode(pImeDpi))
     {
         ret = pImeDpi->ImeGetRegisterWordStyle(nItem, lpStyleBuf);
         goto Quit;
@@ -259,8 +251,7 @@ UINT WINAPI ImmGetRegisterWordStyleA(HKL hKL, UINT nItem, LPSTYLEBUFA lpStyleBuf
     }
 
 Quit:
-    if (pNewStylesW)
-        HeapFree(g_hImm32Heap, 0, pNewStylesW);
+    Imm32HeapFree(pNewStylesW);
     ImmUnlockImeDpi(pImeDpi);
     return ret;
 }
@@ -283,7 +274,7 @@ UINT WINAPI ImmGetRegisterWordStyleW(HKL hKL, UINT nItem, LPSTYLEBUFW lpStyleBuf
     if (!pImeDpi)
         return 0;
 
-    if (pImeDpi->ImeInfo.fdwProperty & IME_PROP_UNICODE)
+    if (ImeDpi_IsUnicode(pImeDpi))
     {
         ret = pImeDpi->ImeGetRegisterWordStyle(nItem, lpStyleBuf);
         goto Quit;
@@ -317,8 +308,7 @@ UINT WINAPI ImmGetRegisterWordStyleW(HKL hKL, UINT nItem, LPSTYLEBUFW lpStyleBuf
     }
 
 Quit:
-    if (pNewStylesA)
-        HeapFree(g_hImm32Heap, 0, pNewStylesA);
+    Imm32HeapFree(pNewStylesA);
     ImmUnlockImeDpi(pImeDpi);
     return ret;
 }
@@ -340,7 +330,7 @@ ImmRegisterWordA(HKL hKL, LPCSTR lpszReading, DWORD dwStyle, LPCSTR lpszRegister
     if (!pImeDpi)
         return FALSE;
 
-    if (!(pImeDpi->ImeInfo.fdwProperty & IME_PROP_UNICODE))
+    if (!ImeDpi_IsUnicode(pImeDpi))
     {
         ret = pImeDpi->ImeRegisterWord(lpszReading, dwStyle, lpszRegister);
         ImmUnlockImeDpi(pImeDpi);
@@ -364,10 +354,8 @@ ImmRegisterWordA(HKL hKL, LPCSTR lpszReading, DWORD dwStyle, LPCSTR lpszRegister
     ret = pImeDpi->ImeRegisterWord(pszReadingW, dwStyle, pszRegisterW);
 
 Quit:
-    if (pszReadingW)
-        HeapFree(g_hImm32Heap, 0, pszReadingW);
-    if (pszRegisterW)
-        HeapFree(g_hImm32Heap, 0, pszRegisterW);
+    Imm32HeapFree(pszReadingW);
+    Imm32HeapFree(pszRegisterW);
     ImmUnlockImeDpi(pImeDpi);
     return ret;
 }
@@ -389,7 +377,7 @@ ImmRegisterWordW(HKL hKL, LPCWSTR lpszReading, DWORD dwStyle, LPCWSTR lpszRegist
     if (!pImeDpi)
         return FALSE;
 
-    if (pImeDpi->ImeInfo.fdwProperty & IME_PROP_UNICODE)
+    if (ImeDpi_IsUnicode(pImeDpi))
     {
         ret = pImeDpi->ImeRegisterWord(lpszReading, dwStyle, lpszRegister);
         ImmUnlockImeDpi(pImeDpi);
@@ -413,10 +401,8 @@ ImmRegisterWordW(HKL hKL, LPCWSTR lpszReading, DWORD dwStyle, LPCWSTR lpszRegist
     ret = pImeDpi->ImeRegisterWord(pszReadingA, dwStyle, pszRegisterA);
 
 Quit:
-    if (pszReadingA)
-        HeapFree(g_hImm32Heap, 0, pszReadingA);
-    if (pszRegisterA)
-        HeapFree(g_hImm32Heap, 0, pszRegisterA);
+    Imm32HeapFree(pszReadingA);
+    Imm32HeapFree(pszRegisterA);
     ImmUnlockImeDpi(pImeDpi);
     return ret;
 }
@@ -438,7 +424,7 @@ ImmUnregisterWordA(HKL hKL, LPCSTR lpszReading, DWORD dwStyle, LPCSTR lpszUnregi
     if (pImeDpi == NULL)
         return FALSE;
 
-    if (!(pImeDpi->ImeInfo.fdwProperty & IME_PROP_UNICODE))
+    if (!ImeDpi_IsUnicode(pImeDpi))
     {
         ret = pImeDpi->ImeUnregisterWord(lpszReading, dwStyle, lpszUnregister);
         ImmUnlockImeDpi(pImeDpi);
@@ -462,10 +448,8 @@ ImmUnregisterWordA(HKL hKL, LPCSTR lpszReading, DWORD dwStyle, LPCSTR lpszUnregi
     ret = pImeDpi->ImeUnregisterWord(pszReadingW, dwStyle, pszUnregisterW);
 
 Quit:
-    if (pszReadingW)
-        HeapFree(g_hImm32Heap, 0, pszReadingW);
-    if (pszUnregisterW)
-        HeapFree(g_hImm32Heap, 0, pszUnregisterW);
+    Imm32HeapFree(pszReadingW);
+    Imm32HeapFree(pszUnregisterW);
     ImmUnlockImeDpi(pImeDpi);
     return ret;
 }
@@ -487,7 +471,7 @@ ImmUnregisterWordW(HKL hKL, LPCWSTR lpszReading, DWORD dwStyle, LPCWSTR lpszUnre
     if (!pImeDpi)
         return FALSE;
 
-    if (pImeDpi->ImeInfo.fdwProperty & IME_PROP_UNICODE)
+    if (ImeDpi_IsUnicode(pImeDpi))
     {
         ret = pImeDpi->ImeUnregisterWord(lpszReading, dwStyle, lpszUnregister);
         ImmUnlockImeDpi(pImeDpi);
@@ -511,10 +495,8 @@ ImmUnregisterWordW(HKL hKL, LPCWSTR lpszReading, DWORD dwStyle, LPCWSTR lpszUnre
     ret = pImeDpi->ImeUnregisterWord(pszReadingA, dwStyle, pszUnregisterA);
 
 Quit:
-    if (pszReadingA)
-        HeapFree(g_hImm32Heap, 0, pszReadingA);
-    if (pszUnregisterA)
-        HeapFree(g_hImm32Heap, 0, pszUnregisterA);
+    Imm32HeapFree(pszReadingA);
+    Imm32HeapFree(pszUnregisterA);
     ImmUnlockImeDpi(pImeDpi);
     return ret;
 }
