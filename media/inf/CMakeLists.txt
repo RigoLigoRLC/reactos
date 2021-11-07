@@ -21,6 +21,7 @@ list(APPEND INF_FILES
     ndisuio.inf
     NET_NIC.inf
     nettcpip.inf
+    nvme.inf
     ports.inf
     scsi.inf
     shortcuts.inf
