@@ -8,7 +8,7 @@ BEGIN
 COMP [/L] [/A] [data1] [data2]\n\n\
   data1      指定要比较的第一个文件的位置和名称。\n\
   data2      指定要比较的第二个文件的位置和名称。\n\
-  /A         以 ASCII 字符形式显示区别 (默认: 十六进制)。\n\
+  /A         以 ASCII 字符形式显示区别（默认：十六进制）。\n\
   /L         显示不同点所在的行号。\n"
     IDS_INVALIDSWITCH "无效的选项 - /%c\n"
     IDS_BADSYNTAX "命令行语法错误\n"

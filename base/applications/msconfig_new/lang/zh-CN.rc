@@ -161,7 +161,7 @@ BEGIN
     CONTROL         "下移(&D)", IDC_RB_FIND_DOWN, "Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 143, 38, 28, 12
     DEFPUSHBUTTON   "查找下一个(&N)", IDOK, 182, 5, 50, 14, WS_GROUP
     PUSHBUTTON      "取消", IDCANCEL, 182, 23, 50, 14, WS_GROUP
-    CONTROL         "从最初(方向:下)或末尾(方向:上)开始搜索(&S)", IDC_CBX_FIND_FROM_BEGINNING,
+    CONTROL         "从头（向下）或从末尾（向上）开始搜索(&S)", IDC_CBX_FIND_FROM_BEGINNING,
                     "Button", BS_AUTOCHECKBOX | WS_TABSTOP, 4, 58, 231, 12
 END
 

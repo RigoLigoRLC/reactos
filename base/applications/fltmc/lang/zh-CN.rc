@@ -4,7 +4,7 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 
 STRINGTABLE
 BEGIN
-    IDS_USAGE "\n有效的命令 :\n\
+    IDS_USAGE "\n有效的命令：\n\
                load        加载一个过滤驱动\n\
                unload      卸载一个过滤驱动\n\
                filters     显示已在系统中注册的过滤驱动列表\n\n\
@@ -25,9 +25,9 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_ERROR_PRIV      "无法设置驱动加载特权 (0x%X)\n"
-    IDS_ERROR_FILTERS   "无法列举过滤驱动列表 (0x%X)\n"
-    IDS_ERROR_LOAD      "无法加载过滤驱动 (0x%X)\n"
-    IDS_ERROR_UNLOAD    "无法卸载过滤驱动 (0x%X)\n"
-    IDS_ERROR_VOLUMES   "无法列出卷 (0x%X)\n"
+    IDS_ERROR_PRIV      "无法设置驱动加载特权（0x%X）\n"
+    IDS_ERROR_FILTERS   "无法列举过滤驱动列表（0x%X）\n"
+    IDS_ERROR_LOAD      "无法加载过滤驱动（0x%X）\n"
+    IDS_ERROR_UNLOAD    "无法卸载过滤驱动（0x%X）\n"
+    IDS_ERROR_VOLUMES   "无法列出卷（0x%X）\n"
 END
