@@ -95,5 +95,5 @@ BEGIN
     IDS_NO_MEMORY "没有可以分配的内存空间。"
     IDS_NO_DIRECTORY "没有指定路径。"
     IDS_INVALID_PATH "指定的路径无效。"
-    IDS_INVALID_NAME "您输入的快捷方式名称可能含有不能在文件名中使用的字符，也可能过长。"
+    IDS_INVALID_NAME "您输入的快捷方式名称过长，或含有不能在文件名中使用的字符。"
 END
