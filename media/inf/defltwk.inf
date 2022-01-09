@@ -177,7 +177,7 @@ SceInfUsers = "Përdoruesit"
 
 [Strings.041f]
 SceInfAuthUsers = "Kimliği Doğrulanmış Kullanıcılar"
-SceInfInteractive = "ETKLİEŞİMLİ"
+SceInfInteractive = "ETKİLEŞİMLİ"
 SceInfGuest = "Konuk"
 SceInfUsers = "Kullanıcılar"
 
@@ -198,3 +198,9 @@ SceInfAuthUsers = "Utilizadores autenticados"
 SceInfInteractive = "INTERACTIVE"
 SceInfGuest = "Convidado"
 SceInfUsers = "Utilizadores"
+
+[Strings.0c04]
+SceInfAuthUsers = "經過身份驗證的使用者"
+SceInfInteractive = "INTERACTIVE"
+SceInfGuest = "來賓"
+SceInfUsers = "使用者"
