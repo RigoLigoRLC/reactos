@@ -345,6 +345,7 @@ IntVideoPortFindAdapter(
 {
     PVIDEO_PORT_DEVICE_EXTENSION DeviceExtension;
     NTSTATUS Status;
+    VP_STATUS vpStatus;
     VIDEO_PORT_CONFIG_INFO ConfigInfo;
     SYSTEM_BASIC_INFORMATION SystemBasicInfo;
     UCHAR Again = FALSE;
@@ -405,32 +406,27 @@ IntVideoPortFindAdapter(
                           DriverExtension->InitializationData.HwDeviceExtensionSize);
 
             /* FIXME: Need to figure out what string to pass as param 3. */
-            Status = DriverExtension->InitializationData.HwFindAdapter(
+            vpStatus = DriverExtension->InitializationData.HwFindAdapter(
                          &DeviceExtension->MiniPortDeviceExtension,
                          DriverExtension->HwContext,
                          NULL,
                          &ConfigInfo,
                          &Again);
 
-            if (Status == ERROR_DEV_NOT_EXIST)
+            if (vpStatus == ERROR_DEV_NOT_EXIST)
             {
                 continue;
             }
-            else if (Status == NO_ERROR)
-            {
-                break;
-            }
             else
             {
-                ERR_(VIDEOPRT, "HwFindAdapter call failed with error 0x%X\n", Status);
-                goto Failure;
+                break;
             }
         }
     }
     else
     {
         /* FIXME: Need to figure out what string to pass as param 3. */
-        Status = DriverExtension->InitializationData.HwFindAdapter(
+        vpStatus = DriverExtension->InitializationData.HwFindAdapter(
                      &DeviceExtension->MiniPortDeviceExtension,
                      DriverExtension->HwContext,
                      NULL,
@@ -438,9 +434,10 @@ IntVideoPortFindAdapter(
                      &Again);
     }
 
-    if (Status != NO_ERROR)
+    if (vpStatus != NO_ERROR)
     {
-        ERR_(VIDEOPRT, "HwFindAdapter call failed with error 0x%X\n", Status);
+        ERR_(VIDEOPRT, "HwFindAdapter call failed with error 0x%X\n", vpStatus);
+        Status = STATUS_UNSUCCESSFUL;
         goto Failure;
     }
 
@@ -476,9 +473,6 @@ IntVideoPortFindAdapter(
                                     &DeviceExtension->HwResetListEntry,
                                     &HwResetAdaptersLock);
     }
-
-    /* Query children of the device. */
-    VideoPortEnumerateChildren(&DeviceExtension->MiniPortDeviceExtension, NULL);
 
     INFO_(VIDEOPRT, "STATUS_SUCCESS\n");
     return STATUS_SUCCESS;
@@ -620,7 +614,7 @@ IntLoadRegistryParameters(VOID)
                                    NULL);
 
         Status = ZwCreateKey(&KeyHandle,
-                             KEY_WRITE,
+                             READ_CONTROL, // Non-0 placeholder: no use for this handle.
                              &ObjectAttributes,
                              0,
                              NULL,
@@ -1173,11 +1167,10 @@ VideoPortSynchronizeExecution(
 /*
  * @implemented
  */
-VP_STATUS
-NTAPI
-VideoPortEnumerateChildren(
-    IN PVOID HwDeviceExtension,
-    IN PVOID Reserved)
+NTSTATUS NTAPI
+IntVideoPortEnumerateChildren(
+    IN PDEVICE_OBJECT DeviceObject,
+    IN PIRP Irp)
 {
     PVIDEO_PORT_DEVICE_EXTENSION DeviceExtension;
     ULONG Status;
@@ -1190,17 +1183,17 @@ VideoPortEnumerateChildren(
     PVIDEO_PORT_CHILD_EXTENSION ChildExtension;
 
     INFO_(VIDEOPRT, "Starting child device probe\n");
-    DeviceExtension = VIDEO_PORT_GET_DEVICE_EXTENSION(HwDeviceExtension);
+    DeviceExtension = DeviceObject->DeviceExtension;
     if (DeviceExtension->DriverExtension->InitializationData.HwGetVideoChildDescriptor == NULL)
     {
         WARN_(VIDEOPRT, "Miniport's HwGetVideoChildDescriptor is NULL!\n");
-        return NO_ERROR;
+        return STATUS_SUCCESS;
     }
 
     if (!IsListEmpty(&DeviceExtension->ChildDeviceList))
     {
         ERR_(VIDEOPRT, "FIXME: Support calling VideoPortEnumerateChildren again!\n");
-        return NO_ERROR;
+        return STATUS_SUCCESS;
     }
 
     /* Enumerate the children */
@@ -1242,7 +1235,7 @@ VideoPortEnumerateChildren(
 
         INFO_(VIDEOPRT, "Probing child: %d\n", ChildEnumInfo.ChildIndex);
         Status = DeviceExtension->DriverExtension->InitializationData.HwGetVideoChildDescriptor(
-                     HwDeviceExtension,
+                     DeviceExtension->MiniPortDeviceExtension,
                      &ChildEnumInfo,
                      &ChildExtension->ChildType,
                      ChildExtension->ChildDescriptor,
@@ -1334,8 +1327,25 @@ VideoPortEnumerateChildren(
                        &ChildExtension->ListEntry);
     }
 
-    /* Trigger reenumeration by the PnP manager */
-    IoInvalidateDeviceRelations(DeviceExtension->PhysicalDeviceObject, BusRelations);
+    return STATUS_SUCCESS;
+}
+
+VP_STATUS
+NTAPI
+VideoPortEnumerateChildren(
+    IN PVOID HwDeviceExtension,
+    IN PVOID Reserved)
+{
+    PVIDEO_PORT_DEVICE_EXTENSION DeviceExtension;
+
+    DeviceExtension = VIDEO_PORT_GET_DEVICE_EXTENSION(HwDeviceExtension);
+    ASSERT(DeviceExtension);
+
+    if (DeviceExtension->PhysicalDeviceObject)
+    {
+        /* Trigger reenumeration by the PnP manager */
+        IoInvalidateDeviceRelations(DeviceExtension->PhysicalDeviceObject, BusRelations);
+    }
 
     return NO_ERROR;
 }

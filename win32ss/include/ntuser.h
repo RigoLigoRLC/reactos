@@ -1183,7 +1183,7 @@ typedef struct tagIMEINFOEX
     };
 } IMEINFOEX, *PIMEINFOEX;
 
-typedef enum IMEINFOEXCLASS
+typedef enum IMEINFOEXCLASS /* unconfirmed: buggy */
 {
     ImeInfoExKeyboardLayout,
     ImeInfoExImeWindow,
@@ -1937,7 +1937,7 @@ NtUserCreateDesktop(
 
 HIMC
 NTAPI
-NtUserCreateInputContext(PCLIENTIMC pClientImc);
+NtUserCreateInputContext(ULONG_PTR dwClientImcData);
 
 NTSTATUS
 NTAPI
@@ -2038,10 +2038,10 @@ NTAPI
 NtUserDestroyWindow(
     HWND Wnd);
 
-DWORD
+BOOL
 NTAPI
 NtUserDisableThreadIme(
-    DWORD dwUnknown1);
+    DWORD dwThreadID);
 
 LRESULT
 NTAPI
@@ -2129,7 +2129,7 @@ BOOL
 NTAPI
 NtUserEndDeferWindowPosEx(
     HDWP WinPosInfo,
-    DWORD Unknown1);
+    BOOL bAsync);
 
 BOOL
 NTAPI
@@ -2877,11 +2877,11 @@ NtUserQueryInformationThread(
     OUT PVOID ThreadInformation,
     IN ULONG ThreadInformationLength);
 
-DWORD
+DWORD_PTR
 NTAPI
 NtUserQueryInputContext(
     HIMC hIMC,
-    DWORD dwUnknown2);
+    DWORD dwType);
 
 DWORD
 NTAPI
@@ -3533,12 +3533,12 @@ BOOL
 NTAPI
 NtUserUnregisterUserApiHook(VOID);
 
-DWORD
+BOOL
 NTAPI
 NtUserUpdateInputContext(
     HIMC hIMC,
-    DWORD Unknown1,
-    LPVOID pClientImc);
+    DWORD dwType,
+    DWORD_PTR dwValue);
 
 DWORD
 NTAPI

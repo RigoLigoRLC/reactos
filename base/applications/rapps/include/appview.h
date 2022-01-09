@@ -14,7 +14,7 @@
 #include <atlwin.h>
 #include <wininet.h>
 #include <shellutils.h>
-#include <rosctrls.h>
+#include <ui/rosctrls.h>
 #include <gdiplus.h>
 #include <math.h>
 
@@ -191,7 +191,6 @@ public:
     HWND Create(HWND hwndParent);
 
     BOOL ShowAvailableAppInfo(CAvailableApplicationInfo *Info);
-
     BOOL ShowInstalledAppInfo(CInstalledApplicationInfo *Info);
 
     VOID SetWelcomeText();
@@ -202,7 +201,7 @@ public:
 };
 
 class CAppsListView :
-    public CUiWindow<CListView>
+    public CUiWindow<CWindowImpl<CAppsListView, CListView>>
 {
     struct SortContext
     {
@@ -222,11 +221,20 @@ class CAppsListView :
     APPLICATION_VIEW_TYPE ApplicationViewType = AppViewTypeEmpty;
 
     HIMAGELIST m_hImageListView = NULL;
+    CStringW m_Watermark;
+
+    BEGIN_MSG_MAP(CAppsListView)
+        MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBackground)
+    END_MSG_MAP()
+
+
+    LRESULT OnEraseBackground(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 public:
     CAppsListView();
     ~CAppsListView();
 
+    VOID SetWatermark(const CStringW& Text);
     VOID SetCheckboxesVisible(BOOL bIsVisible);
 
     VOID ColumnClick(LPNMLISTVIEW pnmv);
@@ -368,10 +376,13 @@ public:
 
     HWND Create(HWND hwndParent);
     void SetRedraw(BOOL bRedraw);
+    void SetFocusOnSearchBar();
     BOOL SetDisplayAppType(APPLICATION_VIEW_TYPE AppType);
 
     BOOL AddInstalledApplication(CInstalledApplicationInfo *InstAppInfo, LPVOID param);
     BOOL AddAvailableApplication(CAvailableApplicationInfo *AvlbAppInfo, BOOL InitCheckState, LPVOID param);
+    VOID SetWatermark(const CStringW& Text);
+
 
     void CheckAll();
     PVOID GetFocusedItemData();

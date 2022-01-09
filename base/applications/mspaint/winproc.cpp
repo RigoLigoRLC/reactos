@@ -13,8 +13,6 @@
 
 #include "precomp.h"
 
-#include "dialogs.h"
-
 /* FUNCTIONS ********************************************************/
 
 BOOL
@@ -39,7 +37,7 @@ zoomTo(int newZoom, int mouseX, int mouseY)
     toolsModel.SetZoom(newZoom);
 
     selectionWindow.ShowWindow(SW_HIDE);
-    imageArea.MoveWindow(3, 3, imageModel.GetWidth() * toolsModel.GetZoom() / 1000, imageModel.GetHeight() * toolsModel.GetZoom() / 1000, FALSE);
+    imageArea.MoveWindow(GRIP_SIZE, GRIP_SIZE, Zoomed(imageModel.GetWidth()), Zoomed(imageModel.GetHeight()), FALSE);
     scrollboxWindow.Invalidate(TRUE);
     imageArea.Invalidate(FALSE);
 
@@ -94,7 +92,7 @@ void CMainWindow::saveImage(BOOL overwrite)
     else if (GetSaveFileName(&sfn) != 0)
     {
         imageModel.SaveImage(sfn.lpstrFile);
-        _tcsncpy(filepathname, sfn.lpstrFile, SIZEOF(filepathname));
+        _tcsncpy(filepathname, sfn.lpstrFile, _countof(filepathname));
         CString strTitle;
         strTitle.Format(IDS_WINDOWTITLE, (LPCTSTR)sfn.lpstrFileTitle);
         SetWindowText(strTitle);
@@ -118,8 +116,8 @@ void CMainWindow::InsertSelectionFromHBITMAP(HBITMAP bitmap, HWND window)
             TCHAR programname[20];
             TCHAR shouldEnlargePromptText[100];
 
-            LoadString(hProgInstance, IDS_PROGRAMNAME, programname, SIZEOF(programname));
-            LoadString(hProgInstance, IDS_ENLARGEPROMPTTEXT, shouldEnlargePromptText, SIZEOF(shouldEnlargePromptText));
+            LoadString(hProgInstance, IDS_PROGRAMNAME, programname, _countof(programname));
+            LoadString(hProgInstance, IDS_ENLARGEPROMPTTEXT, shouldEnlargePromptText, _countof(shouldEnlargePromptText));
 
             switch (MessageBox(shouldEnlargePromptText, programname, MB_YESNOCANCEL | MB_ICONQUESTION))
             {
@@ -157,12 +155,62 @@ void CMainWindow::InsertSelectionFromHBITMAP(HBITMAP bitmap, HWND window)
     ForceRefreshSelectionContents();
 }
 
+LRESULT CMainWindow::OnMouseWheel(UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+    INT zDelta = (SHORT)HIWORD(wParam);
+
+    if (::GetAsyncKeyState(VK_CONTROL) < 0)
+    {
+        if (zDelta < 0)
+        {
+            if (toolsModel.GetZoom() > MIN_ZOOM)
+                zoomTo(toolsModel.GetZoom() / 2, 0, 0);
+        }
+        else if (zDelta > 0)
+        {
+            if (toolsModel.GetZoom() < MAX_ZOOM)
+                zoomTo(toolsModel.GetZoom() * 2, 0, 0);
+        }
+    }
+    else
+    {
+        UINT nCount = 3;
+        if (::GetAsyncKeyState(VK_SHIFT) < 0)
+        {
+#ifndef SPI_GETWHEELSCROLLCHARS
+    #define SPI_GETWHEELSCROLLCHARS 0x006C  // Needed for pre-NT6 PSDK
+#endif
+            SystemParametersInfoW(SPI_GETWHEELSCROLLCHARS, 0, &nCount, 0);
+            for (UINT i = 0; i < nCount; ++i)
+            {
+                if (zDelta < 0)
+                    ::PostMessageW(scrollboxWindow, WM_HSCROLL, MAKEWPARAM(SB_LINEDOWN, 0), 0);
+                else if (zDelta > 0)
+                    ::PostMessageW(scrollboxWindow, WM_HSCROLL, MAKEWPARAM(SB_LINEUP, 0), 0);
+            }
+        }
+        else
+        {
+            SystemParametersInfoW(SPI_GETWHEELSCROLLLINES, 0, &nCount, 0);
+            for (UINT i = 0; i < nCount; ++i)
+            {
+                if (zDelta < 0)
+                    ::PostMessageW(scrollboxWindow, WM_VSCROLL, MAKEWPARAM(SB_LINEDOWN, 0), 0);
+                else if (zDelta > 0)
+                    ::PostMessageW(scrollboxWindow, WM_VSCROLL, MAKEWPARAM(SB_LINEUP, 0), 0);
+            }
+        }
+    }
+
+    return 0;
+}
+
 LRESULT CMainWindow::OnDropFiles(UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
     TCHAR droppedfile[MAX_PATH];
 
     HDROP hDrop = (HDROP)wParam;
-    DragQueryFile(hDrop, 0, droppedfile, SIZEOF(droppedfile));
+    DragQueryFile(hDrop, 0, droppedfile, _countof(droppedfile));
     DragFinish(hDrop);
 
     ConfirmSave() && DoLoadImageFile(m_hWnd, droppedfile, TRUE);
@@ -276,7 +324,7 @@ LRESULT CMainWindow::OnInitMenuPopup(UINT nMsg, WPARAM wParam, LPARAM lParam, BO
                 CheckMenuItem(menu, IDM_VIEWTOOLBOX,      CHECKED_IF(toolBoxContainer.IsWindowVisible()));
                 CheckMenuItem(menu, IDM_VIEWCOLORPALETTE, CHECKED_IF(paletteWindow.IsWindowVisible()));
                 CheckMenuItem(menu, IDM_VIEWSTATUSBAR,    CHECKED_IF(::IsWindowVisible(hStatusBar)));
-                CheckMenuItem(menu, IDM_FORMATICONBAR,    CHECKED_IF(textEditWindow.IsWindowVisible()));
+                CheckMenuItem(menu, IDM_FORMATICONBAR,    CHECKED_IF(fontsDialog.IsWindowVisible()));
                 EnableMenuItem(menu, IDM_FORMATICONBAR, ENABLED_IF(toolsModel.GetActiveTool() == TOOL_TEXT));
 
                 CheckMenuItem(menu, IDM_VIEWSHOWGRID,      CHECKED_IF(showGrid));
@@ -296,8 +344,8 @@ LRESULT CMainWindow::OnInitMenuPopup(UINT nMsg, WPARAM wParam, LPARAM lParam, BO
     CheckMenuItem(menu, IDM_VIEWZOOM400, CHECKED_IF(toolsModel.GetZoom() == 4000));
     CheckMenuItem(menu, IDM_VIEWZOOM800, CHECKED_IF(toolsModel.GetZoom() == 8000));
 
-    CheckMenuItem(menu, IDM_COLORSMODERNPALETTE, CHECKED_IF(paletteModel.SelectedPalette() == 1));
-    CheckMenuItem(menu, IDM_COLORSOLDPALETTE,    CHECKED_IF(paletteModel.SelectedPalette() == 2));
+    CheckMenuItem(menu, IDM_COLORSMODERNPALETTE, CHECKED_IF(paletteModel.SelectedPalette() == PAL_MODERN));
+    CheckMenuItem(menu, IDM_COLORSOLDPALETTE,    CHECKED_IF(paletteModel.SelectedPalette() == PAL_OLDTYPE));
     return 0;
 }
 
@@ -355,6 +403,8 @@ LRESULT CMainWindow::OnKeyDown(UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
                 case TOOL_SHAPE: case TOOL_BEZIER:
                     imageArea.SendMessage(nMsg, wParam, lParam);
                     break;
+                default:
+                    break;
             }
         }
     }
@@ -378,8 +428,8 @@ LRESULT CMainWindow::OnCommand(UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
             HICON paintIcon = LoadIcon(hProgInstance, MAKEINTRESOURCE(IDI_APPICON));
             TCHAR infotitle[100];
             TCHAR infotext[200];
-            LoadString(hProgInstance, IDS_INFOTITLE, infotitle, SIZEOF(infotitle));
-            LoadString(hProgInstance, IDS_INFOTEXT, infotext, SIZEOF(infotext));
+            LoadString(hProgInstance, IDS_INFOTITLE, infotitle, _countof(infotitle));
+            LoadString(hProgInstance, IDS_INFOTEXT, infotext, _countof(infotext));
             ShellAbout(m_hWnd, infotitle, infotext, paintIcon);
             DeleteObject(paintIcon);
             break;
@@ -470,10 +520,14 @@ LRESULT CMainWindow::OnCommand(UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
             break;
         }
         case IDM_EDITUNDO:
+            if (toolsModel.GetActiveTool() == TOOL_TEXT && textEditWindow.IsWindowVisible())
+                break;
             imageModel.Undo();
             imageArea.Invalidate(FALSE);
             break;
         case IDM_EDITREDO:
+            if (toolsModel.GetActiveTool() == TOOL_TEXT && textEditWindow.IsWindowVisible())
+                break;
             imageModel.Redo();
             imageArea.Invalidate(FALSE);
             break;
@@ -505,13 +559,15 @@ LRESULT CMainWindow::OnCommand(UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
         }
         case IDM_EDITSELECTALL:
         {
+            if (toolsModel.GetActiveTool() == TOOL_TEXT && textEditWindow.IsWindowVisible())
+            {
+                textEditWindow.SendMessage(EM_SETSEL, 0, -1);
+                break;
+            }
             HWND hToolbar = FindWindowEx(toolBoxContainer.m_hWnd, NULL, TOOLBARCLASSNAME, NULL);
             SendMessage(hToolbar, TB_CHECKBUTTON, ID_RECTSEL, MAKELPARAM(TRUE, 0));
-            toolBoxContainer.SendMessage(WM_COMMAND, ID_RECTSEL);
-            //TODO: do this properly
-            startPaintingL(imageModel.GetDC(), 0, 0, paletteModel.GetFgColor(), paletteModel.GetBgColor());
-            whilePaintingL(imageModel.GetDC(), imageModel.GetWidth(), imageModel.GetHeight(), paletteModel.GetFgColor(), paletteModel.GetBgColor());
-            endPaintingL(imageModel.GetDC(), imageModel.GetWidth(), imageModel.GetHeight(), paletteModel.GetFgColor(), paletteModel.GetBgColor());
+            toolsModel.selectAll();
+            imageArea.Invalidate(TRUE);
             break;
         }
         case IDM_EDITCOPYTO:
@@ -534,10 +590,10 @@ LRESULT CMainWindow::OnCommand(UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
                 paletteModel.SetFgColor(choosecolor.rgbResult);
             break;
         case IDM_COLORSMODERNPALETTE:
-            paletteModel.SelectPalette(1);
+            paletteModel.SelectPalette(PAL_MODERN);
             break;
         case IDM_COLORSOLDPALETTE:
-            paletteModel.SelectPalette(2);
+            paletteModel.SelectPalette(PAL_OLDTYPE);
             break;
         case IDM_IMAGEINVERTCOLORS:
         {
@@ -613,7 +669,16 @@ LRESULT CMainWindow::OnCommand(UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
             alignChildrenToMainWindow();
             break;
         case IDM_FORMATICONBAR:
-            textEditWindow.ShowWindow(textEditWindow.IsWindowVisible() ? SW_HIDE : SW_SHOW);
+            if (toolsModel.GetActiveTool() == TOOL_TEXT)
+            {
+                if (!fontsDialog.IsWindow())
+                {
+                    fontsDialog.Create(mainWindow);
+                }
+                registrySettings.ShowTextTool = !fontsDialog.IsWindowVisible();
+                fontsDialog.ShowWindow(registrySettings.ShowTextTool ? SW_SHOW : SW_HIDE);
+                fontsDialog.SendMessage(DM_REPOSITION, 0, 0);
+            }
             break;
         case IDM_VIEWSHOWGRID:
             showGrid = !showGrid;

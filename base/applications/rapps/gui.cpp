@@ -25,7 +25,7 @@
 #include <atlwin.h>
 #include <wininet.h>
 #include <shellutils.h>
-#include <rosctrls.h>
+#include <ui/rosctrls.h>
 #include <gdiplus.h>
 #include <math.h>
 
@@ -545,6 +545,10 @@ VOID CMainWindow::OnCommand(WPARAM wParam, LPARAM lParam)
             PostMessageW(WM_CLOSE, 0, 0);
             break;
 
+        case ID_SEARCH:
+            m_ApplicationView->SetFocusOnSearchBar();
+            break;
+
         case ID_INSTALL:
             if (IsAvailableEnum(SelectedEnumType))
             {
@@ -567,7 +571,7 @@ VOID CMainWindow::OnCommand(WPARAM wParam, LPARAM lParam)
                     CAvailableApplicationInfo *FocusedApps = (CAvailableApplicationInfo *)m_ApplicationView->GetFocusedItemData();
                     if (FocusedApps)
                     {
-                        if (DownloadApplication(FocusedApps, FALSE))
+                        if (DownloadApplication(FocusedApps))
                         {
                             UpdateApplicationsList(-1);
                         }
@@ -702,6 +706,14 @@ VOID CMainWindow::UpdateApplicationsList(INT EnumType)
     m_ApplicationView->SetRedraw(TRUE);
     m_ApplicationView->RedrawWindow(0, 0, RDW_INVALIDATE | RDW_ALLCHILDREN); // force the child window to repaint
     UpdateStatusBarText();
+
+    CStringW text;
+    if (m_ApplicationView->GetItemCount() == 0 && !szSearchPattern.IsEmpty())
+    {
+        text.LoadString(IDS_NO_SEARCH_RESULTS);
+    }
+    m_ApplicationView->SetWatermark(text);
+
     bUpdating = FALSE;
 }
 
@@ -782,7 +794,7 @@ BOOL CMainWindow::InstallApplication(CAvailableApplicationInfo *Info)
 {
     if (Info)
     {
-        if (DownloadApplication(Info, FALSE))
+        if (DownloadApplication(Info))
         {
             UpdateApplicationsList(-1);
             return TRUE;

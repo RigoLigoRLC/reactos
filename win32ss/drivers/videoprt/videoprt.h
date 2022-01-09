@@ -234,6 +234,7 @@ IntVideoPortSetupInterrupt(
 NTSTATUS NTAPI
 IntVideoPortFilterResourceRequirements(
    IN PDEVICE_OBJECT DeviceObject,
+   IN PIO_STACK_LOCATION IrpStack,
    IN PIRP Irp);
 
 NTSTATUS NTAPI
@@ -277,6 +278,11 @@ PVOID NTAPI
 IntVideoPortGetProcAddress(
    IN PVOID HwDeviceExtension,
    IN PUCHAR FunctionName);
+
+NTSTATUS NTAPI
+IntVideoPortEnumerateChildren(
+    IN PDEVICE_OBJECT DeviceObject,
+    IN PIRP Irp);
 
 /* int10.c */
 
