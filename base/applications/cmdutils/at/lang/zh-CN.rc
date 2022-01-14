@@ -28,7 +28,7 @@ time               指定命令运行的时间。\n\
     IDS_JOBS_LIST "状态 ID   日                     时间          命令行\n"
     IDS_NO_ENTRIES "列表中没有项目。\n"
 
-    IDS_CONFIRM_QUESTION "您想继续操作吗？(Y/N) [N]: "
+    IDS_CONFIRM_QUESTION "您想继续操作吗？(Y/N) [N]："
     IDS_CONFIRM_INVALID  "\n这是一个无效的回应。\n"
     IDS_CONFIRM_YES "Y"
     IDS_CONFIRM_NO "N"
@@ -43,10 +43,10 @@ time               指定命令运行的时间。\n\
     IDS_ERROR "错误"
     IDS_OK "确定"
 
-    IDS_TASKID      "任务 ID:       %lu\n"
-    IDS_STATUS      "状态:          %s\n"
-    IDS_SCHEDULE    "安排:          %s\n"
-    IDS_TIME        "今日时间:      %s\n"
-    IDS_INTERACTIVE "交互:          %s\n"
-    IDS_COMMAND     "命令:          %s\n"
+    IDS_TASKID      "任务 ID：      %lu\n"
+    IDS_STATUS      "状态：         %s\n"
+    IDS_SCHEDULE    "安排：         %s\n"
+    IDS_TIME        "今日时间：     %s\n"
+    IDS_INTERACTIVE "交互：         %s\n"
+    IDS_COMMAND     "命令：         %s\n"
 END
