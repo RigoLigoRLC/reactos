@@ -157,16 +157,98 @@ NtUserGetAppImeLevel(HWND hWnd)
     return 0;
 }
 
+BOOL FASTCALL UserGetImeInfoEx(LPVOID pUnknown, PIMEINFOEX pInfoEx, IMEINFOEXCLASS SearchType)
+{
+    PKL pkl, pklHead;
+
+    if (!gspklBaseLayout)
+        return FALSE;
+
+    pkl = pklHead = gspklBaseLayout;
+
+    /* Find the matching entry from the list and get info */
+    if (SearchType == ImeInfoExKeyboardLayout)
+    {
+        do
+        {
+            if (pInfoEx->hkl == pkl->hkl)
+            {
+                if (!pkl->piiex)
+                    break;
+
+                *pInfoEx = *pkl->piiex;
+                return TRUE;
+            }
+
+            pkl = pkl->pklNext;
+        } while (pkl != pklHead);
+    }
+    else if (SearchType == ImeInfoExImeFileName)
+    {
+        do
+        {
+            if (pkl->piiex &&
+                _wcsnicmp(pkl->piiex->wszImeFile, pInfoEx->wszImeFile,
+                          RTL_NUMBER_OF(pkl->piiex->wszImeFile)) == 0)
+            {
+                *pInfoEx = *pkl->piiex;
+                return TRUE;
+            }
+
+            pkl = pkl->pklNext;
+        } while (pkl != pklHead);
+    }
+    else
+    {
+        /* Do nothing */
+    }
+
+    return FALSE;
+}
+
 BOOL
 APIENTRY
 NtUserGetImeInfoEx(
     PIMEINFOEX pImeInfoEx,
     IMEINFOEXCLASS SearchType)
 {
-    STUB;
-    return FALSE;
-}
+    IMEINFOEX ImeInfoEx;
+    BOOL ret = FALSE;
 
+    UserEnterShared();
+
+    if (!IS_IMM_MODE())
+        goto Quit;
+
+    _SEH2_TRY
+    {
+        ProbeForWrite(pImeInfoEx, sizeof(*pImeInfoEx), 1);
+        ImeInfoEx = *pImeInfoEx;
+    }
+    _SEH2_EXCEPT(EXCEPTION_EXECUTE_HANDLER)
+    {
+        goto Quit;
+    }
+    _SEH2_END;
+
+    ret = UserGetImeInfoEx(NULL, &ImeInfoEx, SearchType);
+    if (ret)
+    {
+        _SEH2_TRY
+        {
+            *pImeInfoEx = ImeInfoEx;
+        }
+        _SEH2_EXCEPT(EXCEPTION_EXECUTE_HANDLER)
+        {
+            ret = FALSE;
+        }
+        _SEH2_END;
+    }
+
+Quit:
+    UserLeave();
+    return ret;
+}
 
 DWORD
 APIENTRY
@@ -178,13 +260,60 @@ NtUserSetAppImeLevel(
     return 0;
 }
 
-DWORD
-APIENTRY
-NtUserSetImeInfoEx(
-    PIMEINFOEX pImeInfoEx)
+BOOL FASTCALL UserSetImeInfoEx(LPVOID pUnknown, PIMEINFOEX pImeInfoEx)
 {
-    STUB;
-    return 0;
+    PKL pklHead, pkl;
+
+    pkl = pklHead = gspklBaseLayout;
+
+    do
+    {
+        if (pkl->hkl != pImeInfoEx->hkl)
+        {
+            pkl = pkl->pklNext;
+            continue;
+        }
+
+        if (!pkl->piiex)
+            return FALSE;
+
+        if (!pkl->piiex->fLoadFlag)
+            *pkl->piiex = *pImeInfoEx;
+
+        return TRUE;
+    } while (pkl != pklHead);
+
+    return FALSE;
+}
+
+BOOL
+APIENTRY
+NtUserSetImeInfoEx(PIMEINFOEX pImeInfoEx)
+{
+    BOOL ret = FALSE;
+    IMEINFOEX ImeInfoEx;
+
+    UserEnterExclusive();
+
+    if (!IS_IMM_MODE())
+        goto Quit;
+
+    _SEH2_TRY
+    {
+        ProbeForRead(pImeInfoEx, sizeof(*pImeInfoEx), 1);
+        ImeInfoEx = *pImeInfoEx;
+    }
+    _SEH2_EXCEPT(EXCEPTION_EXECUTE_HANDLER)
+    {
+        goto Quit;
+    }
+    _SEH2_END;
+
+    ret = UserSetImeInfoEx(NULL, &ImeInfoEx);
+
+Quit:
+    UserLeave();
+    return ret;
 }
 
 DWORD APIENTRY

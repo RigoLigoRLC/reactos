@@ -36,7 +36,6 @@ zoomTo(int newZoom, int mouseX, int mouseY)
 
     toolsModel.SetZoom(newZoom);
 
-    selectionWindow.ShowWindow(SW_HIDE);
     imageArea.MoveWindow(GRIP_SIZE, GRIP_SIZE, Zoomed(imageModel.GetWidth()), Zoomed(imageModel.GetHeight()), FALSE);
     scrollboxWindow.Invalidate(TRUE);
     imageArea.Invalidate(FALSE);
@@ -534,7 +533,7 @@ LRESULT CMainWindow::OnCommand(UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
         case IDM_EDITCOPY:
             OpenClipboard();
             EmptyClipboard();
-            SetClipboardData(CF_BITMAP, CopyImage(selectionModel.GetBitmap(), IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG));
+            SetClipboardData(CF_BITMAP, CopyDIBImage(selectionModel.GetBitmap()));
             CloseClipboard();
             break;
         case IDM_EDITCUT:
@@ -653,7 +652,7 @@ LRESULT CMainWindow::OnCommand(UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
             toolsModel.SetBackgroundTransparent(!toolsModel.IsBackgroundTransparent());
             break;
         case IDM_IMAGECROP:
-            imageModel.Insert((HBITMAP) CopyImage(selectionModel.GetBitmap(), IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG));
+            imageModel.Insert(CopyDIBImage(selectionModel.GetBitmap()));
             break;
 
         case IDM_VIEWTOOLBOX:
