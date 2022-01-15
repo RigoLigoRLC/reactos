@@ -14,7 +14,7 @@ Usage: DISKPART [/S filename] [/T timeout] [/?]\n\n\
 /T <超时>\t超时秒数，防止 DiskPart 使用重叠。\n\
 /?\t\t显示此帮助消息。\n\n"
     IDS_APP_LICENSE "基于 GNU GPLv2 许可证发行\n"
-    IDS_APP_CURR_COMPUTER "在计算机上: %s\n\n"
+    IDS_APP_CURR_COMPUTER "所在计算机：%s\n\n"
     IDS_APP_LEAVING "\n正在离开 DiskPart ......\n"
     IDS_APP_PROMPT "DISKPART> "
 END
@@ -41,7 +41,7 @@ END
 /* Detail header titles */
 STRINGTABLE
 BEGIN
-    IDS_LIST_DISK_HEAD "\n  磁盘 ###   状态      大小     可用    Dyn  Gpt\n"
+    IDS_LIST_DISK_HEAD "\n  磁盘 ###   状态      大小     可用    活动 Gpt\n"
     IDS_LIST_DISK_LINE "  --------  ----------  -------  -------  ---  ---\n"
     IDS_LIST_DISK_FORMAT "%c %7lu   %-10s  %4I64u %-2s  %4I64u %-2s   %1s    %1s\n"
     IDS_LIST_PARTITION_HEAD "\n     分区           类型          大小     偏移量\n"
@@ -78,7 +78,7 @@ BEGIN
     IDS_STATUS_YES "是"
     IDS_STATUS_NO "否"
     IDS_STATUS_DISK_HEALTHY "健康"
-    IDS_STATUS_DISK_SICK "生病"
+    IDS_STATUS_DISK_SICK "欠佳"
     IDS_STATUS_UNAVAILABLE "不可用"
     IDS_STATUS_ONLINE "联机"
     IDS_STATUS_OFFLINE "脱机"
@@ -88,7 +88,7 @@ END
 /* CMD Messages for commands */
 STRINGTABLE
 BEGIN
-    IDS_MSG_ARG_SYNTAX_ERROR "为此命令指定的参数不是有效的。\n有关命令类型的详细信息:"
+    IDS_MSG_ARG_SYNTAX_ERROR "为此命令指定的参数无效。\n有关命令类型的详细信息："
 END
 
 /* Help Command Descripions */
@@ -131,7 +131,7 @@ BEGIN
     IDS_HELP_CMD_DESC_SELECT "SELECT\t\t- 将焦点转移到一个对象。\n"
     IDS_HELP_CMD_DESC_SETID "SETID\t\t- 更改分区类型。\n"
     IDS_HELP_CMD_DESC_SHRINK "SHRINK\t\t- 减小所选卷的大小。\n"
-    IDS_HELP_CMD_DESC_UNIQUEID "UNIQUEID\t- 显示或设置 GUID 分区表 (GPT) 的标识符\n\t\t  或主引导记录 (MBR) 磁盘的签名。"
+    IDS_HELP_CMD_DESC_UNIQUEID "UNIQUEID\t- 显示或设置 GUID 分区表（GPT）的标识符\n\t\t  或主引导记录（MBR）磁盘的签名。"
 END
 
 /* Common Error Messages */

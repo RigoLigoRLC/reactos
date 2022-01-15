@@ -38,15 +38,15 @@ BEGIN
         MENUITEM "", -1, MFT_SEPARATOR
         POPUP "程序(&P)", IDM_PROGRAMS
         BEGIN
-            MENUITEM "(空)", -1, MFT_STRING, MFS_GRAYED
+            MENUITEM "（空）", -1, MFT_STRING, MFS_GRAYED
         END
         POPUP "收藏夹(&A)", IDM_FAVORITES
         BEGIN
-            MENUITEM "(空)", -1, MFT_STRING, MFS_GRAYED
+            MENUITEM "（空）", -1, MFT_STRING, MFS_GRAYED
         END
         POPUP "文档(&D)", IDM_DOCUMENTS
         BEGIN
-            MENUITEM "(空)", -1, MFT_STRING, MFS_GRAYED
+            MENUITEM "（空）", -1, MFT_STRING, MFS_GRAYED
         END
         POPUP "设置(&S)", IDM_SETTINGS
         BEGIN
