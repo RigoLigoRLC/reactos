@@ -54,16 +54,17 @@ class CMainWindow :
 
     CApplicationView *m_ApplicationView = NULL;
 
-    CAvailableApps m_AvailableApps;
-    CInstalledApps m_InstalledApps;
+    CApplicationDB* m_Db;
+    //CAvailableApps m_AvailableApps;
+    //CInstalledApps m_InstalledApps;
 
     BOOL bUpdating = FALSE;
 
     ATL::CStringW szSearchPattern;
-    INT SelectedEnumType;
+    AppsCategories SelectedEnumType;
 
 public:
-    CMainWindow();
+    CMainWindow(CApplicationDB* db);
 
     ~CMainWindow();
 private:
@@ -94,16 +95,16 @@ private:
 
     VOID OnCommand(WPARAM wParam, LPARAM lParam);
 
-    BOOL CALLBACK EnumInstalledAppProc(CInstalledApplicationInfo *Info);
-    BOOL CALLBACK EnumAvailableAppProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState);
-    static BOOL CALLBACK s_EnumInstalledAppProc(CInstalledApplicationInfo *Info, PVOID param);
-    static BOOL CALLBACK s_EnumAvailableAppProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState, PVOID param);
+    //BOOL CALLBACK EnumInstalledAppProc(CInstalledApplicationInfo *Info);
+    //BOOL CALLBACK EnumAvailableAppProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState);
+    //static BOOL CALLBACK s_EnumInstalledAppProc(CInstalledApplicationInfo *Info, PVOID param);
+    //static BOOL CALLBACK s_EnumAvailableAppProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState, PVOID param);
 
-    static BOOL CALLBACK s_EnumSelectedAppForDownloadProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState, PVOID param);
+    //static BOOL CALLBACK s_EnumSelectedAppForDownloadProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState, PVOID param);
 
     VOID UpdateStatusBarText();
 
-    VOID UpdateApplicationsList(INT EnumType);
+    VOID UpdateApplicationsList(AppsCategories EnumType);
 
 public:
     static ATL::CWndClassInfo &GetWndClassInfo();
@@ -116,13 +117,10 @@ public:
 
     // this function is called when application-view is asked to install an application
     // if Info is not zero, this app should be installed. otherwise those checked apps should be installed
-    BOOL InstallApplication(CAvailableApplicationInfo *Info);
+    BOOL InstallApplication(CApplicationInfo *Info);
 
     // this function is called when search text is changed
     BOOL SearchTextChanged(ATL::CStringW &SearchText);
 
     void HandleTabOrder(int direction);
 };
-
-
-VOID MainWindowLoop(INT nShowCmd);

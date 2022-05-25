@@ -83,13 +83,14 @@ ATL::CStringW LoadStatusString(DownloadStatus StatusParam)
 struct DownloadInfo
 {
     DownloadInfo() {}
-    DownloadInfo(const CAvailableApplicationInfo& AppInfo)
+    DownloadInfo(const CApplicationInfo& AppInfo)
         : DLType(DLTYPE_APPLICATION)
-        , szUrl(AppInfo.m_szUrlDownload)
-        , szName(AppInfo.m_szName)
-        , szSHA1(AppInfo.m_szSHA1)
-        , SizeInBytes(AppInfo.m_SizeBytes)
+        //, szUrl(AppInfo.m_szUrlDownload)
+        //, szName(AppInfo.m_szName)
+        //, szSHA1(AppInfo.m_szSHA1)
+        //, SizeInBytes(AppInfo.m_SizeBytes)
     {
+        __debugbreak();
     }
 
     DownloadType DLType;
@@ -1019,7 +1020,7 @@ VOID CDownloadManager::LaunchDownloadDialog(BOOL bIsModal)
 // CDownloadManager
 
 
-BOOL DownloadListOfApplications(const ATL::CSimpleArray<CAvailableApplicationInfo>& AppsList, BOOL bIsModal)
+BOOL DownloadListOfApplications(const ATL::CSimpleArray<CApplicationInfo>& AppsList, BOOL bIsModal)
 {
     if (AppsList.GetSize() == 0)
         return FALSE;
@@ -1036,7 +1037,7 @@ BOOL DownloadListOfApplications(const ATL::CSimpleArray<CAvailableApplicationInf
     return TRUE;
 }
 
-BOOL DownloadApplication(CAvailableApplicationInfo* pAppInfo)
+BOOL DownloadApplication(CApplicationInfo* pAppInfo)
 {
     if (!pAppInfo)
         return FALSE;

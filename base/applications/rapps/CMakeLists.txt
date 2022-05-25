@@ -5,6 +5,8 @@ include_directories(${REACTOS_SOURCE_DIR}/sdk/lib/conutils)
 include_directories(include)
 
 list(APPEND SOURCE
+    applicationdb.cpp
+    applicationinfo.cpp
     appview.cpp
     asyncinet.cpp
     available.cpp
@@ -19,6 +21,8 @@ list(APPEND SOURCE
     settingsdlg.cpp
     unattended.cpp
     winmain.cpp
+    include/applicationdb.h
+    include/applicationinfo.h
     include/appview.h
     include/asyncinet.h
     include/available.h

@@ -244,6 +244,7 @@ LSTATUS CInstalledApplicationInfo::RemoveFromRegistry()
     return RegDeleteKeyW(m_IsUserKey ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE, szFullName);
 }
 
+#if 0
 BOOL CInstalledApps::Enum(INT EnumType, APPENUMPROC lpEnumProc, PVOID param)
 {
     FreeCachedEntries();
@@ -369,3 +370,4 @@ VOID CInstalledApps::FreeCachedEntries()
 
     m_InfoList.RemoveAll();
 }
+#endif

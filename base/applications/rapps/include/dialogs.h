@@ -1,6 +1,6 @@
 #pragma once
 
-#include "available.h"
+#include "applicationinfo.h"
 
 #include <windef.h>
 #include <atlsimpcoll.h>
@@ -9,9 +9,9 @@
 VOID CreateSettingsDlg(HWND hwnd);
 
 //Main window
-VOID MainWindowLoop(INT nShowCmd);
+VOID MainWindowLoop(class CApplicationDB* db, INT nShowCmd);
 
 // Download dialogs
 VOID DownloadApplicationsDB(LPCWSTR lpUrl, BOOL IsOfficial);
-BOOL DownloadApplication(CAvailableApplicationInfo* pAppInfo);
-BOOL DownloadListOfApplications(const ATL::CSimpleArray<CAvailableApplicationInfo>& AppsList, BOOL bIsModal);
+BOOL DownloadApplication(CApplicationInfo* pAppInfo);
+BOOL DownloadListOfApplications(const ATL::CSimpleArray<CApplicationInfo>& AppsList, BOOL bIsModal);

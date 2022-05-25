@@ -239,12 +239,12 @@ HWND CComboBox::Create(HWND hwndParent)
 
 VOID CAppRichEdit::LoadAndInsertText(UINT uStringID,
     const ATL::CStringW &szText,
-    DWORD StringFlags,
     DWORD TextFlags)
 {
     ATL::CStringW szLoadedText;
     if (!szText.IsEmpty() && szLoadedText.LoadStringW(uStringID))
     {
+        const DWORD StringFlags = CFE_BOLD;
         InsertText(szLoadedText, StringFlags);
         InsertText(szText, TextFlags);
     }
@@ -262,163 +262,169 @@ VOID CAppRichEdit::LoadAndInsertText(UINT uStringID,
     }
 }
 
-VOID CAppRichEdit::InsertVersionInfo(CAvailableApplicationInfo *Info)
-{
-    if (Info->IsInstalled())
-    {
-        if (Info->HasInstalledVersion())
-        {
-            if (Info->HasUpdate())
-                LoadAndInsertText(IDS_STATUS_UPDATE_AVAILABLE, CFE_ITALIC);
-            else
-                LoadAndInsertText(IDS_STATUS_INSTALLED, CFE_ITALIC);
+//VOID CAppRichEdit::InsertVersionInfo(CAvailableApplicationInfo *Info)
+//{
+//    if (Info->IsInstalled())
+//    {
+//        if (Info->HasInstalledVersion())
+//        {
+//            if (Info->HasUpdate())
+//                LoadAndInsertText(IDS_STATUS_UPDATE_AVAILABLE, CFE_ITALIC);
+//            else
+//                LoadAndInsertText(IDS_STATUS_INSTALLED, CFE_ITALIC);
+//
+//            LoadAndInsertText(IDS_AINFO_VERSION, Info->m_szInstalledVersion, 0);
+//        }
+//        else
+//        {
+//            LoadAndInsertText(IDS_STATUS_INSTALLED, CFE_ITALIC);
+//        }
+//    }
+//    else
+//    {
+//        LoadAndInsertText(IDS_STATUS_NOTINSTALLED, CFE_ITALIC);
+//    }
+//
+//    LoadAndInsertText(IDS_AINFO_AVAILABLEVERSION, Info->m_szVersion, 0);
+//}
+//
+//VOID CAppRichEdit::InsertLicenseInfo(CAvailableApplicationInfo *Info)
+//{
+//    ATL::CStringW szLicense;
+//    switch (Info->m_LicenseType)
+//    {
+//    case LICENSE_OPENSOURCE:
+//        szLicense.LoadStringW(IDS_LICENSE_OPENSOURCE);
+//        break;
+//    case LICENSE_FREEWARE:
+//        szLicense.LoadStringW(IDS_LICENSE_FREEWARE);
+//        break;
+//    case LICENSE_TRIAL:
+//        szLicense.LoadStringW(IDS_LICENSE_TRIAL);
+//        break;
+//    default:
+//        LoadAndInsertText(IDS_AINFO_LICENSE, Info->m_szLicense, 0);
+//        return;
+//    }
+//
+//    szLicense += L" (" + Info->m_szLicense + L")";
+//    LoadAndInsertText(IDS_AINFO_LICENSE, szLicense, 0);
+//}
 
-            LoadAndInsertText(IDS_AINFO_VERSION, Info->m_szInstalledVersion, CFE_BOLD, 0);
-        }
-        else
-        {
-            LoadAndInsertText(IDS_STATUS_INSTALLED, CFE_ITALIC);
-        }
-    }
-    else
-    {
-        LoadAndInsertText(IDS_STATUS_NOTINSTALLED, CFE_ITALIC);
-    }
+//VOID CAppRichEdit::InsertLanguageInfo(CAvailableApplicationInfo *Info)
+//{
+//    if (!Info->HasLanguageInfo())
+//    {
+//        return;
+//    }
+//
+//    const INT nTranslations = Info->m_LanguageLCIDs.GetSize();
+//    ATL::CStringW szLangInfo;
+//    ATL::CStringW szLoadedTextAvailability;
+//    ATL::CStringW szLoadedAInfoText;
+//
+//    szLoadedAInfoText.LoadStringW(IDS_AINFO_LANGUAGES);
+//
+//    if (Info->HasNativeLanguage())
+//    {
+//        szLoadedTextAvailability.LoadStringW(IDS_LANGUAGE_AVAILABLE_TRANSLATION);
+//        if (nTranslations > 1)
+//        {
+//            ATL::CStringW buf;
+//            buf.LoadStringW(IDS_LANGUAGE_MORE_PLACEHOLDER);
+//            szLangInfo.Format(buf, nTranslations - 1);
+//        }
+//        else
+//        {
+//            szLangInfo.LoadStringW(IDS_LANGUAGE_SINGLE);
+//            szLangInfo = L" (" + szLangInfo + L")";
+//        }
+//    }
+//    else if (Info->HasEnglishLanguage())
+//    {
+//        szLoadedTextAvailability.LoadStringW(IDS_LANGUAGE_ENGLISH_TRANSLATION);
+//        if (nTranslations > 1)
+//        {
+//            ATL::CStringW buf;
+//            buf.LoadStringW(IDS_LANGUAGE_AVAILABLE_PLACEHOLDER);
+//            szLangInfo.Format(buf, nTranslations - 1);
+//        }
+//        else
+//        {
+//            szLangInfo.LoadStringW(IDS_LANGUAGE_SINGLE);
+//            szLangInfo = L" (" + szLangInfo + L")";
+//        }
+//    }
+//    else
+//    {
+//        szLoadedTextAvailability.LoadStringW(IDS_LANGUAGE_NO_TRANSLATION);
+//    }
+//
+//    InsertText(szLoadedAInfoText, CFE_BOLD);
+//    InsertText(szLoadedTextAvailability, NULL);
+//    InsertText(szLangInfo, CFE_ITALIC);
+//}
 
-    LoadAndInsertText(IDS_AINFO_AVAILABLEVERSION, Info->m_szVersion, CFE_BOLD, 0);
-}
-
-VOID CAppRichEdit::InsertLicenseInfo(CAvailableApplicationInfo *Info)
-{
-    ATL::CStringW szLicense;
-    switch (Info->m_LicenseType)
-    {
-    case LICENSE_OPENSOURCE:
-        szLicense.LoadStringW(IDS_LICENSE_OPENSOURCE);
-        break;
-    case LICENSE_FREEWARE:
-        szLicense.LoadStringW(IDS_LICENSE_FREEWARE);
-        break;
-    case LICENSE_TRIAL:
-        szLicense.LoadStringW(IDS_LICENSE_TRIAL);
-        break;
-    default:
-        LoadAndInsertText(IDS_AINFO_LICENSE, Info->m_szLicense, CFE_BOLD, 0);
-        return;
-    }
-
-    szLicense += L" (" + Info->m_szLicense + L")";
-    LoadAndInsertText(IDS_AINFO_LICENSE, szLicense, CFE_BOLD, 0);
-}
-
-VOID CAppRichEdit::InsertLanguageInfo(CAvailableApplicationInfo *Info)
-{
-    if (!Info->HasLanguageInfo())
-    {
-        return;
-    }
-
-    const INT nTranslations = Info->m_LanguageLCIDs.GetSize();
-    ATL::CStringW szLangInfo;
-    ATL::CStringW szLoadedTextAvailability;
-    ATL::CStringW szLoadedAInfoText;
-
-    szLoadedAInfoText.LoadStringW(IDS_AINFO_LANGUAGES);
-
-    if (Info->HasNativeLanguage())
-    {
-        szLoadedTextAvailability.LoadStringW(IDS_LANGUAGE_AVAILABLE_TRANSLATION);
-        if (nTranslations > 1)
-        {
-            ATL::CStringW buf;
-            buf.LoadStringW(IDS_LANGUAGE_MORE_PLACEHOLDER);
-            szLangInfo.Format(buf, nTranslations - 1);
-        }
-        else
-        {
-            szLangInfo.LoadStringW(IDS_LANGUAGE_SINGLE);
-            szLangInfo = L" (" + szLangInfo + L")";
-        }
-    }
-    else if (Info->HasEnglishLanguage())
-    {
-        szLoadedTextAvailability.LoadStringW(IDS_LANGUAGE_ENGLISH_TRANSLATION);
-        if (nTranslations > 1)
-        {
-            ATL::CStringW buf;
-            buf.LoadStringW(IDS_LANGUAGE_AVAILABLE_PLACEHOLDER);
-            szLangInfo.Format(buf, nTranslations - 1);
-        }
-        else
-        {
-            szLangInfo.LoadStringW(IDS_LANGUAGE_SINGLE);
-            szLangInfo = L" (" + szLangInfo + L")";
-        }
-    }
-    else
-    {
-        szLoadedTextAvailability.LoadStringW(IDS_LANGUAGE_NO_TRANSLATION);
-    }
-
-    InsertText(szLoadedAInfoText, CFE_BOLD);
-    InsertText(szLoadedTextAvailability, NULL);
-    InsertText(szLangInfo, CFE_ITALIC);
-}
-
-BOOL CAppRichEdit::ShowAvailableAppInfo(CAvailableApplicationInfo *Info)
+BOOL CAppRichEdit::ShowAppInfo(CApplicationInfo *Info)
 {
     if (!Info) return FALSE;
+    __debugbreak();
 
-    SetText(Info->m_szName, CFE_BOLD);
-    InsertVersionInfo(Info);
-    InsertLicenseInfo(Info);
-    InsertLanguageInfo(Info);
+    //Info->EnsureDetailsLoaded();
 
-    LoadAndInsertText(IDS_AINFO_SIZE, Info->m_szSize, CFE_BOLD, 0);
-    LoadAndInsertText(IDS_AINFO_URLSITE, Info->m_szUrlSite, CFE_BOLD, CFE_LINK);
-    LoadAndInsertText(IDS_AINFO_DESCRIPTION, Info->m_szDesc, CFE_BOLD, 0);
-    LoadAndInsertText(IDS_AINFO_URLDOWNLOAD, Info->m_szUrlDownload, CFE_BOLD, CFE_LINK);
-    LoadAndInsertText(IDS_AINFO_PACKAGE_NAME, Info->m_szPkgName, CFE_BOLD, 0);
+    //SetText(Info->m_szName, CFE_BOLD);
+    //InsertVersionInfo(Info);
+    //InsertLicenseInfo(Info);
+    //InsertLanguageInfo(Info);
+
+    //LoadAndInsertText(IDS_AINFO_SIZE, Info->m_szSize, 0);
+    //LoadAndInsertText(IDS_AINFO_URLSITE, Info->m_szUrlSite, CFE_LINK);
+    //LoadAndInsertText(IDS_AINFO_DESCRIPTION, Info->m_szDesc, 0);
+    //LoadAndInsertText(IDS_AINFO_URLDOWNLOAD, Info->m_szUrlDownload, CFE_LINK);
+    //LoadAndInsertText(IDS_AINFO_PACKAGE_NAME, Info->m_szPkgName, 0);
 
     return TRUE;
 }
 
-inline VOID CAppRichEdit::InsertTextWithString(UINT StringID, DWORD StringFlags, const ATL::CStringW &Text, DWORD TextFlags)
+inline VOID CAppRichEdit::InsertTextWithString(UINT StringID, const ATL::CStringW &Text, DWORD TextFlags)
 {
     if (!Text.IsEmpty())
     {
-        LoadAndInsertText(StringID, Text, StringFlags, TextFlags);
+        LoadAndInsertText(StringID, Text, TextFlags);
     }
 }
 
-BOOL CAppRichEdit::ShowInstalledAppInfo(CInstalledApplicationInfo *Info)
+#if 0
+BOOL CAppRichEdit::ShowAppInfo(CApplicationInfo *Info)
 {
     if (!Info) return FALSE;
+    __debugbreak();
 
-    SetText(Info->szDisplayName, CFE_BOLD);
-    InsertText(L"\n", 0);
+    //Info->EnsureDetailsLoaded();
 
-    Info->EnsureDetailsLoaded();
+    //SetText(Info->szDisplayName, CFE_BOLD);
+    //InsertText(L"\n", 0);
 
-    InsertTextWithString(IDS_INFO_VERSION, CFE_BOLD, Info->szDisplayVersion, 0);
-    InsertTextWithString(IDS_INFO_PUBLISHER, CFE_BOLD, Info->szPublisher, 0);
-    InsertTextWithString(IDS_INFO_REGOWNER, CFE_BOLD, Info->szRegOwner, 0);
-    InsertTextWithString(IDS_INFO_PRODUCTID, CFE_BOLD, Info->szProductID, 0);
-    InsertTextWithString(IDS_INFO_HELPLINK, CFE_BOLD, Info->szHelpLink, CFM_LINK);
-    InsertTextWithString(IDS_INFO_HELPPHONE, CFE_BOLD, Info->szHelpTelephone, 0);
-    InsertTextWithString(IDS_INFO_README, CFE_BOLD, Info->szReadme, 0);
-    InsertTextWithString(IDS_INFO_CONTACT, CFE_BOLD, Info->szContact, 0);
-    InsertTextWithString(IDS_INFO_UPDATEINFO, CFE_BOLD, Info->szURLUpdateInfo, CFM_LINK);
-    InsertTextWithString(IDS_INFO_INFOABOUT, CFE_BOLD, Info->szURLInfoAbout, CFM_LINK);
-    InsertTextWithString(IDS_INFO_COMMENTS, CFE_BOLD, Info->szComments, 0);
-    InsertTextWithString(IDS_INFO_INSTALLDATE, CFE_BOLD, Info->szInstallDate, 0);
-    InsertTextWithString(IDS_INFO_INSTLOCATION, CFE_BOLD, Info->szInstallLocation, 0);
-    InsertTextWithString(IDS_INFO_INSTALLSRC, CFE_BOLD, Info->szInstallSource, 0);
-    InsertTextWithString(IDS_INFO_UNINSTALLSTR, CFE_BOLD, Info->szUninstallString, 0);
-    InsertTextWithString(IDS_INFO_MODIFYPATH, CFE_BOLD, Info->szModifyPath, 0);
+    //InsertTextWithString(IDS_INFO_VERSION, Info->szDisplayVersion, 0);
+    //InsertTextWithString(IDS_INFO_PUBLISHER, Info->szPublisher, 0);
+    //InsertTextWithString(IDS_INFO_REGOWNER, Info->szRegOwner, 0);
+    //InsertTextWithString(IDS_INFO_PRODUCTID, Info->szProductID, 0);
+    //InsertTextWithString(IDS_INFO_HELPLINK, Info->szHelpLink, CFM_LINK);
+    //InsertTextWithString(IDS_INFO_HELPPHONE, Info->szHelpTelephone, 0);
+    //InsertTextWithString(IDS_INFO_README, Info->szReadme, 0);
+    //InsertTextWithString(IDS_INFO_CONTACT, Info->szContact, 0);
+    //InsertTextWithString(IDS_INFO_UPDATEINFO, Info->szURLUpdateInfo, CFM_LINK);
+    //InsertTextWithString(IDS_INFO_INFOABOUT, Info->szURLInfoAbout, CFM_LINK);
+    //InsertTextWithString(IDS_INFO_COMMENTS, Info->szComments, 0);
+    //InsertTextWithString(IDS_INFO_INSTALLDATE, Info->szInstallDate, 0);
+    //InsertTextWithString(IDS_INFO_INSTLOCATION, Info->szInstallLocation, 0);
+    //InsertTextWithString(IDS_INFO_INSTALLSRC, Info->szInstallSource, 0);
+    //InsertTextWithString(IDS_INFO_UNINSTALLSTR, Info->szUninstallString, 0);
+    //InsertTextWithString(IDS_INFO_MODIFYPATH, Info->szModifyPath, 0);
 
     return TRUE;
 }
+#endif
 
 VOID CAppRichEdit::SetWelcomeText()
 {
@@ -812,7 +818,8 @@ BOOL CAppScrnshotPreview::DisplayImage(LPCWSTR lpszLocation)
         DownloadParam->hwndNotify = m_hWnd;
         DownloadParam->ID = ID;
         // generate a filename
-        ATL::CStringW ScrnshotFolder = CAvailableApps::m_Strings.szAppsPath;
+        __debugbreak();
+        ATL::CStringW ScrnshotFolder = "";
         PathAppendW(ScrnshotFolder.GetBuffer(MAX_PATH), L"screenshots");
         ScrnshotFolder.ReleaseBuffer();
 
@@ -1054,27 +1061,28 @@ HWND CAppInfoDisplay::Create(HWND hwndParent)
     return CWindowImpl::Create(hwndParent, r, L"", WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
 }
 
-BOOL CAppInfoDisplay::ShowAvailableAppInfo(CAvailableApplicationInfo *Info)
+BOOL CAppInfoDisplay::ShowAppInfo(CApplicationInfo *Info)
 {
     ATL::CStringW ScrnshotLocation;
-    if (Info->RetrieveScrnshot(0, ScrnshotLocation))
-    {
-        ScrnshotPrev->DisplayImage(ScrnshotLocation);
-    }
-    else
+    __debugbreak();
+    //if (Info->RetrieveScrnshot(0, ScrnshotLocation))
+    //{
+    //    ScrnshotPrev->DisplayImage(ScrnshotLocation);
+    //}
+    //else
     {
         ScrnshotPrev->DisplayEmpty();
     }
     ResizeChildren();
-    return RichEdit->ShowAvailableAppInfo(Info);
+    return RichEdit->ShowAppInfo(Info);
 }
 
-BOOL CAppInfoDisplay::ShowInstalledAppInfo(CInstalledApplicationInfo *Info)
-{
-    ScrnshotPrev->DisplayEmpty();
-    ResizeChildren();
-    return RichEdit->ShowInstalledAppInfo(Info);
-}
+//BOOL CAppInfoDisplay::ShowInstalledAppInfo(CInstalledApplicationInfo *Info)
+//{
+//    ScrnshotPrev->DisplayEmpty();
+//    ResizeChildren();
+//    return RichEdit->ShowInstalledAppInfo(Info);
+//}
 
 VOID CAppInfoDisplay::SetWelcomeText()
 {
@@ -1206,18 +1214,19 @@ VOID CAppsListView::ColumnClick(LPNMLISTVIEW pnmv)
 
 BOOL CAppsListView::AddColumn(INT Index, ATL::CStringW &Text, INT Width, INT Format)
 {
-    return AddColumn(Index, const_cast<LPWSTR>(Text.GetString()), Width, Format);
-}
-
-int CAppsListView::AddColumn(INT Index, LPWSTR lpText, INT Width, INT Format)
-{
+//    return AddColumn(Index, const_cast<LPWSTR>(Text.GetString()), Width, Format);
+//}
+//
+//int CAppsListView::AddColumn(INT Index, LPWSTR lpText, INT Width, INT Format)
+//{
     LVCOLUMNW Column;
+    //__debugbreak();
 
     ZeroMemory(&Column, sizeof(Column));
 
     Column.mask = LVCF_FMT | LVCF_TEXT | LVCF_WIDTH | LVCF_SUBITEM;
     Column.iSubItem = Index;
-    Column.pszText = lpText;
+    Column.pszText = const_cast<LPWSTR>(Text.GetString());
     Column.cx = Width;
     Column.fmt = Format;
 
@@ -1420,86 +1429,84 @@ BOOL CAppsListView::SetViewMode(DWORD ViewMode)
     return SendMessage(LVM_SETVIEW, (WPARAM)ViewMode, 0) == 1;
 }
 
-BOOL CAppsListView::AddInstalledApplication(CInstalledApplicationInfo *InstAppInfo, LPVOID CallbackParam)
+BOOL CAppsListView::AddApplication(CApplicationInfo *AppInfo, LPVOID CallbackParam)
 {
-    if (ApplicationViewType != AppViewTypeInstalledApps)
+        __debugbreak();
+    if (ApplicationViewType == AppViewTypeInstalledApps)
+    {
+        /* Load icon from registry */
+        HICON hIcon = NULL;
+        ATL::CStringW szIconPath;
+        //if (AppInfo->RetrieveIcon(szIconPath))
+        //{
+        //    PathParseIconLocationW((LPWSTR)szIconPath.GetString());
+
+        //    /* Load only the 1st icon from the application executable,
+        //     * because all apps provide the executables which have the main icon
+        //     * as 1st in the index , so we don't need other icons here */
+        //    hIcon = ExtractIconW(hInst,
+        //                         szIconPath.GetString(),
+        //                         0);
+        //}
+
+        if (!hIcon)
+        {
+        /* Load default icon */
+            hIcon = LoadIconW(hInst, MAKEINTRESOURCEW(IDI_MAIN));
+        }
+
+        int IconIndex = ImageList_AddIcon(m_hImageListView, hIcon);
+        DestroyIcon(hIcon);
+
+        int Index = AddItem(ItemCount, IconIndex, AppInfo->szDisplayName, (LPARAM)CallbackParam);
+        SetItemText(Index, 1, AppInfo->szDisplayVersion.IsEmpty() ? L"---" : AppInfo->szDisplayVersion);
+        SetItemText(Index, 2, AppInfo->szComments.IsEmpty() ? L"---" : AppInfo->szComments);
+
+        ItemCount++;
+        return TRUE;
+    }
+    else if (ApplicationViewType == AppViewTypeAvailableApps)
+    {
+        /* Load icon from file */
+        HICON hIcon = NULL;
+        ATL::CStringW szIconPath;
+        //if (AvlbAppInfo->RetrieveIcon(szIconPath))
+        //{
+        //    hIcon = (HICON)LoadImageW(NULL,
+        //        szIconPath.GetString(),
+        //        IMAGE_ICON,
+        //        LISTVIEW_ICON_SIZE,
+        //        LISTVIEW_ICON_SIZE,
+        //        LR_LOADFROMFILE);
+        //}
+
+        if (!hIcon || GetLastError() != ERROR_SUCCESS)
+        {
+        /* Load default icon */
+        hIcon = LoadIconW(hInst, MAKEINTRESOURCEW(IDI_MAIN));
+        }
+
+        int IconIndex = ImageList_AddIcon(m_hImageListView, hIcon);
+        DestroyIcon(hIcon);
+
+        int Index = AddItem(ItemCount, IconIndex, AppInfo->szDisplayName, (LPARAM)CallbackParam);
+
+        __debugbreak();
+        if (/*InitCheckState*/TRUE)
+        {
+            SetCheckState(Index, TRUE);
+        }
+
+        SetItemText(Index, 1, AppInfo->szDisplayVersion);
+        SetItemText(Index, 2, AppInfo->szComments);
+
+        ItemCount++;
+        return TRUE;
+    }
+    else
     {
         return FALSE;
     }
-
-    /* Load icon from registry */
-    HICON hIcon = NULL;
-    ATL::CStringW szIconPath;
-    if (InstAppInfo->RetrieveIcon(szIconPath))
-    {
-        PathParseIconLocationW((LPWSTR)szIconPath.GetString());
-
-        /* Load only the 1st icon from the application executable,
-         * because all apps provide the executables which have the main icon
-         * as 1st in the index , so we don't need other icons here */
-        hIcon = ExtractIconW(hInst,
-                             szIconPath.GetString(),
-                             0);
-    }
-
-    if (!hIcon)
-    {
-        /* Load the default icon */
-        hIcon = LoadIconW(hInst, MAKEINTRESOURCEW(IDI_MAIN));
-    }
-
-    int IconIndex = ImageList_AddIcon(m_hImageListView, hIcon);
-    DestroyIcon(hIcon);
-
-    int Index = AddItem(ItemCount, IconIndex, InstAppInfo->szDisplayName, (LPARAM)CallbackParam);
-    SetItemText(Index, 1, InstAppInfo->szDisplayVersion.IsEmpty() ? L"---" : InstAppInfo->szDisplayVersion);
-    SetItemText(Index, 2, InstAppInfo->szComments.IsEmpty() ? L"---" : InstAppInfo->szComments);
-
-    ItemCount++;
-    return TRUE;
-}
-
-BOOL CAppsListView::AddAvailableApplication(CAvailableApplicationInfo *AvlbAppInfo, BOOL InitCheckState, LPVOID CallbackParam)
-{
-    if (ApplicationViewType != AppViewTypeAvailableApps)
-    {
-        return FALSE;
-    }
-
-    /* Load icon from file */
-    HICON hIcon = NULL;
-    ATL::CStringW szIconPath;
-    if (AvlbAppInfo->RetrieveIcon(szIconPath))
-    {
-        hIcon = (HICON)LoadImageW(NULL,
-                                  szIconPath.GetString(),
-                                  IMAGE_ICON,
-                                  LISTVIEW_ICON_SIZE,
-                                  LISTVIEW_ICON_SIZE,
-                                  LR_LOADFROMFILE);
-    }
-
-    if (!hIcon || GetLastError() != ERROR_SUCCESS)
-    {
-        /* Load the default icon */
-        hIcon = LoadIconW(hInst, MAKEINTRESOURCEW(IDI_MAIN));
-    }
-
-    int IconIndex = ImageList_AddIcon(m_hImageListView, hIcon);
-    DestroyIcon(hIcon);
-
-    int Index = AddItem(ItemCount, IconIndex, AvlbAppInfo->m_szName, (LPARAM)CallbackParam);
-
-    if (InitCheckState)
-    {
-        SetCheckState(Index, TRUE);
-    }
-
-    SetItemText(Index, 1, AvlbAppInfo->m_szVersion);
-    SetItemText(Index, 2, AvlbAppInfo->m_szDesc);
-
-    ItemCount++;
-    return TRUE;
 }
 
 // this function is called when parent window receiving an notification about checkstate changing
@@ -1618,7 +1625,8 @@ BOOL CApplicationView::ProcessWindowMessage(HWND hwnd, UINT message, WPARAM wPar
 
                     if (ApplicationViewType == AppViewTypeAvailableApps)
                     {
-                        m_MainWindow->InstallApplication((CAvailableApplicationInfo *)m_ListView->GetItemData(Item->iItem));
+                        __debugbreak();
+                        m_MainWindow->InstallApplication((CApplicationInfo *)m_ListView->GetItemData(Item->iItem));
                     }
                 }
             }
@@ -1897,7 +1905,8 @@ VOID CApplicationView::OnCommand(WPARAM wParam, LPARAM lParam)
     switch (wCommand)
     {
     case ID_INSTALL:
-        m_MainWindow->InstallApplication((CAvailableApplicationInfo *)GetFocusedItemData());
+        __debugbreak();
+        m_MainWindow->InstallApplication((CApplicationInfo *)GetFocusedItemData());
         break;
 
     case ID_TOOLBAR_INSTALL:
@@ -2027,23 +2036,30 @@ BOOL CApplicationView::SetDisplayAppType(APPLICATION_VIEW_TYPE AppType)
     return TRUE;
 }
 
-BOOL CApplicationView::AddInstalledApplication(CInstalledApplicationInfo *InstAppInfo, LPVOID param)
+BOOL CApplicationView::AddApplication(CApplicationInfo *AppInfo, LPVOID param)
 {
-    if (ApplicationViewType != AppViewTypeInstalledApps)
+    //__debugbreak();
+    if (ApplicationViewType == AppViewTypeInstalledApps)
+    {
+        return m_ListView->AddApplication(AppInfo, param);
+    }
+    else if (ApplicationViewType == AppViewTypeAvailableApps)
+    {
+        return m_ListView->AddApplication(AppInfo, /*InitCheckState, */param);
+
+    }
+    else
     {
         return FALSE;
     }
-    return m_ListView->AddInstalledApplication(InstAppInfo, param);
 }
 
-BOOL CApplicationView::AddAvailableApplication(CAvailableApplicationInfo *AvlbAppInfo, BOOL InitCheckState, LPVOID param)
-{
-    if (ApplicationViewType != AppViewTypeAvailableApps)
-    {
-        return FALSE;
-    }
-    return m_ListView->AddAvailableApplication(AvlbAppInfo, InitCheckState, param);
-}
+//BOOL CApplicationView::AddAvailableApplication(CAvailableApplicationInfo *AvlbAppInfo, BOOL InitCheckState, LPVOID param)
+//{
+//    {
+//        return FALSE;
+//    }
+//}
 
 VOID CApplicationView::SetWatermark(const CStringW& Text)
 {
@@ -2081,13 +2097,14 @@ VOID CApplicationView::AppendTabOrderWindow(int Direction, ATL::CSimpleArray<HWN
 // CallbackParam is the param passed to listview when adding the item (the one getting focus now).
 BOOL CApplicationView::ItemGetFocus(LPVOID CallbackParam)
 {
+    __debugbreak();
     switch (ApplicationViewType)
     {
     case AppViewTypeInstalledApps:
-        return m_AppsInfo->ShowInstalledAppInfo((CInstalledApplicationInfo *)CallbackParam);
+        return m_AppsInfo->ShowAppInfo((CApplicationInfo *)CallbackParam);
 
     case AppViewTypeAvailableApps:
-        return m_AppsInfo->ShowAvailableAppInfo((CAvailableApplicationInfo *)CallbackParam);
+        return m_AppsInfo->ShowAppInfo((CApplicationInfo *)CallbackParam);
 
     case AppViewTypeEmpty:
     default:
