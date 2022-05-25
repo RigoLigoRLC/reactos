@@ -1,48 +1,60 @@
 #pragma once
 
-#include <windef.h>
+//#include <windef.h>
 #include <atlstr.h>
-#include <atlsimpcoll.h>
-#include <atlcoll.h>
+//#include <atlsimpcoll.h>
+//#include <atlcoll.h>
 
-#include "misc.h"
-#include "configparser.h"
+//#include "misc.h"
+//#include "configparser.h"
 
 
-#define MAX_SCRNSHOT_NUM 16
+//#define MAX_SCRNSHOT_NUM 16
 
-enum LicenseType
-{
-    LICENSE_NONE,
-    LICENSE_OPENSOURCE,
-    LICENSE_FREEWARE,
-    LICENSE_TRIAL,
-    LICENSE_MIN = LICENSE_NONE,
-    LICENSE_MAX = LICENSE_TRIAL
-};
-
-inline BOOL IsLicenseType(INT x)
-{
-    return (x >= LICENSE_MIN && x <= LICENSE_MAX);
-}
-
-struct AvailableStrings
-{
-    ATL::CStringW szPath;
-    ATL::CStringW szCabPath;
-    ATL::CStringW szAppsPath;
-    ATL::CStringW szSearchPath;
-    ATL::CStringW szCabName;
-    ATL::CStringW szCabDir;
-
-    AvailableStrings();
-};
-
-//class CAvailableApplicationInfo
+//enum LicenseType
 //{
-//public:
-//    INT m_Category;
-//    //BOOL m_IsSelected;
+//    LICENSE_NONE,
+//    LICENSE_OPENSOURCE,
+//    LICENSE_FREEWARE,
+//    LICENSE_TRIAL,
+//    LICENSE_MIN = LICENSE_NONE,
+//    LICENSE_MAX = LICENSE_TRIAL
+//};
+//
+//inline BOOL IsLicenseType(INT x)
+//{
+//    return (x >= LICENSE_MIN && x <= LICENSE_MAX);
+//}
+//
+//struct AvailableStrings
+//{
+//    ATL::CStringW szPath;
+//    ATL::CStringW szCabPath;
+//    ATL::CStringW szAppsPath;
+//    ATL::CStringW szSearchPath;
+//    ATL::CStringW szCabName;
+//    ATL::CStringW szCabDir;
+//
+//    AvailableStrings();
+//};
+
+class CApplicationInfo
+{
+public:
+
+    CApplicationInfo();
+    virtual ~CApplicationInfo();
+
+    CStringW szDisplayIcon;
+    CStringW szDisplayName;
+    CStringW szDisplayVersion;
+    CStringW szComments;
+    AppsCategories iCategory;
+
+    virtual BOOL Valid() const = 0;
+
+    //INT m_Category;
+    //BOOL m_IsSelected;
 //    LicenseType m_LicenseType;
 //    ATL::CStringW m_szName; // software's display name.
 //    ATL::CStringW m_szRegName;
@@ -102,10 +114,23 @@ struct AvailableStrings
 //    VOID RetrieveLicenseType();
 //    VOID RetrieveSize();
 //    inline BOOL FindInLanguages(LCID what) const;
-//};
+};
 
-typedef BOOL(CALLBACK *AVAILENUMPROC)(CAvailableApplicationInfo *Info, BOOL bInitialCheckState, PVOID param);
+class CAvailableApplicationInfo
+    : public CApplicationInfo
+{
+    class CConfigParser* m_Parser;
+    CStringW m_szPkgName;
+    CStringW m_szUrlDownload;
+public:
+    CAvailableApplicationInfo(const CStringW& Filename);
+    ~CAvailableApplicationInfo();
 
+    virtual BOOL Valid() const override;
+};
+
+//typedef BOOL(CALLBACK *AVAILENUMPROC)(CAvailableApplicationInfo *Info, BOOL bInitialCheckState, PVOID param);
+//
 //class CAvailableApps
 //{
 //    ATL::CAtlList<CAvailableApplicationInfo*> m_InfoList;
@@ -132,8 +157,17 @@ typedef BOOL(CALLBACK *AVAILENUMPROC)(CAvailableApplicationInfo *Info, BOOL bIni
 //    CAvailableApplicationInfo* FindAppByPkgName(const ATL::CStringW& szPkgName) const;
 //    ATL::CSimpleArray<CAvailableApplicationInfo> FindAppsByPkgNameList(const ATL::CSimpleArray<ATL::CStringW> &arrAppsNames) const;
 //    //ATL::CSimpleArray<CAvailableApplicationInfo> GetSelected() const;
-
+//
 //    const ATL::CStringW& GetFolderPath() const;
 //    const ATL::CStringW& GetAppPath() const;
 //    const ATL::CStringW& GetCabPath() const;
+//};
+
+//class CApplicationInfoList
+//{
+//private:
+//    ATL::CAtlList<CApplicationInfo*> m_List;
+//
+//public:
+//
 //};

@@ -87,27 +87,18 @@ class CAppRichEdit :
     public CUiWindow<CRichEdit>
 {
 private:
-    VOID LoadAndInsertText(UINT uStringID,
-        const ATL::CStringW &szText,
-        DWORD StringFlags,
-        DWORD TextFlags);
-
-    VOID LoadAndInsertText(UINT uStringID,
-        DWORD StringFlags);
-
-    VOID InsertVersionInfo(CAvailableApplicationInfo *Info);
-
-    VOID InsertLicenseInfo(CAvailableApplicationInfo *Info);
-
-    VOID InsertLanguageInfo(CAvailableApplicationInfo *Info);
+    VOID LoadAndInsertText(UINT uStringID, const ATL::CStringW &szText, DWORD TextFlags);
+    VOID LoadAndInsertText(UINT uStringID, DWORD StringFlags);
+    //VOID InsertVersionInfo(CAvailableApplicationInfo *Info);
+    //VOID InsertLicenseInfo(CAvailableApplicationInfo *Info);
+    //VOID InsertLanguageInfo(CAvailableApplicationInfo *Info);
 
 public:
-    BOOL ShowAvailableAppInfo(CAvailableApplicationInfo *Info);
+    //BOOL ShowAvailableAppInfo(CAvailableApplicationInfo *Info);
+    //BOOL ShowInstalledAppInfo(CInstalledApplicationInfo *Info);
+    BOOL ShowAppInfo(CApplicationInfo* Info);
 
-    inline VOID InsertTextWithString(UINT StringID, DWORD StringFlags, const ATL::CStringW &Text, DWORD TextFlags);
-
-    BOOL ShowInstalledAppInfo(CInstalledApplicationInfo *Info);
-
+    inline VOID InsertTextWithString(UINT StringID, const ATL::CStringW &Text, DWORD TextFlags);
     VOID SetWelcomeText();
 };
 
@@ -190,8 +181,8 @@ public:
 
     HWND Create(HWND hwndParent);
 
-    BOOL ShowAvailableAppInfo(CAvailableApplicationInfo *Info);
-    BOOL ShowInstalledAppInfo(CInstalledApplicationInfo *Info);
+    BOOL ShowAppInfo(CApplicationInfo* Info);
+    //BOOL ShowInstalledAppInfo(CInstalledApplicationInfo *Info);
 
     VOID SetWelcomeText();
 
@@ -240,9 +231,6 @@ public:
     VOID ColumnClick(LPNMLISTVIEW pnmv);
 
     BOOL AddColumn(INT Index, ATL::CStringW &Text, INT Width, INT Format);
-
-    int AddColumn(INT Index, LPWSTR lpText, INT Width, INT Format);
-
     void DeleteColumn(INT Index);
 
     INT AddItem(INT ItemIndex, INT IconIndex, LPCWSTR lpText, LPARAM lParam);
@@ -256,20 +244,17 @@ public:
     HWND Create(HWND hwndParent);
 
     BOOL GetCheckState(INT item);
-
     VOID SetCheckState(INT item, BOOL fCheck);
-
     VOID CheckAll();
 
     PVOID GetFocusedItemData();
 
     BOOL SetDisplayAppType(APPLICATION_VIEW_TYPE AppType);
-
     BOOL SetViewMode(DWORD ViewMode);
 
-    BOOL AddInstalledApplication(CInstalledApplicationInfo *InstAppInfo, LPVOID CallbackParam);
+    BOOL AddApplication(CApplicationInfo* AppInfo, LPVOID CallbackParam);
 
-    BOOL AddAvailableApplication(CAvailableApplicationInfo *AvlbAppInfo, BOOL InitCheckState, LPVOID CallbackParam);
+    //BOOL AddAvailableApplication(CAvailableApplicationInfo *AvlbAppInfo, BOOL InitCheckState, LPVOID CallbackParam);
 
     // this function is called when parent window receiving an notification about checkstate changing
     VOID ItemCheckStateNotify(int iItem, BOOL bCheck);
@@ -379,8 +364,8 @@ public:
     void SetFocusOnSearchBar();
     BOOL SetDisplayAppType(APPLICATION_VIEW_TYPE AppType);
 
-    BOOL AddInstalledApplication(CInstalledApplicationInfo *InstAppInfo, LPVOID param);
-    BOOL AddAvailableApplication(CAvailableApplicationInfo *AvlbAppInfo, BOOL InitCheckState, LPVOID param);
+    BOOL AddApplication(CApplicationInfo* InstAppInfo, LPVOID param);
+    //BOOL AddAvailableApplication(CAvailableApplicationInfo *AvlbAppInfo, BOOL InitCheckState, LPVOID param);
     VOID SetWatermark(const CStringW& Text);
 
 

@@ -138,7 +138,7 @@ BOOL StartProcess(const ATL::CStringW& Path, BOOL Wait)
     return TRUE;
 }
 
-BOOL GetStorageDirectory(ATL::CStringW& Directory)
+BOOL GetStorageDirectory(CStringW& Directory)
 {
     static CStringW CachedDirectory;
     static BOOL CachedDirectoryInitialized = FALSE;

@@ -92,9 +92,10 @@ CSideTreeView::~CSideTreeView()
 
 // **** CMainWindow ****
 
-CMainWindow::CMainWindow() :
-    m_ClientPanel(NULL),
-    SelectedEnumType(ENUM_ALL_INSTALLED)
+CMainWindow::CMainWindow(CApplicationDB* db)
+    : m_ClientPanel(NULL)
+    , m_Db(db)
+    , SelectedEnumType(ENUM_ALL_INSTALLED)
 {
 }
 
@@ -277,19 +278,21 @@ BOOL CMainWindow::RemoveSelectedAppFromRegistry()
 
     if (MessageBoxW(szMsgText, szMsgTitle, MB_YESNO | MB_ICONQUESTION) == IDYES)
     {
-        CInstalledApplicationInfo *InstalledApp = (CInstalledApplicationInfo *)m_ApplicationView->GetFocusedItemData();
+        CApplicationInfo *InstalledApp = (CApplicationInfo *)m_ApplicationView->GetFocusedItemData();
         if (!InstalledApp)
             return FALSE;
 
-        LSTATUS Result = InstalledApp->RemoveFromRegistry();
-        if (Result != ERROR_SUCCESS)
-        {
-            // TODO: popup a messagebox telling user it fails somehow
-            return FALSE;
-        }
+        __debugbreak();
+
+        //LSTATUS Result = InstalledApp->RemoveFromRegistry();
+        //if (Result != ERROR_SUCCESS)
+        //{
+        //    // TODO: popup a messagebox telling user it fails somehow
+        //    return FALSE;
+        //}
 
         // as it's already removed form registry, this will also remove it from the list
-        UpdateApplicationsList(-1);
+        UpdateApplicationsList(SelectedEnumType);
         return TRUE;
     }
 
@@ -301,11 +304,12 @@ BOOL CMainWindow::UninstallSelectedApp(BOOL bModify)
     if (!IsInstalledEnum(SelectedEnumType))
         return FALSE;
 
-    CInstalledApplicationInfo *InstalledApp = (CInstalledApplicationInfo *)m_ApplicationView->GetFocusedItemData();
+    CApplicationInfo *InstalledApp = (CApplicationInfo *)m_ApplicationView->GetFocusedItemData();
     if (!InstalledApp)
         return FALSE;
 
-    return InstalledApp->UninstallApplication(bModify);
+    __debugbreak();
+    return FALSE;// InstalledApp->UninstallApplication(bModify);
 }
 
 BOOL CMainWindow::ProcessWindowMessage(HWND hwnd, UINT Msg, WPARAM wParam, LPARAM lParam, LRESULT &theResult, DWORD dwMapId)
@@ -324,8 +328,9 @@ BOOL CMainWindow::ProcessWindowMessage(HWND hwnd, UINT Msg, WPARAM wParam, LPARA
         SaveSettings(hwnd, &SettingsInfo);
 
         FreeLogs();
-        m_AvailableApps.FreeCachedEntries();
-        m_InstalledApps.FreeCachedEntries();
+        __debugbreak();
+        //m_AvailableApps.FreeCachedEntries();
+        //m_InstalledApps.FreeCachedEntries();
 
         delete m_ClientPanel;
 
@@ -489,7 +494,7 @@ BOOL CMainWindow::ProcessWindowMessage(HWND hwnd, UINT Msg, WPARAM wParam, LPARA
         {
             ::KillTimer(hwnd, SEARCH_TIMER_ID);
 
-            UpdateApplicationsList(-1);
+            UpdateApplicationsList(SelectedEnumType);
         }
         break;
     }
@@ -552,6 +557,8 @@ VOID CMainWindow::OnCommand(WPARAM wParam, LPARAM lParam)
         case ID_INSTALL:
             if (IsAvailableEnum(SelectedEnumType))
             {
+                __debugbreak();
+#if 0
                 ATL::CSimpleArray<CAvailableApplicationInfo> AppsList;
 
                 // enum all selected apps
@@ -582,17 +589,18 @@ VOID CMainWindow::OnCommand(WPARAM wParam, LPARAM lParam)
                         // or at least popup a messagebox telling user to select/check some app first
                     }
                 }
+#endif
             }
             break;
 
         case ID_UNINSTALL:
             if (UninstallSelectedApp(FALSE))
-                UpdateApplicationsList(-1);
+                UpdateApplicationsList(SelectedEnumType);
             break;
 
         case ID_MODIFY:
             if (UninstallSelectedApp(TRUE))
-                UpdateApplicationsList(-1);
+                UpdateApplicationsList(SelectedEnumType);
             break;
 
         case ID_REGREMOVE:
@@ -600,12 +608,14 @@ VOID CMainWindow::OnCommand(WPARAM wParam, LPARAM lParam)
             break;
 
         case ID_REFRESH:
-            UpdateApplicationsList(-1);
+            UpdateApplicationsList(SelectedEnumType);
             break;
 
         case ID_RESETDB:
-            CAvailableApps::ForceUpdateAppsDB();
-            UpdateApplicationsList(-1);
+            //CAvailableApps::ForceUpdateAppsDB();
+            __debugbreak();
+
+            UpdateApplicationsList(SelectedEnumType);
             break;
 
         case ID_HELP:
@@ -623,68 +633,62 @@ VOID CMainWindow::OnCommand(WPARAM wParam, LPARAM lParam)
     }
 }
 
-BOOL CALLBACK CMainWindow::EnumInstalledAppProc(CInstalledApplicationInfo *Info)
-{
-    if (!SearchPatternMatch(Info->szDisplayName.GetString(), szSearchPattern))
-    {
-        return TRUE;
-    }
-    return m_ApplicationView->AddInstalledApplication(Info, Info); // currently, the callback param is Info itself
-}
-
-BOOL CALLBACK CMainWindow::EnumAvailableAppProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState)
-{
-    if (!SearchPatternMatch(Info->m_szName.GetString(), szSearchPattern) &&
-        !SearchPatternMatch(Info->m_szDesc.GetString(), szSearchPattern))
-    {
-        return TRUE;
-    }
-    return m_ApplicationView->AddAvailableApplication(Info, bInitialCheckState, Info); // currently, the callback param is Info itself
-}
-
-BOOL CALLBACK CMainWindow::s_EnumInstalledAppProc(CInstalledApplicationInfo *Info, PVOID param)
-{
-    CMainWindow *pThis = (CMainWindow *)param;
-    return pThis->EnumInstalledAppProc(Info);
-}
-
-BOOL CALLBACK CMainWindow::s_EnumAvailableAppProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState, PVOID param)
-{
-    CMainWindow *pThis = (CMainWindow *)param;
-    return pThis->EnumAvailableAppProc(Info, bInitialCheckState);
-}
-
-BOOL CALLBACK CMainWindow::s_EnumSelectedAppForDownloadProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState, PVOID param)
-{
-    ATL::CSimpleArray<CAvailableApplicationInfo> *pAppList = (ATL::CSimpleArray<CAvailableApplicationInfo> *)param;
-    pAppList->Add(*Info);
-    return TRUE;
-}
+//BOOL CALLBACK CMainWindow::EnumInstalledAppProc(CInstalledApplicationInfo *Info)
+//{
+//    if (!SearchPatternMatch(Info->szDisplayName, szSearchPattern))
+//    {
+//        return TRUE;
+//    }
+//    return m_ApplicationView->AddInstalledApplication(Info, Info); // currently, the callback param is Info itself
+//}
+//
+//BOOL CALLBACK CMainWindow::EnumAvailableAppProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState)
+//{
+//    if (!SearchPatternMatch(Info->m_szName, szSearchPattern) &&
+//        !SearchPatternMatch(Info->m_szDesc, szSearchPattern))
+//    {
+//        return TRUE;
+//    }
+//    return m_ApplicationView->AddAvailableApplication(Info, bInitialCheckState, Info); // currently, the callback param is Info itself
+//}
+//
+//BOOL CALLBACK CMainWindow::s_EnumInstalledAppProc(CInstalledApplicationInfo *Info, PVOID param)
+//{
+//    CMainWindow *pThis = (CMainWindow *)param;
+//    return pThis->EnumInstalledAppProc(Info);
+//}
+//
+//BOOL CALLBACK CMainWindow::s_EnumAvailableAppProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState, PVOID param)
+//{
+//    CMainWindow *pThis = (CMainWindow *)param;
+//    return pThis->EnumAvailableAppProc(Info, bInitialCheckState);
+//}
+//
+//BOOL CALLBACK CMainWindow::s_EnumSelectedAppForDownloadProc(CAvailableApplicationInfo *Info, BOOL bInitialCheckState, PVOID param)
+//{
+//    ATL::CSimpleArray<CAvailableApplicationInfo> *pAppList = (ATL::CSimpleArray<CAvailableApplicationInfo> *)param;
+//    pAppList->Add(*Info);
+//    return TRUE;
+//}
 
 VOID CMainWindow::UpdateStatusBarText()
 {
     if (m_StatusBar)
     {
         ATL::CStringW szBuffer;
+        __debugbreak();
 
-        szBuffer.Format(IDS_APPS_COUNT, m_ApplicationView->GetItemCount(), m_AvailableApps.GetSelectedCount());
+        szBuffer.Format(IDS_APPS_COUNT, m_ApplicationView->GetItemCount(), 0/*m_AvailableApps.GetSelectedCount()*/);
         m_StatusBar->SetText(szBuffer);
     }
 }
 
-VOID CMainWindow::UpdateApplicationsList(INT EnumType)
+VOID CMainWindow::UpdateApplicationsList(AppsCategories EnumType)
 {
     bUpdating = TRUE;
 
-    if (EnumType == -1)
-    {
-        // keep the old enum type
-        EnumType = SelectedEnumType;
-    }
-    else
-    {
+    if (SelectedEnumType != EnumType)
         SelectedEnumType = EnumType;
-    }
 
     m_ApplicationView->SetRedraw(FALSE);
     if (IsInstalledEnum(EnumType))
@@ -693,7 +697,8 @@ VOID CMainWindow::UpdateApplicationsList(INT EnumType)
         m_ApplicationView->SetDisplayAppType(AppViewTypeInstalledApps);
 
         // enum installed softwares
-        m_InstalledApps.Enum(EnumType, s_EnumInstalledAppProc, this);
+        __debugbreak();
+        //m_InstalledApps.Enum(EnumType, s_EnumInstalledAppProc, this);
     }
     else if (IsAvailableEnum(EnumType))
     {
@@ -701,7 +706,30 @@ VOID CMainWindow::UpdateApplicationsList(INT EnumType)
         m_ApplicationView->SetDisplayAppType(AppViewTypeAvailableApps);
 
         // enum available softwares
-        m_AvailableApps.Enum(EnumType, s_EnumAvailableAppProc, this);
+//        __debugbreak();
+        CAtlList<CApplicationInfo*> List;
+        m_Db->GetApps(List, EnumType);
+        POSITION CurrentListPosition = List.GetHeadPosition();
+        while (CurrentListPosition)
+        {
+            CApplicationInfo* Info = List.GetNext(CurrentListPosition);
+            if (szSearchPattern.IsEmpty() ||
+                SearchPatternMatch(Info->szDisplayName, szSearchPattern) ||
+                SearchPatternMatch(Info->szComments, szSearchPattern))
+            {
+
+                m_ApplicationView->AddApplication(Info, /*bInitialCheckState,*/ Info); // currently, the callback param is Info itself
+            }
+        }
+            //    if (!SearchPatternMatch(Info->m_szName, szSearchPattern) &&
+//        !SearchPatternMatch(Info->m_szDesc, szSearchPattern))
+//    {
+//        return TRUE;
+//    }
+//    return m_ApplicationView->AddAvailableApplication(Info, bInitialCheckState, Info); // currently, the callback param is Info itself
+
+
+       // m_AvailableApps.Enum(EnumType, s_EnumAvailableAppProc, this);
     }
     m_ApplicationView->SetRedraw(TRUE);
     m_ApplicationView->RedrawWindow(0, 0, RDW_INVALIDATE | RDW_ALLCHILDREN); // force the child window to repaint
@@ -766,17 +794,19 @@ BOOL CMainWindow::ItemCheckStateChanged(BOOL bChecked, LPVOID CallbackParam)
     {
         if (bChecked)
         {
-            if (!m_AvailableApps.AddSelected((CAvailableApplicationInfo *)CallbackParam))
-            {
-                return FALSE;
-            }
+            __debugbreak();
+            //if (!m_AvailableApps.AddSelected((CAvailableApplicationInfo *)CallbackParam))
+            //{
+            //    return FALSE;
+            //}
         }
         else
         {
-            if (!m_AvailableApps.RemoveSelected((CAvailableApplicationInfo *)CallbackParam))
-            {
-                return FALSE;
-            }
+            __debugbreak();
+            //if (!m_AvailableApps.RemoveSelected((CAvailableApplicationInfo *)CallbackParam))
+            //{
+            //    return FALSE;
+            //}
         }
 
         UpdateStatusBarText();
@@ -790,29 +820,31 @@ BOOL CMainWindow::ItemCheckStateChanged(BOOL bChecked, LPVOID CallbackParam)
 
 // this function is called when one or more application(s) should be installed install
 // if Info is not zero, this app should be installed. otherwise those checked apps should be installed
-BOOL CMainWindow::InstallApplication(CAvailableApplicationInfo *Info)
+BOOL CMainWindow::InstallApplication(CApplicationInfo *Info)
 {
     if (Info)
     {
         if (DownloadApplication(Info))
         {
-            UpdateApplicationsList(-1);
+            UpdateApplicationsList(SelectedEnumType);
             return TRUE;
         }
     }
     else
     {
-        ATL::CSimpleArray<CAvailableApplicationInfo> AppsList;
+        ATL::CSimpleArray<CApplicationInfo> AppsList;
 
         // enum all selected apps
-        m_AvailableApps.Enum(ENUM_CAT_SELECTED, s_EnumSelectedAppForDownloadProc, (PVOID)&AppsList);
+        __debugbreak();
+       // m_AvailableApps.Enum(ENUM_CAT_SELECTED, s_EnumSelectedAppForDownloadProc, (PVOID)&AppsList);
 
         if (AppsList.GetSize())
         {
             if (DownloadListOfApplications(AppsList, FALSE))
             {
-                m_AvailableApps.RemoveAllSelected();
-                UpdateApplicationsList(-1);
+                __debugbreak();
+                //m_AvailableApps.RemoveAllSelected();
+                UpdateApplicationsList(SelectedEnumType);
                 return TRUE;
             }
         }
@@ -871,12 +903,12 @@ void CMainWindow::HandleTabOrder(int direction)
 
 
 
-VOID MainWindowLoop(INT nShowCmd)
+VOID MainWindowLoop(CApplicationDB* db, INT nShowCmd)
 {
     HACCEL KeyBrd;
     MSG Msg;
 
-    CMainWindow* wnd = new CMainWindow();
+    CMainWindow* wnd = new CMainWindow(db);
     if (!wnd)
         return;
 

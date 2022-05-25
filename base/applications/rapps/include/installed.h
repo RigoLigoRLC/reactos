@@ -51,13 +51,13 @@ public:
 
 typedef BOOL(CALLBACK *APPENUMPROC)(CInstalledApplicationInfo * Info, PVOID param);
 
-class CInstalledApps
-{
-    ATL::CAtlList<CInstalledApplicationInfo *> m_InfoList;
-
-public:
-    BOOL Enum(INT EnumType, APPENUMPROC lpEnumProc, PVOID param);
-
-    VOID FreeCachedEntries();
-};
+//class CInstalledApps
+//{
+//    ATL::CAtlList<CInstalledApplicationInfo *> m_InfoList;
+//
+//public:
+//    BOOL Enum(INT EnumType, APPENUMPROC lpEnumProc, PVOID param);
+//
+//    VOID FreeCachedEntries();
+//};
 
