@@ -76,9 +76,12 @@ class CApplicationDB
 {
 private:
     CPathW m_BasePath;
-    CAtlList<CApplicationInfo*> m_List;
+    CAtlList<CApplicationInfo*> m_Available;
+    CAtlList<CApplicationInfo*> m_Installed;
 
     BOOL EnumerateFiles();
+
+    CApplicationInfo* FindByPackageName(const CStringW& name);
 
 public:
 
@@ -87,8 +90,9 @@ public:
     void GetApps(CAtlList<CApplicationInfo*>& List, AppsCategories Type) const;
 
 
-    BOOL Update();
-    BOOL ForceUpdate();
+    VOID UpdateAvailable();
+    VOID UpdateInstalled();
+    VOID ForceUpdateAvailable();
     VOID Delete();
 
 };

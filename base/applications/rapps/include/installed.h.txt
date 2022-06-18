@@ -3,6 +3,7 @@
 #include <windef.h>
 #include <atlstr.h>
 
+#if 0
 class CInstalledApplicationInfo
 {
 private:
@@ -48,8 +49,8 @@ public:
     CStringW szModifyPath;
 
 };
-
-typedef BOOL(CALLBACK *APPENUMPROC)(CInstalledApplicationInfo * Info, PVOID param);
+#endif
+//typedef BOOL(CALLBACK *APPENUMPROC)(CInstalledApplicationInfo * Info, PVOID param);
 
 //class CInstalledApps
 //{

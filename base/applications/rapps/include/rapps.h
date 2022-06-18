@@ -10,8 +10,6 @@
 #include "dialogs.h"
 #include "applicationinfo.h"
 #include "applicationdb.h"
-//#include "installed.h"
-//#include "available.h"
 #include "misc.h"
 #include "configparser.h"
 

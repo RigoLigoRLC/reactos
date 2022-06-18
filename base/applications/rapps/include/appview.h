@@ -252,7 +252,7 @@ public:
     BOOL SetDisplayAppType(APPLICATION_VIEW_TYPE AppType);
     BOOL SetViewMode(DWORD ViewMode);
 
-    BOOL AddApplication(CApplicationInfo* AppInfo, LPVOID CallbackParam);
+    BOOL AddApplication(CApplicationInfo* AppInfo, BOOL InitialCheckState);
 
     //BOOL AddAvailableApplication(CAvailableApplicationInfo *AvlbAppInfo, BOOL InitCheckState, LPVOID CallbackParam);
 
@@ -364,7 +364,7 @@ public:
     void SetFocusOnSearchBar();
     BOOL SetDisplayAppType(APPLICATION_VIEW_TYPE AppType);
 
-    BOOL AddApplication(CApplicationInfo* InstAppInfo, LPVOID param);
+    BOOL AddApplication(CApplicationInfo* InstAppInfo, BOOL InitialCheckState);
     //BOOL AddAvailableApplication(CAvailableApplicationInfo *AvlbAppInfo, BOOL InitCheckState, LPVOID param);
     VOID SetWatermark(const CStringW& Text);
 

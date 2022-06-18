@@ -17,14 +17,10 @@ VOID CMainToolbar::AddImageToImageList(HIMAGELIST hImageList, UINT ImageIndex)
 {
     HICON hImage;
 
-    if (!(hImage = (HICON)LoadImageW(hInst,
-        MAKEINTRESOURCE(ImageIndex),
-        IMAGE_ICON,
-        m_iToolbarHeight,
-        m_iToolbarHeight,
-        0)))
+    if (!(hImage =
+              (HICON)LoadImageW(hInst, MAKEINTRESOURCE(ImageIndex), IMAGE_ICON, m_iToolbarHeight, m_iToolbarHeight, 0)))
     {
-        /* TODO: Error message */
+        return;
     }
 
     ImageList_AddIcon(hImageList, hImage);
@@ -36,13 +32,9 @@ HIMAGELIST CMainToolbar::InitImageList()
     HIMAGELIST hImageList;
 
     /* Create the toolbar icon image list */
-    hImageList = ImageList_Create(m_iToolbarHeight,//GetSystemMetrics(SM_CXSMICON),
-        m_iToolbarHeight,//GetSystemMetrics(SM_CYSMICON),
-        ILC_MASK | GetSystemColorDepth(),
-        1, 1);
+    hImageList = ImageList_Create(m_iToolbarHeight, m_iToolbarHeight, ILC_MASK | GetSystemColorDepth(), 1, 1);
     if (!hImageList)
     {
-        /* TODO: Error message */
         return NULL;
     }
 
@@ -131,7 +123,6 @@ HWND CMainToolbar::Create(HWND hwndParent)
 
     if (!m_hWnd)
     {
-        /* TODO: Show error message */
         return FALSE;
     }
 
@@ -141,13 +132,11 @@ HWND CMainToolbar::Create(HWND hwndParent)
     /* Set image list */
     HIMAGELIST hImageList = InitImageList();
 
-    if (!hImageList)
+    if (hImageList)
     {
-        /* TODO: Show error message */
-        return FALSE;
+        ImageList_Destroy(SetImageList(hImageList));
     }
 
-    ImageList_Destroy(SetImageList(hImageList));
 
     AddButtons(_countof(Buttons), Buttons);
 
@@ -1035,21 +1024,27 @@ ATL::CWndClassInfo &CAppInfoDisplay::GetWndClassInfo()
     DWORD csStyle = CS_VREDRAW | CS_HREDRAW;
     static ATL::CWndClassInfo wc =
     {
+        /*.m_wc=*/
         {
-            sizeof(WNDCLASSEX),
-            csStyle,
-            StartWindowProc,
-            0,
-            0,
-            NULL,
-            NULL,
-            NULL,
-            (HBRUSH)(COLOR_BTNFACE + 1),
-            NULL,
-            L"RAppsAppInfo",
-            NULL
+            /*cbSize=*/sizeof(WNDCLASSEX),
+            /*style=*/csStyle,
+            /*lpfnWndProc=*/StartWindowProc,
+            /*cbClsExtra=*/0,
+            /*cbWndExtra=*/0,
+            /*hInstance=*/NULL,
+            /*hIcon=*/NULL,
+            /*hCursor*/NULL,
+            /*hbrBackground=*/(HBRUSH)(COLOR_BTNFACE + 1),
+            /*lpszMenuName=*/NULL,
+            /*lpszClassName=*/L"RAppsAppInfo",
+            /*hIconSm=*/NULL
         },
-        NULL, NULL, IDC_ARROW, TRUE, 0, _T("")
+        /*m_lpszOrigName=*/NULL,
+        /*pWndProc=*/NULL,
+        /*m_lpszCursorID=*/IDC_ARROW,
+        /*m_bSystemCursor*/TRUE,
+        /*m_atom=*/0,
+        /*m_szAutoName=*/_T("")
     };
     return wc;
 }
@@ -1064,12 +1059,11 @@ HWND CAppInfoDisplay::Create(HWND hwndParent)
 BOOL CAppInfoDisplay::ShowAppInfo(CApplicationInfo *Info)
 {
     ATL::CStringW ScrnshotLocation;
-    __debugbreak();
-    //if (Info->RetrieveScrnshot(0, ScrnshotLocation))
-    //{
-    //    ScrnshotPrev->DisplayImage(ScrnshotLocation);
-    //}
-    //else
+    if (Info->RetrieveScreenshot(ScrnshotLocation))
+    {
+        ScrnshotPrev->DisplayImage(ScrnshotLocation);
+    }
+    else
     {
         ScrnshotPrev->DisplayEmpty();
     }
@@ -1308,7 +1302,6 @@ HWND CAppsListView::Create(HWND hwndParent)
         GetSystemColorDepth() | ILC_MASK,
         0, 1);
 
-    // currently, this two Imagelist is the same one.
     SetImageList(m_hImageListView, LVSIL_SMALL);
     SetImageList(m_hImageListView, LVSIL_NORMAL);
 
@@ -1363,7 +1356,8 @@ PVOID CAppsListView::GetFocusedItemData()
 
 BOOL CAppsListView::SetDisplayAppType(APPLICATION_VIEW_TYPE AppType)
 {
-    if (!DeleteAllItems()) return FALSE;
+    if (!DeleteAllItems())
+        return FALSE;
     ApplicationViewType = AppType;
 
     bIsAscending = TRUE;
@@ -1429,36 +1423,36 @@ BOOL CAppsListView::SetViewMode(DWORD ViewMode)
     return SendMessage(LVM_SETVIEW, (WPARAM)ViewMode, 0) == 1;
 }
 
-BOOL CAppsListView::AddApplication(CApplicationInfo *AppInfo, LPVOID CallbackParam)
+BOOL CAppsListView::AddApplication(CApplicationInfo *AppInfo, BOOL InitialCheckState)
 {
-        __debugbreak();
+        //__debugbreak();
     if (ApplicationViewType == AppViewTypeInstalledApps)
     {
         /* Load icon from registry */
         HICON hIcon = NULL;
         ATL::CStringW szIconPath;
-        //if (AppInfo->RetrieveIcon(szIconPath))
-        //{
-        //    PathParseIconLocationW((LPWSTR)szIconPath.GetString());
+        if (AppInfo->RetrieveIcon(szIconPath))
+        {
+            PathParseIconLocationW((LPWSTR)szIconPath.GetString());
 
-        //    /* Load only the 1st icon from the application executable,
-        //     * because all apps provide the executables which have the main icon
-        //     * as 1st in the index , so we don't need other icons here */
-        //    hIcon = ExtractIconW(hInst,
-        //                         szIconPath.GetString(),
-        //                         0);
-        //}
+            /* Load only the 1st icon from the application executable,
+             * because all apps provide the executables which have the main icon
+             * as 1st in the index , so we don't need other icons here */
+            hIcon = ExtractIconW(hInst,
+                                 szIconPath.GetString(),
+                                 0);
+        }
 
         if (!hIcon)
         {
-        /* Load default icon */
+            /* Load default icon */
             hIcon = LoadIconW(hInst, MAKEINTRESOURCEW(IDI_MAIN));
         }
 
         int IconIndex = ImageList_AddIcon(m_hImageListView, hIcon);
         DestroyIcon(hIcon);
 
-        int Index = AddItem(ItemCount, IconIndex, AppInfo->szDisplayName, (LPARAM)CallbackParam);
+        int Index = AddItem(ItemCount, IconIndex, AppInfo->szDisplayName, (LPARAM)AppInfo);
         SetItemText(Index, 1, AppInfo->szDisplayVersion.IsEmpty() ? L"---" : AppInfo->szDisplayVersion);
         SetItemText(Index, 2, AppInfo->szComments.IsEmpty() ? L"---" : AppInfo->szComments);
 
@@ -1469,30 +1463,25 @@ BOOL CAppsListView::AddApplication(CApplicationInfo *AppInfo, LPVOID CallbackPar
     {
         /* Load icon from file */
         HICON hIcon = NULL;
-        ATL::CStringW szIconPath;
-        //if (AvlbAppInfo->RetrieveIcon(szIconPath))
-        //{
-        //    hIcon = (HICON)LoadImageW(NULL,
-        //        szIconPath.GetString(),
-        //        IMAGE_ICON,
-        //        LISTVIEW_ICON_SIZE,
-        //        LISTVIEW_ICON_SIZE,
-        //        LR_LOADFROMFILE);
-        //}
-
-        if (!hIcon || GetLastError() != ERROR_SUCCESS)
+        CStringW szIconPath;
+        if (AppInfo->RetrieveIcon(szIconPath))
         {
-        /* Load default icon */
-        hIcon = LoadIconW(hInst, MAKEINTRESOURCEW(IDI_MAIN));
+            hIcon = (HICON)LoadImageW(NULL, szIconPath, IMAGE_ICON, LISTVIEW_ICON_SIZE, LISTVIEW_ICON_SIZE, LR_LOADFROMFILE);
+        }
+
+        if (!hIcon)
+        {
+            /* Load default icon */
+            hIcon = LoadIconW(hInst, MAKEINTRESOURCEW(IDI_MAIN));
         }
 
         int IconIndex = ImageList_AddIcon(m_hImageListView, hIcon);
         DestroyIcon(hIcon);
 
-        int Index = AddItem(ItemCount, IconIndex, AppInfo->szDisplayName, (LPARAM)CallbackParam);
+        int Index = AddItem(ItemCount, IconIndex, AppInfo->szDisplayName, (LPARAM)AppInfo);
 
-        __debugbreak();
-        if (/*InitCheckState*/TRUE)
+        //__debugbreak();
+        if (InitialCheckState)
         {
             SetCheckState(Index, TRUE);
         }
@@ -2036,22 +2025,23 @@ BOOL CApplicationView::SetDisplayAppType(APPLICATION_VIEW_TYPE AppType)
     return TRUE;
 }
 
-BOOL CApplicationView::AddApplication(CApplicationInfo *AppInfo, LPVOID param)
+BOOL CApplicationView::AddApplication(CApplicationInfo *AppInfo, BOOL InitialCheckState)
 {
     //__debugbreak();
-    if (ApplicationViewType == AppViewTypeInstalledApps)
-    {
-        return m_ListView->AddApplication(AppInfo, param);
-    }
-    else if (ApplicationViewType == AppViewTypeAvailableApps)
-    {
-        return m_ListView->AddApplication(AppInfo, /*InitCheckState, */param);
+    return m_ListView->AddApplication(AppInfo, InitialCheckState);
+    //if (ApplicationViewType == AppViewTypeInstalledApps)
+    //{
+    //}
+    //else if (ApplicationViewType == AppViewTypeAvailableApps)
+    //{
+    //    return m_ListView->AddApplication(AppInfo, /*InitCheckState, */param);
 
-    }
-    else
-    {
-        return FALSE;
-    }
+    //}
+    //else
+    //{
+    //    __debugbreak();
+    //    return FALSE;
+    //}
 }
 
 //BOOL CApplicationView::AddAvailableApplication(CAvailableApplicationInfo *AvlbAppInfo, BOOL InitCheckState, LPVOID param)
@@ -2097,14 +2087,12 @@ VOID CApplicationView::AppendTabOrderWindow(int Direction, ATL::CSimpleArray<HWN
 // CallbackParam is the param passed to listview when adding the item (the one getting focus now).
 BOOL CApplicationView::ItemGetFocus(LPVOID CallbackParam)
 {
-    __debugbreak();
     switch (ApplicationViewType)
     {
     case AppViewTypeInstalledApps:
-        return m_AppsInfo->ShowAppInfo((CApplicationInfo *)CallbackParam);
-
     case AppViewTypeAvailableApps:
         return m_AppsInfo->ShowAppInfo((CApplicationInfo *)CallbackParam);
+
 
     case AppViewTypeEmpty:
     default:

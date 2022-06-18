@@ -9,11 +9,11 @@ list(APPEND SOURCE
     applicationinfo.cpp
     appview.cpp
     asyncinet.cpp
-    available.cpp
+    available.cpp.txt
     cabinet.cpp
     configparser.cpp
     gui.cpp
-    installed.cpp
+    installed.cpp.txt
     integrity.cpp
     loaddlg.cpp
     misc.cpp
@@ -25,13 +25,13 @@ list(APPEND SOURCE
     include/applicationinfo.h
     include/appview.h
     include/asyncinet.h
-    include/available.h
+    include/available.h.txt
     include/configparser.h
     include/crichedit.h
     include/defines.h
     include/dialogs.h
     include/gui.h
-    include/installed.h
+    include/installed.h.txt
     include/misc.h
     include/rapps.h
     include/resource.h
