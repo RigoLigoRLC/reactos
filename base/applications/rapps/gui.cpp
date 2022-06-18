@@ -328,7 +328,7 @@ BOOL CMainWindow::ProcessWindowMessage(HWND hwnd, UINT Msg, WPARAM wParam, LPARA
         SaveSettings(hwnd, &SettingsInfo);
 
         FreeLogs();
-        __debugbreak();
+       // __debugbreak();
         //m_AvailableApps.FreeCachedEntries();
         //m_InstalledApps.FreeCachedEntries();
 
@@ -612,8 +612,8 @@ VOID CMainWindow::OnCommand(WPARAM wParam, LPARAM lParam)
             break;
 
         case ID_RESETDB:
-            //CAvailableApps::ForceUpdateAppsDB();
-            __debugbreak();
+            m_Db->ForceUpdateAvailable();
+            m_Selected.RemoveAll();
 
             UpdateApplicationsList(SelectedEnumType);
             break;
@@ -676,10 +676,26 @@ VOID CMainWindow::UpdateStatusBarText()
     if (m_StatusBar)
     {
         ATL::CStringW szBuffer;
-        __debugbreak();
+        //__debugbreak();
 
-        szBuffer.Format(IDS_APPS_COUNT, m_ApplicationView->GetItemCount(), 0/*m_AvailableApps.GetSelectedCount()*/);
+        szBuffer.Format(IDS_APPS_COUNT, m_ApplicationView->GetItemCount(), m_Selected.GetCount());
         m_StatusBar->SetText(szBuffer);
+    }
+}
+
+VOID CMainWindow::AddApplications(CAtlList<CApplicationInfo*>& List)
+{
+    POSITION CurrentListPosition = List.GetHeadPosition();
+    while (CurrentListPosition)
+    {
+        CApplicationInfo* Info = List.GetNext(CurrentListPosition);
+        if (szSearchPattern.IsEmpty() ||
+            SearchPatternMatch(Info->szDisplayName, szSearchPattern) ||
+            SearchPatternMatch(Info->szComments, szSearchPattern))
+        {
+            BOOL bSelected = m_Selected.Find(Info) != NULL;
+            m_ApplicationView->AddApplication(Info, bSelected);
+        }
     }
 }
 
@@ -696,9 +712,9 @@ VOID CMainWindow::UpdateApplicationsList(AppsCategories EnumType)
         // set the display type of application-view. this will remove all the item in application-view too.
         m_ApplicationView->SetDisplayAppType(AppViewTypeInstalledApps);
 
-        // enum installed softwares
-        __debugbreak();
-        //m_InstalledApps.Enum(EnumType, s_EnumInstalledAppProc, this);
+        CAtlList<CApplicationInfo*> List;
+        m_Db->GetApps(List, EnumType);
+        AddApplications(List);
     }
     else if (IsAvailableEnum(EnumType))
     {
@@ -706,30 +722,16 @@ VOID CMainWindow::UpdateApplicationsList(AppsCategories EnumType)
         m_ApplicationView->SetDisplayAppType(AppViewTypeAvailableApps);
 
         // enum available softwares
-//        __debugbreak();
-        CAtlList<CApplicationInfo*> List;
-        m_Db->GetApps(List, EnumType);
-        POSITION CurrentListPosition = List.GetHeadPosition();
-        while (CurrentListPosition)
+        if (EnumType == ENUM_CAT_SELECTED)
         {
-            CApplicationInfo* Info = List.GetNext(CurrentListPosition);
-            if (szSearchPattern.IsEmpty() ||
-                SearchPatternMatch(Info->szDisplayName, szSearchPattern) ||
-                SearchPatternMatch(Info->szComments, szSearchPattern))
-            {
-
-                m_ApplicationView->AddApplication(Info, /*bInitialCheckState,*/ Info); // currently, the callback param is Info itself
-            }
+            AddApplications(m_Selected);
         }
-            //    if (!SearchPatternMatch(Info->m_szName, szSearchPattern) &&
-//        !SearchPatternMatch(Info->m_szDesc, szSearchPattern))
-//    {
-//        return TRUE;
-//    }
-//    return m_ApplicationView->AddAvailableApplication(Info, bInitialCheckState, Info); // currently, the callback param is Info itself
-
-
-       // m_AvailableApps.Enum(EnumType, s_EnumAvailableAppProc, this);
+        else
+        {
+            CAtlList<CApplicationInfo*> List;
+            m_Db->GetApps(List, EnumType);
+            AddApplications(List);
+        }
     }
     m_ApplicationView->SetRedraw(TRUE);
     m_ApplicationView->RedrawWindow(0, 0, RDW_INVALIDATE | RDW_ALLCHILDREN); // force the child window to repaint
@@ -790,32 +792,30 @@ HWND CMainWindow::Create()
 // CallbackParam is the param passed to application-view when adding the item (the one getting focus now).
 BOOL CMainWindow::ItemCheckStateChanged(BOOL bChecked, LPVOID CallbackParam)
 {
-    if (!bUpdating)
+    if (bUpdating)
+        return TRUE;
+
+    CApplicationInfo* Info = (CApplicationInfo*)CallbackParam;
+
+    if (bChecked)
     {
-        if (bChecked)
+        m_Selected.AddTail(Info);
+    }
+    else
+    {
+        POSITION Pos = m_Selected.Find(Info);
+        if (Pos != NULL)
         {
-            __debugbreak();
-            //if (!m_AvailableApps.AddSelected((CAvailableApplicationInfo *)CallbackParam))
-            //{
-            //    return FALSE;
-            //}
+            m_Selected.RemoveAt(Pos);
         }
         else
         {
             __debugbreak();
-            //if (!m_AvailableApps.RemoveSelected((CAvailableApplicationInfo *)CallbackParam))
-            //{
-            //    return FALSE;
-            //}
         }
+    }
 
-        UpdateStatusBarText();
-        return TRUE;
-    }
-    else
-    {
-        return TRUE;
-    }
+    UpdateStatusBarText();
+    return TRUE;
 }
 
 // this function is called when one or more application(s) should be installed install
@@ -862,7 +862,7 @@ BOOL CMainWindow::SearchTextChanged(ATL::CStringW &SearchText)
 
     szSearchPattern = SearchText;
 
-    DWORD dwDelay;
+    DWORD dwDelay = 0;
     SystemParametersInfoW(SPI_GETMENUSHOWDELAY, 0, &dwDelay, 0);
     SetTimer(SEARCH_TIMER_ID, dwDelay);
 

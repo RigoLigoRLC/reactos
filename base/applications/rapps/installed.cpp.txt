@@ -12,6 +12,7 @@
 #include "installed.h"
 #include "misc.h"
 
+#if 0
 CInstalledApplicationInfo::CInstalledApplicationInfo(BOOL bIsUserKey, REGSAM RegWowKey, HKEY hKey, const CStringW& szKeyName)
     : m_IsUserKey(bIsUserKey)
     , m_WowKey(RegWowKey)
@@ -370,4 +371,6 @@ VOID CInstalledApps::FreeCachedEntries()
 
     m_InfoList.RemoveAll();
 }
+#endif
+
 #endif

@@ -549,13 +549,16 @@ public:
 
     CUiSplitPanel()
     {
+        m_hCursor = NULL;
         m_Width = CUiMeasure::FitParent();
         m_Height = CUiMeasure::FitParent();
         m_Pos = 100;
+        m_Horizontal = FALSE;
         m_MinFirst = 100;
         m_MinSecond = 100;
         m_DynamicFirst = FALSE;
         m_HasOldRect = FALSE;
+        memset(&m_LastRect, 0, sizeof(m_LastRect));
     }
 
     virtual ~CUiSplitPanel()

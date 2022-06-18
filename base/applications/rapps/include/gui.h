@@ -55,6 +55,8 @@ class CMainWindow :
     CApplicationView *m_ApplicationView = NULL;
 
     CApplicationDB* m_Db;
+    CAtlList<CApplicationInfo*> m_Selected;
+
     //CAvailableApps m_AvailableApps;
     //CInstalledApps m_InstalledApps;
 
@@ -105,6 +107,7 @@ private:
     VOID UpdateStatusBarText();
 
     VOID UpdateApplicationsList(AppsCategories EnumType);
+    VOID AddApplications(CAtlList<CApplicationInfo*>& List);
 
 public:
     static ATL::CWndClassInfo &GetWndClassInfo();

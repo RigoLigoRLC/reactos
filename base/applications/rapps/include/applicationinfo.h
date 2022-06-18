@@ -2,6 +2,7 @@
 
 //#include <windef.h>
 #include <atlstr.h>
+#include <atlpath.h>
 //#include <atlsimpcoll.h>
 //#include <atlcoll.h>
 
@@ -9,7 +10,6 @@
 //#include "configparser.h"
 
 
-//#define MAX_SCRNSHOT_NUM 16
 
 //enum LicenseType
 //{
@@ -42,16 +42,20 @@ class CApplicationInfo
 {
 public:
 
-    CApplicationInfo();
+    CApplicationInfo(const CStringW& Identifier, AppsCategories Category);
     virtual ~CApplicationInfo();
+
+    const CStringW szIdentifier;  // PkgName or KeyName
+    const AppsCategories iCategory;
 
     CStringW szDisplayIcon;
     CStringW szDisplayName;
     CStringW szDisplayVersion;
     CStringW szComments;
-    AppsCategories iCategory;
 
     virtual BOOL Valid() const = 0;
+    virtual BOOL RetrieveIcon(CStringW& Path) const = 0;
+    virtual BOOL RetrieveScreenshot(CStringW& Path) = 0;
 
     //INT m_Category;
     //BOOL m_IsSelected;
@@ -120,13 +124,34 @@ class CAvailableApplicationInfo
     : public CApplicationInfo
 {
     class CConfigParser* m_Parser;
-    CStringW m_szPkgName;
+    CSimpleArray<CStringW> m_szScrnshotLocation;
+    bool m_ScrnshotRetrieved;
+  public:
     CStringW m_szUrlDownload;
-public:
-    CAvailableApplicationInfo(const CStringW& Filename);
+
+    CAvailableApplicationInfo(CConfigParser* Parser, const CStringW& PkgName, AppsCategories Category, const CPathW& BasePath);
     ~CAvailableApplicationInfo();
 
     virtual BOOL Valid() const override;
+    virtual BOOL RetrieveIcon(CStringW& Path) const override;
+    virtual BOOL RetrieveScreenshot(CStringW& Path) override;
+};
+
+class CInstalledApplicationInfo
+    : public CApplicationInfo
+{
+    CRegKey m_hKey;
+
+    BOOL GetApplicationRegString(LPCWSTR lpKeyName, ATL::CStringW& String);
+
+public:
+    CInstalledApplicationInfo(HKEY Key, const CStringW& KeyName, AppsCategories Category);
+    ~CInstalledApplicationInfo();
+
+
+    virtual BOOL Valid() const override;
+    virtual BOOL RetrieveIcon(CStringW& Path) const override;
+    virtual BOOL RetrieveScreenshot(CStringW& Path) override;
 };
 
 //typedef BOOL(CALLBACK *AVAILENUMPROC)(CAvailableApplicationInfo *Info, BOOL bInitialCheckState, PVOID param);

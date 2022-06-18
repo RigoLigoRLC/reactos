@@ -60,17 +60,50 @@ CApplicationDB::CApplicationDB(const CStringW& path)
 
 }
 
-void CApplicationDB::GetApps(CAtlList<CApplicationInfo*>& List, AppsCategories Type) const
+CApplicationInfo* CApplicationDB::FindByPackageName(const CStringW& name)
 {
-    POSITION CurrentListPosition = m_List.GetHeadPosition();
+    POSITION CurrentListPosition = m_Available.GetHeadPosition();
     while (CurrentListPosition)
     {
-        CApplicationInfo* Info = m_List.GetNext(CurrentListPosition);
-
-        if (Type == ENUM_ALL_AVAILABLE ||
-            Type == Info->iCategory)
+        CApplicationInfo* Info = m_Available.GetNext(CurrentListPosition);
+        if (Info->szIdentifier == name)
         {
-            List.AddTail(Info);
+            return Info;
+        }
+    }
+    return NULL;
+}
+
+
+void CApplicationDB::GetApps(CAtlList<CApplicationInfo*>& List, AppsCategories Type) const
+{
+    if (Type == ENUM_INSTALLED_APPLICATIONS ||
+        Type == ENUM_UPDATES)
+    {
+        POSITION CurrentListPosition = m_Installed.GetHeadPosition();
+        while (CurrentListPosition)
+        {
+            CApplicationInfo* Info = m_Installed.GetNext(CurrentListPosition);
+
+            if (Type == ENUM_ALL_INSTALLED ||
+                Type == Info->iCategory)
+            {
+                List.AddTail(Info);
+            }
+        }
+    }
+    else
+    {
+        POSITION CurrentListPosition = m_Available.GetHeadPosition();
+        while (CurrentListPosition)
+        {
+            CApplicationInfo* Info = m_Available.GetNext(CurrentListPosition);
+
+            if (Type == ENUM_ALL_AVAILABLE ||
+                Type == Info->iCategory)
+            {
+                List.AddTail(Info);
+            }
         }
     }
 }
@@ -93,6 +126,34 @@ BOOL CApplicationDB::EnumerateFiles()
 
     do
     {
+        CStringW szPkgName = FindFileData.cFileName;
+        PathRemoveExtensionW(szPkgName.GetBuffer(MAX_PATH));
+        szPkgName.ReleaseBuffer();
+
+        CApplicationInfo* Info = FindByPackageName(szPkgName);
+        if (Info)
+        {
+
+        }
+        else
+        {
+            CConfigParser* Parser = new CConfigParser(FindFileData.cFileName);
+            int Cat;
+            if (!Parser->GetInt(L"Category", Cat))
+                Cat = ENUM_INVALID;
+
+            Info = new CAvailableApplicationInfo(Parser, szPkgName, static_cast<AppsCategories>(Cat), AppsPath);
+            if (Info->Valid())
+            {
+                m_Available.AddTail(Info);
+            }
+            else
+            {
+                delete Info;
+            }
+        }
+
+
         // loop for all the cached entries
         //POSITION CurrentListPosition = m_InfoList.GetHeadPosition();
         //CAvailableApplicationInfo* Info = NULL;
@@ -127,15 +188,6 @@ BOOL CApplicationDB::EnumerateFiles()
         //}
 
         //// create a new entry
-        CApplicationInfo* Info = new CAvailableApplicationInfo(FindFileData.cFileName);
-        if (Info->Valid())
-        {
-            m_List.AddTail(Info);
-        }
-        else
-        {
-            delete Info;
-        }
         //// set a timestamp for the next time
         //Info->SetLastWriteTime(&FindFileData.ftLastWriteTime);
 
@@ -175,16 +227,13 @@ BOOL CApplicationDB::EnumerateFiles()
 }
 
 
-BOOL CApplicationDB::Update()
+VOID CApplicationDB::UpdateAvailable()
 {
-
     if (!CreateDirectoryW(m_BasePath/*m_Strings.szPath*/, NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
-    {
-        return FALSE;
-    }
+        return;
 
     if (EnumerateFiles())
-        return TRUE;
+        return;
 
     ////if there are some files in the db folder - we're good
     //CPathW AppsPath = m_BasePath;
@@ -198,27 +247,122 @@ BOOL CApplicationDB::Update()
     //    return TRUE;
     //}
 
-    DownloadApplicationsDB(SettingsInfo.bUseSource ? SettingsInfo.szSourceURL : APPLICATION_DATABASE_URL,
-        !SettingsInfo.bUseSource);
+    DownloadApplicationsDB(
+        SettingsInfo.bUseSource ? SettingsInfo.szSourceURL : APPLICATION_DATABASE_URL, !SettingsInfo.bUseSource);
 
     CPathW AppsPath = m_BasePath;
     AppsPath += L"rapps";
     if (!ExtractFilesFromCab(APPLICATION_DATABASE_NAME, m_BasePath, AppsPath))
-    {
-        return FALSE;
-    }
+        return;
 
     CPathW CabFile = m_BasePath;
     CabFile += APPLICATION_DATABASE_NAME;
     DeleteFileW(CabFile);
 
-    return EnumerateFiles();
+    EnumerateFiles();
 }
 
-BOOL CApplicationDB::ForceUpdate()
+VOID CApplicationDB::ForceUpdateAvailable()
 {
     Delete();
-    return Update();
+    return UpdateAvailable();
+}
+
+VOID CApplicationDB::UpdateInstalled()
+{
+    HKEY RootKeyEnum[3] = { HKEY_CURRENT_USER, HKEY_LOCAL_MACHINE, HKEY_LOCAL_MACHINE };
+    REGSAM RegSamEnum[3] = { KEY_WOW64_32KEY,   KEY_WOW64_32KEY,    KEY_WOW64_64KEY };
+
+    int LoopKeys = 2;
+
+    if (IsSystem64Bit())
+    {
+        // loop for all 3 combination.
+        // note that HKEY_CURRENT_USER\Software don't have a redirect
+        // https://docs.microsoft.com/en-us/windows/win32/winprog64/shared-registry-keys#redirected-shared-and-reflected-keys-under-wow64
+        LoopKeys = 3;
+    }
+
+    for (int i = 0; i < LoopKeys; i++)
+    {
+        DWORD dwSize = MAX_PATH;
+        HKEY hKey, hSubKey;
+        LONG ItemIndex = 0;
+        WCHAR szKeyName[MAX_PATH];
+
+        if (RegOpenKeyExW(RootKeyEnum[i],
+            L"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+            NULL,
+            KEY_READ | RegSamEnum[i],
+            &hKey) != ERROR_SUCCESS)
+        {
+            continue;
+        }
+
+        while (1)
+        {
+            dwSize = MAX_PATH;
+            if (RegEnumKeyExW(hKey, ItemIndex, szKeyName, &dwSize, NULL, NULL, NULL, NULL) != ERROR_SUCCESS)
+            {
+                break;
+            }
+
+            ItemIndex++;
+
+            if (RegOpenKeyW(hKey, szKeyName, &hSubKey) == ERROR_SUCCESS)
+            {
+                DWORD dwValue = 0;
+
+                dwSize = sizeof(DWORD);
+                if (RegQueryValueExW(hSubKey, L"SystemComponent", NULL, NULL, (LPBYTE)&dwValue, &dwSize) == ERROR_SUCCESS &&
+                    dwValue == 1)
+                {
+                    // Ignore system components
+                    RegCloseKey(hSubKey);
+                    continue;
+                }
+
+                // RootKeyEnum[i] == HKEY_CURRENT_USER, RegSamEnum[i],
+
+                BOOL bIsUpdate = (RegQueryValueExW(hSubKey, L"ParentKeyName", NULL, NULL, NULL, &dwSize) == ERROR_SUCCESS);
+
+                CInstalledApplicationInfo* Info = new CInstalledApplicationInfo(hSubKey, szKeyName, bIsUpdate ? ENUM_UPDATES : ENUM_INSTALLED_APPLICATIONS);
+
+                // items without display name are ignored
+                //if (Info->GetApplicationRegString(L"DisplayName", Info->szDisplayName))
+                //{
+                //    Info->GetApplicationRegString(L"DisplayIcon", Info->szDisplayIcon);
+                //    Info->GetApplicationRegString(L"DisplayVersion", Info->szDisplayVersion);
+                //    Info->GetApplicationRegString(L"Comments", Info->szComments);
+
+                //    bSuccess = TRUE;
+                //}
+
+                if (Info->Valid())
+                {
+                    // add to InfoList.
+                    m_Installed.AddTail(Info);
+
+                    //// invoke callback
+                    //if (lpEnumProc)
+                    //{
+                    //    if ((EnumType == ENUM_ALL_INSTALLED) || /* All components */
+                    //        ((EnumType == ENUM_INSTALLED_APPLICATIONS) && (!Info->bIsUpdate)) || /* Applications only */
+                    //        ((EnumType == ENUM_UPDATES) && (Info->bIsUpdate))) /* Updates only */
+                    //    {
+                    //        lpEnumProc(Info, param);
+                    //    }
+                    //}
+                }
+                else
+                {
+                    delete Info;
+                }
+            }
+        }
+
+        RegCloseKey(hKey);
+    }
 }
 
 

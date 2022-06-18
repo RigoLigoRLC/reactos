@@ -254,12 +254,13 @@ BOOL ParseCmdAndExecute(LPWSTR lpCmdLine, BOOL bIsFirstLaunch, int nCmdShow)
 
     if (SettingsInfo.bUpdateAtStart || bIsFirstLaunch)
     {
-        db.ForceUpdate();
+        db.ForceUpdateAvailable();
     }
     else
     {
-        db.Update();
+        db.UpdateAvailable();
     }
+    db.UpdateInstalled();
 
     if (argc == 1) // RAPPS is launched without options
     {
