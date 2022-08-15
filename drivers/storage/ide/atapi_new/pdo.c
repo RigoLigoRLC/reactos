@@ -25,9 +25,6 @@ IdePortPdoDispatchDeviceControl(
     NTSTATUS Status;
     PIO_STACK_LOCATION IoStack = IoGetCurrentIrpStackLocation(Irp);
 
-    INFO("(%p, %p) Dev.%lu IOCTL 0x%lX\n", DevicePdoExtension->Common.Self, Irp,
-         0 /* FIXME */, IoStack->Parameters.DeviceIoControl.IoControlCode);
-
     /* FIXME: Bus remove */
 
     switch (IoStack->Parameters.DeviceIoControl.IoControlCode)
