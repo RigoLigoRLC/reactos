@@ -130,7 +130,7 @@ IdePortPdoDispatchDeviceControl(
                     AdapterDescriptor->Size = sizeof(STORAGE_ADAPTER_DESCRIPTOR);
                     AdapterDescriptor->MaximumTransferLength = 0x20000; /* FIXME: UDMA buffer boundary */
                     AdapterDescriptor->MaximumPhysicalPages = 0xFFFFFFFF; /* FIXME */
-                    AdapterDescriptor->AlignmentMask = DevicePdoExtension->Common.Self->AlignmentRequirement;
+                    AdapterDescriptor->AlignmentMask = DeviceExtension->Common.Self->AlignmentRequirement;
                     AdapterDescriptor->AdapterUsesPio = TRUE;
                     AdapterDescriptor->AdapterScansDown = FALSE;
                     AdapterDescriptor->CommandQueueing = FALSE;

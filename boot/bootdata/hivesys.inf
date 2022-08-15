@@ -128,6 +128,9 @@ HKLM,"SYSTEM\CurrentControlSet\Control\CriticalDeviceDatabase\ROOT#SWENUM","Clas
 HKLM,"SYSTEM\CurrentControlSet\Control\CriticalDeviceDatabase\PCI#CC_0108","Service",0x00000000,"nvme"
 HKLM,"SYSTEM\CurrentControlSet\Control\CriticalDeviceDatabase\PCI#CC_0108","ClassGUID",0x00000000,"{4D36E97B-E325-11CE-BFC1-08002BE10318}"
 
+HKLM,"SYSTEM\CurrentControlSet\Control\CriticalDeviceDatabase\PCI#CC_010601","Service",0x00000000,"storahci"
+HKLM,"SYSTEM\CurrentControlSet\Control\CriticalDeviceDatabase\PCI#CC_010601","ClassGUID",0x00000000,"{4D36E96A-E325-11CE-BFC1-08002BE10318}"
+
 HKLM,"SYSTEM\CurrentControlSet\Control\SafeBoot","AlternateShell",2,"cmd.exe"
 
 ; Safe Boot drivers
@@ -1835,6 +1838,14 @@ HKLM,"SYSTEM\CurrentControlSet\Services\nvme","Group",0x00000000,"Primary Disk"
 HKLM,"SYSTEM\CurrentControlSet\Services\nvme","ImagePath",0x00020000,"system32\drivers\nvme.sys"
 HKLM,"SYSTEM\CurrentControlSet\Services\nvme","Start",0x00010001,0x00000000
 HKLM,"SYSTEM\CurrentControlSet\Services\nvme","Type",0x00010001,0x00000001
+
+; storahci driver
+HKLM,"SYSTEM\CurrentControlSet\Services\storahci","ErrorControl",0x00010001,0x00000001
+HKLM,"SYSTEM\CurrentControlSet\Services\storahci","Group",0x00000000,"Primary Disk"
+HKLM,"SYSTEM\CurrentControlSet\Services\storahci","ImagePath",0x00020000,"system32\drivers\storahci.sys"
+HKLM,"SYSTEM\CurrentControlSet\Services\storahci","Start",0x00010001,0x00000000
+HKLM,"SYSTEM\CurrentControlSet\Services\storahci","Type",0x00010001,0x00000001
+
 
 ; MountMgr driver
 HKLM,"SYSTEM\CurrentControlSet\Services\MountMgr","ErrorControl",0x00010001,0x00000001
