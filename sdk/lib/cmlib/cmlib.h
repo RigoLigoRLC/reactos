@@ -554,6 +554,15 @@ CmpMarkIndexDirty(
 //
 LONG
 NTAPI
+CmpCompareTwoCompressedNames(
+    _In_ PWCHAR FirstCompressedName,
+    _In_ ULONG FirstCompressedNameLength,
+    _In_ PWCHAR SecondCompressedName,
+    _In_ ULONG SecondCompressedNameLength
+);
+
+LONG
+NTAPI
 CmpCompareCompressedName(
     IN PCUNICODE_STRING SearchName,
     IN PWCHAR CompressedName,
