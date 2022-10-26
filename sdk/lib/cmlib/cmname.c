@@ -104,6 +104,80 @@ CmpCompressedNameSize(IN PWCHAR Name,
     return (USHORT)Length * sizeof(WCHAR);
 }
 
+/**
+ * @brief
+ * Compares two compressed names. This routine is used
+ * exclusively for lexicographical order validation checks.
+ *
+ * @param[in] FirstCompressedName
+ * The first compressed name.
+ *
+ * @param[in] FirstCompressedNameLength
+ * The length of the first compressed name.
+ *
+ * @param[in] SecondCompressedName
+ * The second compressed name.
+ *
+ * @param[in] SecondCompressedNameLength
+ * The length of the second compressed name.
+ *
+ * @return
+ * Returns the result difference of the names that
+ * have been compared. Result == 0 indicates that
+ * the first name is equal to that of the second name.
+ * Result > 0 indicates the first name is greater
+ * than the second. Result < 0 indicates the first name
+ * is less than that of the second.
+ */
+LONG
+NTAPI
+CmpCompareTwoCompressedNames(
+    _In_ PWCHAR FirstCompressedName,
+    _In_ ULONG FirstCompressedNameLength,
+    _In_ PWCHAR SecondCompressedName,
+    _In_ ULONG SecondCompressedNameLength)
+{
+    PUCHAR FirstNamePointer, SecondNamePointer;
+    WCHAR FirstCharacter, SecondCharacter;
+    LONG FirstLength, SecondLength;
+    LONG Result;
+
+    ASSERT(FirstCompressedNameLength != 0);
+    ASSERT(SecondCompressedNameLength != 0);
+
+    /* Cache the names and lengths and compare them */
+    FirstLength = FirstCompressedNameLength;
+    SecondLength = SecondCompressedNameLength;
+    FirstNamePointer = (PUCHAR)FirstCompressedName;
+    SecondNamePointer = (PUCHAR)SecondCompressedName;
+    while (FirstLength > 0 && SecondLength > 0)
+    {
+        /* Get the characters */
+        FirstCharacter = (WCHAR)(*FirstNamePointer++);
+        SecondCharacter = (WCHAR)(*SecondNamePointer++);
+
+        /* Check if we have a direct match */
+        if (FirstCharacter != SecondCharacter)
+        {
+            /* See if they match and return result if they don't */
+            Result = (LONG)RtlUpcaseUnicodeChar(FirstCharacter) -
+                     (LONG)RtlUpcaseUnicodeChar(SecondCharacter);
+            if (Result)
+            {
+                /* They don't match */
+                return Result;
+            }
+        }
+
+        /* Next chars */
+        FirstCompressedNameLength--;
+        SecondCompressedNameLength--;
+    }
+
+    /* Return the difference directly */
+    return FirstLength - SecondLength;
+}
+
 LONG
 NTAPI
 CmpCompareCompressedName(IN PCUNICODE_STRING SearchName,
