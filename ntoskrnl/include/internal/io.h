@@ -7,6 +7,9 @@
  */
 
 #include "ntdddisk.h"
+#define NDEBUG
+#include <debug.h>
+#include <mm/ARM3/miarm.h>
 
 //
 // Define this if you want debugging support
@@ -530,6 +533,83 @@ typedef enum _DEVICE_ACTION
     PiActionStartDevice,
     PiActionQueryState,
 } DEVICE_ACTION;
+
+//
+// Internal flags used for crash dump controls
+//
+#define IO_DUMP_ENABLED     0x01
+#define IO_DUMP_SEND_ALERT  0x02
+#define IO_DUMP_TYPE_FULL   0x10
+#define IO_DUMP_TYPE_KERNEL 0x20
+#define IO_DUMP_TYPE_TRIAGE 0x40
+
+//
+// Header of crash dump file content
+//
+typedef struct _DUMP_HEADER32
+{
+    ULONG Signature;
+    ULONG ValidDump;
+    ULONG MajorVersion;
+    ULONG MinorVersion;
+    ULONG DirectoryTableBase;
+    ULONG PfnDataBase;
+    ULONG PsLoadedModuleList;
+    ULONG PsActiveProcessHead;
+    ULONG MachineImageType;
+    ULONG NumberProcessors;
+    ULONG BugCheckCode;
+    ULONG BugCheckParameter1;
+    ULONG BugCheckParameter2;
+    ULONG BugCheckParameter3;
+    ULONG BugCheckParameter4;
+    CHAR VersionUser[32];
+    CHAR PaeEnabled;
+    CHAR KdSecondaryVersion;
+    CHAR Spare[2];
+    ULONG KdDebuggerDataBlock;
+    union
+    {
+        PHYSICAL_MEMORY_DESCRIPTOR PhysicalMemoryBlock;
+        UCHAR reserved3[700];
+    };
+    union
+    {
+        CONTEXT Context;
+        UCHAR reserved4[1200];
+    };
+    EXCEPTION_RECORD ExceptionRecord;
+    CHAR Comment[128];
+    UCHAR Reserved0[1768];
+    ULONG DumpType;
+    ULONG MiniDumpFields;
+    ULONG SecondaryDataState;
+    ULONG ProductType;
+    ULONG SuiteMask;
+    UCHAR reserved1[4];
+    LARGE_INTEGER RequieredDumpSpace;
+    UCHAR Reserved2[16];
+    LARGE_INTEGER SystemUpTime;
+    LARGE_INTEGER SystemTime;
+    UCHAR reserved[56];
+} DUMP_HEADER32, *PDUMP_HEADER32;
+
+//
+// Crash dump control information
+//
+typedef struct _ROS_DUMP_CONTROL_BLOCK
+{
+    WORD Size;
+    BYTE DumpFlags;
+    BYTE ProcessorCount;
+    WORD Architecture;
+    BOOLEAN Checked;
+    DWORD NtBuildNumber;
+    DWORD CsdVersion;
+    DWORD BuildNumber;
+    DWORD DumpPageCount;
+    DWORD DumpFileSize;
+} ROS_DUMP_CONTROL_BLOCK, *PROS_DUMP_CONTROL_BLOCK;
 
 //
 // Resource code
@@ -1447,6 +1527,7 @@ extern KSPIN_LOCK IopDeviceActionLock;
 extern LIST_ENTRY IopDeviceActionRequestList;
 extern RESERVE_IRP_ALLOCATOR IopReserveIrpAllocator;
 extern BOOLEAN IoRemoteBootClient;
+extern PROS_DUMP_CONTROL_BLOCK IopDumpControlBlock;
 
 //
 // Inlined Functions
