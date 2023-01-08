@@ -7,6 +7,8 @@
  */
 
 #include "ntdddisk.h"
+#include "ntddscsi.h"
+#include "hal/halx86/include/haldma.h"
 #define NDEBUG
 #include <debug.h>
 #include <mm/ARM3/miarm.h>
@@ -23,6 +25,7 @@
 #define IO_FILE_DEBUG                                   0x02
 #define IO_API_DEBUG                                    0x04
 #define IO_CTL_DEBUG                                    0x08
+#define IO_DUMP_DEBUG                                   0x10
 
 //
 // Debug/Tracing support
@@ -595,20 +598,87 @@ typedef struct _DUMP_HEADER32
 } DUMP_HEADER32, *PDUMP_HEADER32;
 
 //
+// Crash dump post-initialization information
+//
+typedef struct _DUMP_INITIALIZATION_CONTEXT
+{
+    ULONG Length;
+    ULONG Reserved;
+    PVOID MemoryBlock;
+    PVOID CommonBuffer[2];
+    LARGE_INTEGER PhysicalAddress[2];
+    PVOID StallRoutine;
+    PVOID OpenRoutine;
+    PVOID WriteRoutine;
+    PVOID FinishRoutine;
+    ADAPTER_OBJECT* AdapterObject;
+    PVOID MappedRegisterBase;
+    PVOID PortConfiguration;
+    UCHAR CrashDump;
+    ULONG MaximumTransferSize;
+    ULONG CommonBufferSize;
+    PSCSI_ADDRESS TargetAddress;
+    PVOID WritePendingRoutine;
+    ULONG PartitionStyle;
+    union
+    {
+        struct
+        {
+            ULONG Signature;
+            ULONG Checksum;
+        } Mbr; /* This took reference of Windows 10 14393. Not sure if it actually is like this */
+        struct
+        {
+            GUID Guid;
+        } Gpt;
+    } DiskInfo;
+} DUMP_INITIALIZATION_CONTEXT, *PDUMP_INITIALIZATION_CONTEXT;
+
+//
+// Crash dump driver stack context
+//
+typedef struct _DUMP_STACK_CONTEXT
+{
+    DUMP_INITIALIZATION_CONTEXT Init;
+    LARGE_INTEGER PartitionOffset;
+    PVOID DumpPointers;
+    ULONG PointersLength;
+    PCWSTR ModulePrefix;
+    LIST_ENTRY DriverList;
+    STRING InitMsg;
+    STRING ProgMsg;
+    STRING DoneMsg;
+    PVOID FileObject;
+    int UsageType;
+    DUMP_POINTERS DumpPointerMemory;
+} DUMP_STACK_CONTEXT, *PDUMP_STACK_CONTEXT;
+
+//
 // Crash dump control information
 //
 typedef struct _ROS_DUMP_CONTROL_BLOCK
 {
-    WORD Size;
+    BYTE Type;
     BYTE DumpFlags;
+    WORD Size;
     BYTE ProcessorCount;
     WORD Architecture;
-    BOOLEAN Checked;
-    DWORD NtBuildNumber;
-    DWORD CsdVersion;
-    DWORD BuildNumber;
-    DWORD DumpPageCount;
-    DWORD DumpFileSize;
+    PDUMP_STACK_CONTEXT DumpStack;
+    /* Symbols below needs verify */
+    ULONG MemoryDescriptorLength;
+    PLARGE_INTEGER FileDescriptorArray;
+    ULONG FileDescriptorSize;
+    PULONG HeaderPage;
+    ULONG HeaderPfn;
+    ULONG MajorVersion;
+    ULONG MinorVersion;
+    ULONG BuildNumber;
+    CHAR VersionUser[32];
+    ULONG HeaderSize;
+    LARGE_INTEGER DumpFileSize;
+    ULONG TriageDumpFlags;
+    PUCHAR TriageDumpBuffer;
+    ULONG TriageDumpBufferSize;
 } ROS_DUMP_CONTROL_BLOCK, *PROS_DUMP_CONTROL_BLOCK;
 
 //
