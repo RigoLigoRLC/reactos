@@ -263,7 +263,7 @@ IopGetDumpStack(IN PCWSTR DriverPrefix,
     PDEVICE_OBJECT DeviceObject, RelatedDeviceObject;
     IO_STACK_LOCATION StackLocation;
     KEVENT Event;
-    PVOID DiskIoBuffer;
+    PVOID DiskIoBuffer, Information;
     NTSTATUS Status;
     
     /* Allocate dump stack context */
@@ -605,10 +605,11 @@ IopGetDumpStack(IN PCWSTR DriverPrefix,
     RtlZeroMemory(&StackLocation, sizeof(IO_STACK_LOCATION));
     StackLocation.MajorFunction = IRP_MJ_PNP;
     StackLocation.MinorFunction = IRP_MN_DEVICE_USAGE_NOTIFICATION;
-    StackLocation.Parameters.UsageNotification.Type = UsageType; /*FIXME:VERIFY*/
+    StackLocation.Parameters.UsageNotification.Type = UsageType;
     StackLocation.Parameters.UsageNotification.InPath = TRUE; /*FIXME:EXPLAIN*/
 
-    Status = IopSynchronousCall(RelatedDeviceObject, &StackLocation, NULL);
+    Status = IopSynchronousCall(RelatedDeviceObject, &StackLocation, &Information);
+    /* Information is unused*/
 
     if(DryRun)
     {
