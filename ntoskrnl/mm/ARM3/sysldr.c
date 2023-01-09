@@ -2900,7 +2900,7 @@ MmLoadSystemImage(IN PUNICODE_STRING FileName,
     ULONG EntrySize, DriverSize;
     PLOAD_IMPORTS LoadedImports = MM_SYSLDR_NO_IMPORTS;
     PCHAR MissingApiName, Buffer;
-    PWCHAR MissingDriverName;
+    PWCHAR MissingDriverName, PrefixedBuffer;
     HANDLE SectionHandle;
     ACCESS_MASK DesiredAccess;
     PSECTION Section = NULL;
@@ -2964,7 +2964,52 @@ MmLoadSystemImage(IN PUNICODE_STRING FileName,
     PrefixName = *FileName;
 
     /* Check if we have a prefix */
-    if (NamePrefix) DPRINT1("Prefixed images are not yet supported!\n");
+    if (NamePrefix)
+    {
+        /* Check if "directory + prefix" is too long for the string */
+        if(PrefixName.MaximumLength + BaseDirectory.Length < PrefixName.MaximumLength)
+        {
+            Status = STATUS_INSUFFICIENT_RESOURCES;
+            goto Quickie;
+        }
+
+        /* Set maximum length to the size of "directory + prefix" */
+        PrefixName.MaximumLength += BaseDirectory.Length;
+
+        /* Check if "directory + prefix + basename" is too long for the string */
+        if(PrefixName.MaximumLength + BaseName.Length < PrefixName.MaximumLength)
+        {
+            Status = STATUS_INSUFFICIENT_RESOURCES;
+            goto Quickie;
+        }
+
+        /* Set the final maximum length to the size of "directory + prefix + basename" */
+        PrefixName.MaximumLength += BaseName.Length;
+
+        /* Allocate the buffer exclusively used for prefixed name */
+        PrefixedBuffer = ExAllocatePoolWithTag(PagedPool,
+                                               PrefixName.MaximumLength,
+                                               TAG_LDR_WSTR);
+        if(!PrefixedBuffer)
+        {
+            Status = STATUS_INSUFFICIENT_RESOURCES;
+            goto Quickie;
+        }
+
+        /* Clear out the prefixed name string */
+        PrefixName.Buffer = PrefixedBuffer;
+        PrefixName.Length = 0;
+
+        /* Concatenate the strings */
+        RtlAppendUnicodeStringToString(&PrefixName, &BaseDirectory);
+        RtlAppendUnicodeStringToString(&PrefixName, NamePrefix);
+        RtlAppendUnicodeStringToString(&PrefixName, &BaseName);
+
+        /* Now the base name of the image would become the prefixed version */
+        BaseName.Buffer = &(PrefixName.Buffer[BaseDirectory.Length * 2]);
+        BaseName.Length += NamePrefix->Length;
+        BaseName.MaximumLength += NamePrefix->Length;
+    }
 
     /* Check if we already have a name, use it instead */
     if (LoadedName) BaseName = *LoadedName;
@@ -3406,8 +3451,8 @@ Quickie:
     /* If we have a file handle, close it */
     if (FileHandle) ZwClose(FileHandle);
 
-    /* Check if we had a prefix (not supported yet - PrefixName == *FileName now) */
-    /* if (NamePrefix) ExFreePool(PrefixName.Buffer); */
+    /* Check if we had a prefix */
+    if (NamePrefix) ExFreePoolWithTag(PrefixedBuffer, TAG_LDR_WSTR);
 
     /* Free the name buffer and return status */
     ExFreePoolWithTag(Buffer, TAG_LDR_WSTR);
