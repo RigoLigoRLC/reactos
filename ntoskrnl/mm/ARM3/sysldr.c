@@ -2967,30 +2967,30 @@ MmLoadSystemImage(IN PUNICODE_STRING FileName,
     if (NamePrefix)
     {
         /* Check if "directory + prefix" is too long for the string */
-        if(PrefixName.MaximumLength + BaseDirectory.Length < PrefixName.MaximumLength)
+        Status = RtlUShortAdd(PrefixName.MaximumLength,
+                              BaseDirectory.Length,
+                              &PrefixName.MaximumLength);
+        if (!NT_SUCCESS(Status))
         {
-            Status = STATUS_INSUFFICIENT_RESOURCES;
+            Status = STATUS_INVALID_PARAMETER;
             goto Quickie;
         }
-
-        /* Set maximum length to the size of "directory + prefix" */
-        PrefixName.MaximumLength += BaseDirectory.Length;
 
         /* Check if "directory + prefix + basename" is too long for the string */
-        if(PrefixName.MaximumLength + BaseName.Length < PrefixName.MaximumLength)
+        Status = RtlUShortAdd(PrefixName.MaximumLength,
+                              BaseName.Length,
+                              &PrefixName.MaximumLength);
+        if (!NT_SUCCESS(Status))
         {
-            Status = STATUS_INSUFFICIENT_RESOURCES;
+            Status = STATUS_INVALID_PARAMETER;
             goto Quickie;
         }
-
-        /* Set the final maximum length to the size of "directory + prefix + basename" */
-        PrefixName.MaximumLength += BaseName.Length;
 
         /* Allocate the buffer exclusively used for prefixed name */
         PrefixedBuffer = ExAllocatePoolWithTag(PagedPool,
                                                PrefixName.MaximumLength,
                                                TAG_LDR_WSTR);
-        if(!PrefixedBuffer)
+        if (!PrefixedBuffer)
         {
             Status = STATUS_INSUFFICIENT_RESOURCES;
             goto Quickie;
