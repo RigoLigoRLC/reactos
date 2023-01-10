@@ -3006,7 +3006,7 @@ MmLoadSystemImage(IN PUNICODE_STRING FileName,
         RtlAppendUnicodeStringToString(&PrefixName, &BaseName);
 
         /* Now the base name of the image would become the prefixed version */
-        BaseName.Buffer = &(PrefixName.Buffer[BaseDirectory.Length * 2]);
+        BaseName.Buffer = &(PrefixName.Buffer[BaseDirectory.Length / sizeof(WCHAR)]);
         BaseName.Length += NamePrefix->Length;
         BaseName.MaximumLength += NamePrefix->Length;
     }
