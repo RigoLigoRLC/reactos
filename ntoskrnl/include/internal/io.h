@@ -635,6 +635,17 @@ typedef struct _DUMP_INITIALIZATION_CONTEXT
 } DUMP_INITIALIZATION_CONTEXT, *PDUMP_INITIALIZATION_CONTEXT;
 
 //
+// Crash dump driver list node
+//
+typedef struct _DUMP_STACK_DRIVER
+{
+    LIST_ENTRY DriverList;
+    PIMAGE_NT_HEADERS DriverImage;
+    PVOID ImageBaseAddress;
+    DWORD ImageSize;
+} DUMP_STACK_DRIVER, *PDUMP_STACK_DRIVER;
+
+//
 // Crash dump driver stack context
 //
 typedef struct _DUMP_STACK_CONTEXT

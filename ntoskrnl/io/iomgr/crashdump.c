@@ -180,8 +180,17 @@ IopLoadDumpDriver(IN OUT PDUMP_STACK_CONTEXT DumpStack,
 {
     UNICODE_STRING Prefix, ModulePath, LoadedName;
     PUNICODE_STRING pLoadedName;
-    PVOID ImageBase, ModuleObject;
+    PDUMP_STACK_DRIVER DriverNode;
     NTSTATUS Status;
+
+    /* Allocate list node for the driver to be loaded */
+    DriverNode = ExAllocatePoolWithTag(NonPagedPool,
+                                       sizeof(DUMP_STACK_DRIVER),
+                                       DUMP_POOL_TAG);
+    if (DriverNode == NULL)
+    {
+        return STATUS_INSUFFICIENT_RESOURCES;
+    }
 
     pLoadedName = NULL;
     RtlInitUnicodeString(&Prefix, DumpStack->ModulePrefix);
@@ -217,25 +226,33 @@ IopLoadDumpDriver(IN OUT PDUMP_STACK_CONTEXT DumpStack,
 
     /* Load the driver */
     Status = MmLoadSystemImage(&ModulePath,
-                                &Prefix,
-                                pLoadedName,
-                                0, /* FIXME: Session loading is not supported*/
-                                &ModuleObject,
-                                &ImageBase);
+                               &Prefix,
+                               pLoadedName,
+                               0, /* FIXME: Session loading is not supported*/
+                               &DriverNode->DriverImage,
+                               &DriverNode->ImageBaseAddress);
     
     /* Discard the temporary string */
     if(LoadedName.Buffer != NULL)
     {
-        ExFreePool(LoadedName.Buffer);
+        ExFreePoolWithTag(LoadedName.Buffer, DUMP_POOL_TAG);
     }
 
     if(!NT_SUCCESS(Status))
     {
-        return Status;
+        goto Cleanup;
     }
 
-    /* TODO: Put it onto the DumpStack->DriverList. 
-             Have not nailed down the node structure yet, it's not viable right now */
+    /* Insert driver into dump context's driver list */
+    InsertTailList(&DumpStack->DriverList, &DriverNode->DriverList);
+
+    /* Exit normally */
+    return STATUS_SUCCESS;
+
+Cleanup:
+    /* Failure path, pool is definitely allocated, free it */
+    ExFreePoolWithTag(DriverNode, DUMP_POOL_TAG);
+
     return Status;
 }
 
@@ -414,7 +431,7 @@ IopGetDumpStack(IN PCWSTR DriverPrefix,
                                        0,
                                        IoFileObjectType,
                                        KernelMode,
-                                       &FileObject,
+                                       (PVOID*)&FileObject,
                                        NULL);
 
     DeviceObject = IoGetRelatedDeviceObject(FileObject);
@@ -436,7 +453,7 @@ IopGetDumpStack(IN PCWSTR DriverPrefix,
         goto Failure3;
     }
 
-    /* TODO: figure out what this does. Next level in stack should be File system. */
+    /* Set up the file system driver's IO stack layer */
     IoGetNextIrpStackLocation(Irp)->FileObject = FileObject;
 
     /* Ask the driver for dump pointers */
@@ -633,13 +650,13 @@ Cleanup:
         /* Output the dump stack */
         *DumpStack = pDumpStack;
 
-        ExFreePool(DiskIoBuffer);
+        ExFreePoolWithTag(DiskIoBuffer, DUMP_POOL_TAG);
         return Status;
     }
 Failure2:
-    ExFreePool(DiskIoBuffer);
+    ExFreePoolWithTag(DiskIoBuffer, DUMP_POOL_TAG);
 Failure1:
-    ExFreePool(pDumpStack);
+    ExFreePoolWithTag(pDumpStack, DUMP_POOL_TAG);
     return Status;
 }
 

@@ -396,6 +396,9 @@ LARGE_INTEGER MmCriticalSectionTimeout;
 ULONG MmThrottleTop;
 ULONG MmThrottleBottom;
 
+/* TODO: Describe */
+PMMPTE MmCrashDumpPte;
+
 /* PRIVATE FUNCTIONS **********************************************************/
 
 VOID
@@ -2332,6 +2335,9 @@ MmArmInitSystem(IN ULONG Phase,
         TestPte = MiSubsectionPteToSubsection(&TempPte);
         ASSERT(PointerPte == TestPte);
 #endif
+
+        /* Reserve PTE for memory dump */
+        MmCrashDumpPte = MiReserveSystemPtes(32, SystemPteSpace);
 
         //
         // Build the physical memory block

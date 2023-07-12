@@ -660,6 +660,7 @@ extern LARGE_INTEGER MmCriticalSectionTimeout;
 extern LIST_ENTRY MmWorkingSetExpansionHead;
 extern KSPIN_LOCK MmExpansionLock;
 extern PETHREAD MiExpansionLockOwner;
+extern PMMPTE MmCrashDumpPte;
 
 FORCEINLINE
 BOOLEAN

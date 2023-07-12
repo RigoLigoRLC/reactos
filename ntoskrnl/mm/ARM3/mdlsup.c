@@ -1705,7 +1705,10 @@ VOID
 NTAPI
 MmMapMemoryDumpMdl(IN PMDL Mdl)
 {
+    
+
     UNIMPLEMENTED;
+
 }
 
 /* EOF */
