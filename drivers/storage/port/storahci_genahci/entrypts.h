@@ -585,7 +585,12 @@ typedef struct _AHCI_DUMP_CONTEXT {
 
 
 // Storport miniport driver entry routines, with prefix: "AhciHw"
-sp_DRIVER_INITIALIZE DriverEntry;
+// sp_DRIVER_INITIALIZE DriverEntry;
+NTSTATUS NTAPI
+DriverEntry(
+    __in PVOID Argument1,    //IN PDRIVER_OBJECT  DriverObject,
+    __in PVOID Argument2     //IN PUNICODE_STRING  RegistryPath
+    );
 
 HW_FIND_ADAPTER_EX AhciHwFindAdapter;
 
