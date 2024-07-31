@@ -198,22 +198,22 @@ Called by:
     PAHCI_ADAPTER_EXTENSION adapterExtension = ChannelExtension->AdapterExtension;
 
     ie.AsUlong = StorPortReadRegisterUlong(adapterExtension, &IE->AsUlong);
-    ie.DHRE = 1; //Device to Host Register FIS Interrupt (DHRS):  A D2H Register FIS has been received with the ‘I’ bit set, and has been copied into system memory.
-    ie.PSE  = 1; //PIO Setup FIS Interrupt (PSS):  A PIO Setup FIS has been received with the ‘I’ bit set, it has been copied into system memory, and the data related to that FIS has been transferred.  This bit shall be set even if the data transfer resulted in an error.
-    ie.DSE  = 1; //DMA Setup FIS Interrupt (DSS):  A DMA Setup FIS has been received with the ‘I’ bit set and has been copied into system memory.
-    ie.SDBE = 1; //Set Device Bits Interrupt (SDBS):  A Set Device Bits FIS has been received with the ‘I’ bit set and has been copied into system memory.
+    ie.DHRE = 1; //Device to Host Register FIS Interrupt (DHRS):  A D2H Register FIS has been received with the ï¿½Iï¿½ bit set, and has been copied into system memory.
+    ie.PSE  = 1; //PIO Setup FIS Interrupt (PSS):  A PIO Setup FIS has been received with the ï¿½Iï¿½ bit set, it has been copied into system memory, and the data related to that FIS has been transferred.  This bit shall be set even if the data transfer resulted in an error.
+    ie.DSE  = 1; //DMA Setup FIS Interrupt (DSS):  A DMA Setup FIS has been received with the ï¿½Iï¿½ bit set and has been copied into system memory.
+    ie.SDBE = 1; //Set Device Bits Interrupt (SDBS):  A Set Device Bits FIS has been received with the ï¿½Iï¿½ bit set and has been copied into system memory.
 
-    ie.UFE  = 0; //Unknown FIS Interrupt (UFS): When set to ‘1’, indicates that an unknown FIS was received and has been copied into system memory.  This bit is cleared to ‘0’ by software clearing the PxSERR.DIAG.F bit to ‘0’.  Note that this bit does not directly reflect the PxSERR.DIAG.F bit.  PxSERR.DIAG.F is set immediately when an unknown FIS is detected, whereas this bit is set when that FIS is posted to memory.  Software should wait to act on an unknown FIS until this bit is set to ‘1’ or the two bits may become out of sync.
-    ie.DPE  = 0; //Descriptor Processed (DPS):  A PRD with the ‘I’ bit set has transferred all of its data.  Refer to section 5.4.2.
+    ie.UFE  = 0; //Unknown FIS Interrupt (UFS): When set to ï¿½1ï¿½, indicates that an unknown FIS was received and has been copied into system memory.  This bit is cleared to ï¿½0ï¿½ by software clearing the PxSERR.DIAG.F bit to ï¿½0ï¿½.  Note that this bit does not directly reflect the PxSERR.DIAG.F bit.  PxSERR.DIAG.F is set immediately when an unknown FIS is detected, whereas this bit is set when that FIS is posted to memory.  Software should wait to act on an unknown FIS until this bit is set to ï¿½1ï¿½ or the two bits may become out of sync.
+    ie.DPE  = 0; //Descriptor Processed (DPS):  A PRD with the ï¿½Iï¿½ bit set has transferred all of its data.  Refer to section 5.4.2.
     ie.PCE  = 1; //Port Connect Change Status (PCS): 1=Change in Current Connect Status. 0=No change in Current Connect Status.  This bit reflects the state of PxSERR.DIAG.X.  This bit is only cleared when PxSERR.DIAG.X is cleared.
     if(adapterExtension->CAP.SMPS) {
-        ie.DMPE  = 1; //Device Mechanical Presence Status (DMPS): When set, indicates that a mechanical presence switch attached to this port has been opened or closed, which may lead to a change in the connection state of the device.  This bit is only valid if both CAP.SMPS and P0CMD.MPSP are set to ‘1’.
+        ie.DMPE  = 1; //Device Mechanical Presence Status (DMPS): When set, indicates that a mechanical presence switch attached to this port has been opened or closed, which may lead to a change in the connection state of the device.  This bit is only valid if both CAP.SMPS and P0CMD.MPSP are set to ï¿½1ï¿½.
     } else {
         ie.DMPE  = 0;
     }
 
     //Reserved :14;
-    ie.PRCE = 1; //PhyRdy Change Status (PRCS): When set to ‘1’ indicates the internal PhyRdy signal changed state.  This bit reflects the state of P0SERR.DIAG.N.  To clear this bit, software must clear P0SERR.DIAG.N to ‘0’.
+    ie.PRCE = 1; //PhyRdy Change Status (PRCS): When set to ï¿½1ï¿½ indicates the internal PhyRdy signal changed state.  This bit reflects the state of P0SERR.DIAG.N.  To clear this bit, software must clear P0SERR.DIAG.N to ï¿½0ï¿½.
     ie.IPME = 0; //Incorrect Port Multiplier Status (IPMS):  Indicates that the HBA received a FIS from a device whose Port Multiplier field did not match what was expected.  The IPMS bit may be set during enumeration of devices on a Port Multiplier due to the normal Port Multiplier enumeration process.  It is recommended that IPMS only be used after enumeration is complete on the Port Multiplier.
 
     ie.OFE  = 1; //Overflow Status (OFS):  Indicates that the HBA received more bytes from a device than was specified in the PRD table for the command.
@@ -225,8 +225,8 @@ Called by:
     ie.HBFE = 1; //Host Bus Fatal Error Status (HBFS):  Indicates that the HBA encountered a host bus error that it cannot recover from, such as a bad software pointer.  In PCI, such an indication would be a target or master abort.
     ie.TFEE = 1; //Task File Error Status (TFES):  This bit is set whenever the status register is updated by the device and the error bit (bit 0) is set.
     cmd.AsUlong = StorPortReadRegisterUlong(adapterExtension, &ChannelExtension->Px->CMD.AsUlong);
-    if(cmd.CPD) {    //check for PxCMD.CPD set to ‘1’ before setting CPDE
-        ie.CPDE = 1; //Cold Port Detect Status (CPDS): When set, a device status has changed as detected by the cold presence detect logic.  This bit can either be set due to a non-connected port receiving a device, or a connected port having its device removed.  This bit is only valid if the port supports cold presence detect as indicated by PxCMD.CPD set to ‘1’.
+    if(cmd.CPD) {    //check for PxCMD.CPD set to ï¿½1ï¿½ before setting CPDE
+        ie.CPDE = 1; //Cold Port Detect Status (CPDS): When set, a device status has changed as detected by the cold presence detect logic.  This bit can either be set due to a non-connected port receiving a device, or a connected port having its device removed.  This bit is only valid if the port supports cold presence detect as indicated by PxCMD.CPD set to ï¿½1ï¿½.
     } else {
         ie.CPDE = 0;
     }
@@ -497,6 +497,7 @@ PortBusChangeProcess (
 }
 
 VOID
+NTAPI
 AhciPortBusChangeDpcRoutine(
     __in PSTOR_DPC  Dpc,
     __in PVOID      AdapterExtension,

@@ -1382,6 +1382,7 @@ AhciPortFailAllIos(
 }
 
 VOID
+NTAPI
 AhciPortSrbCompletionDpcRoutine(
     __in PSTOR_DPC  Dpc,
     __in PVOID      AdapterExtension,

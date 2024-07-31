@@ -9231,7 +9231,7 @@ typedef union _STOR_SLIST_HEADER
     typedef HW_PASSIVE_INITIALIZE_ROUTINE *PHW_PASSIVE_INITIALIZE_ROUTINE;
 
     typedef VOID
-    HW_DPC_ROUTINE(
+    (NTAPI HW_DPC_ROUTINE)(
         _In_ PSTOR_DPC Dpc,
         _In_ PVOID HwDeviceExtension,
         _In_opt_ PVOID SystemArgument1,
