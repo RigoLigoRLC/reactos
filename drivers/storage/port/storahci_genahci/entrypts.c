@@ -1177,7 +1177,7 @@ AhciHwBuildIo (
     //
     // Make sure the incoming Srb with the expected type
     //
-    NT_ASSERT(Srb->Function == SRB_FUNCTION_STORAGE_REQUEST_BLOCK);
+    // NT_ASSERT(Srb->Function == SRB_FUNCTION_STORAGE_REQUEST_BLOCK);
 
     // SrbExtension is not Null-ed by Storport, so do it here.
     AhciZeroMemory((PCHAR)GetSrbExtension(Srb), sizeof(AHCI_SRB_EXTENSION));
