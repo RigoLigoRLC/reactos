@@ -539,8 +539,8 @@ typedef struct _STOR_POFX_COMPONENT_V2 {
 } STOR_POFX_COMPONENT_V2, *PSTOR_POFX_COMPONENT_V2;
 #endif
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortGetD3ColdSupport(
     _In_ PVOID HwDeviceExtension,
     _In_opt_ PVOID Address,
@@ -1027,8 +1027,8 @@ typedef struct _STORAGE_PHYSICAL_TOPOLOGY_DESCRIPTOR {
 
 
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortAsyncNotificationDetected(
     _In_ PVOID HwDeviceExtension,
     _In_ PSTOR_ADDRESS Address,
@@ -1071,8 +1071,8 @@ StorPortAsyncNotificationDetected(
 
 
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortRegistryReadAdapterKey(
     _In_ PVOID HwDeviceExtension,
     _In_opt_ PUCHAR SubKeyName,
@@ -1113,8 +1113,8 @@ Return Value:
 }
 
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortInvokeAcpiMethod (
     _In_      PVOID HwDeviceExtension,
     _In_opt_  PSTOR_ADDRESS Address,
@@ -1142,8 +1142,8 @@ StorPortInvokeAcpiMethod (
 
 
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortIsDeviceOperationAllowed(
     _In_ PVOID HwDeviceExtension,
     _In_ PSTOR_ADDRESS Address,
@@ -1176,8 +1176,8 @@ Returns:
 
 
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortRegistryWriteAdapterKey(
     _In_ PVOID HwDeviceExtension,
     _In_opt_ PUCHAR SubKeyName,
@@ -1218,8 +1218,8 @@ Return Value:
 }
 
 _IRQL_requires_max_(DISPATCH_LEVEL)
-ULONG
 FORCEINLINE
+ULONG
 StorPortFreeWorker(
     _In_ PVOID HwDeviceExtension,
     _In_ PVOID Worker
@@ -1231,8 +1231,8 @@ StorPortFreeWorker(
 }
 
 _IRQL_requires_max_(DISPATCH_LEVEL)
-ULONG
 FORCEINLINE
+ULONG
 StorPortInitializeWorker(
     _In_ PVOID HwDeviceExtension,
     _Out_ PVOID *Worker
@@ -1245,8 +1245,8 @@ StorPortInitializeWorker(
 
 
 _IRQL_requires_max_(DISPATCH_LEVEL)
-ULONG
 FORCEINLINE
+ULONG
 StorPortQueueWorkItem(
     _In_ PVOID HwDeviceExtension,
     _In_ PHW_WORKITEM WorkItemCallback,
@@ -1338,8 +1338,8 @@ typedef struct _STORAGE_PHYSICAL_DEVICE_DATA {
 
 
 _IRQL_requires_max_(PASSIVE_LEVEL)
-ULONG
 FORCEINLINE
+ULONG
 StorPortInitializePoFxPower(
     _In_ PVOID HwDeviceExtension,
     _In_opt_ PSTOR_ADDRESS Address,
@@ -1602,8 +1602,8 @@ typedef struct _CURRENT_DEVICE_INTERNAL_STATUS_LOG {
 
 
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortLogTelemetry(
     _In_ PVOID HwDeviceExtension,
     _In_opt_ PSTOR_ADDRESS StorAddress,
@@ -1719,8 +1719,8 @@ typedef struct _ERROR_HISTORY_DIRECTORY {
 
 } ERROR_HISTORY_DIRECTORY, *PERROR_HISTORY_DIRECTORY;
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortSetPowerSettingNotificationGuids (
     _In_                   PVOID  HwDeviceExtension,
     _In_                   ULONG  GuidCount,
@@ -1733,8 +1733,8 @@ StorPortSetPowerSettingNotificationGuids (
                                     Guid);
 }
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortMarkDumpMemory(
     _In_ PVOID HwDeviceExtension,
     _In_ PVOID Address,
@@ -1815,8 +1815,8 @@ Returns:
 #endif
 }
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortSetUnitAttributes(
     _In_ PVOID HwDeviceExtension,
     _In_ PSTOR_ADDRESS Address,
@@ -1909,8 +1909,8 @@ typedef struct _VPD_EXTENDED_INQUIRY_DATA_PAGE {
     UCHAR Reserved8[45];
 } VPD_EXTENDED_INQUIRY_DATA_PAGE, *PVPD_EXTENDED_INQUIRY_DATA_PAGE;
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortGetRequestInfo (
     _In_ PVOID HwDeviceExtension,
     _In_ PSCSI_REQUEST_BLOCK Srb,
@@ -1923,8 +1923,8 @@ StorPortGetRequestInfo (
                                     RequestInfo);
 }
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortQueryPerformanceCounter(
     _In_ PVOID HwDeviceExtension,
     _Out_opt_  PLARGE_INTEGER PerformanceFrequency,
@@ -1967,8 +1967,8 @@ ULONG StorPortFreeTimer(
   PVOID TimerHandle
 );
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortSetUnitAttributes(
     _In_ PVOID HwDeviceExtension,
     _In_ PSTOR_ADDRESS Address,

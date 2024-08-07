@@ -152,8 +152,8 @@ typedef struct _SCSI_REQUEST_BLOCK_EX {
 
 
 __drv_maxIRQL(DISPATCH_LEVEL)
-ULONG
 FORCEINLINE
+ULONG
 StorPortPoFxActivateComponentEx(
     __in PVOID HwDeviceExtension,
     __in_opt PSTOR_ADDRESS Address,
@@ -195,8 +195,8 @@ Returns:
 }
 
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortPoFxIdleComponentEx(
     __in PVOID HwDeviceExtension,
     __in_opt PSTOR_ADDRESS Address,
@@ -632,8 +632,8 @@ typedef enum _STORPORT_ETW_EVENT_OPCODE {
 #define STORPORT_ETW_MAX_DESCRIPTION_LENGTH 32
 #define STORPORT_ETW_MAX_PARAM_NAME_LENGTH 16
 
-ULONG
 FORCEINLINE
+ULONG
 StorPortEtwEvent2(
     __in PVOID HwDeviceExtension,
     __in_opt PSTOR_ADDRESS Address,
