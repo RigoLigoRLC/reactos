@@ -1897,6 +1897,8 @@ KdpQueryPerformanceCounter(IN PKTRAP_FRAME TrapFrame)
     return KeQueryPerformanceCounter(NULL);
 }
 
+static ULONG KdEnterDebuggerLevel = 0;
+
 BOOLEAN
 NTAPI
 KdEnterDebugger(IN PKTRAP_FRAME TrapFrame,
@@ -1925,9 +1927,13 @@ KdEnterDebugger(IN PKTRAP_FRAME TrapFrame,
     Enable = KeFreezeExecution(TrapFrame, ExceptionFrame);
 
     /* Lock the port, save the state and set debugger entered */
-    KdpPortLocked = KeTryToAcquireSpinLockAtDpcLevel(&KdpDebuggerLock);
-    KdSave(FALSE);
-    KdEnteredDebugger = TRUE;
+    if (KdEnterDebuggerLevel == 0)
+    {
+        KdpPortLocked = KeTryToAcquireSpinLockAtDpcLevel(&KdpDebuggerLock);
+        KdSave(FALSE);
+        KdEnteredDebugger = TRUE;
+    }
+    ++KdEnterDebuggerLevel;
 
     /* Check freeze flag */
     if (KiFreezeFlag & 1)
@@ -1957,8 +1963,12 @@ KdExitDebugger(IN BOOLEAN Enable)
     ULONG TimeSlip;
 
     /* Restore the state and unlock the port */
-    KdRestore(FALSE);
-    if (KdpPortLocked) KdpPortUnlock();
+    --KdEnterDebuggerLevel;
+    if (KdEnterDebuggerLevel == 0)
+    {
+        KdRestore(FALSE);
+        if (KdpPortLocked) KdpPortUnlock();
+    }
 
     /* Unfreeze the CPUs, restoring also the IRQL */
     KeThawExecution(Enable);
