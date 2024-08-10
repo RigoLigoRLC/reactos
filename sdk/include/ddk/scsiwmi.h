@@ -25,7 +25,11 @@
 #ifndef _SCSIWMI_
 #define _SCSIWMI_
 
+#ifdef _NTSTORPORT_
+#define SCSIPORT_API STORPORT_API
+#else
 #include "srb.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
