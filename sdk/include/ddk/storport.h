@@ -9163,6 +9163,14 @@ typedef union _STOR_SLIST_HEADER
     typedef ULONG_PTR STOR_KSPIN_LOCK;
     typedef STOR_KSPIN_LOCK *PSTOR_KSPIN_LOCK;
 
+    //
+    // Legacy Storport miniport registry key type identifiers
+    //
+    
+    #define MINIPORT_REG_SZ REG_SZ
+    #define MINIPORT_REG_BINARY REG_BINARY
+    #define MINIPORT_REG_DWORD REG_DWORD
+
 //
 // Flags for StorPortMarkDumpMemory function.
 //
