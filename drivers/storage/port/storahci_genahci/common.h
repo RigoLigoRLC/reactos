@@ -1977,34 +1977,6 @@ StorPortSetUnitAttributes(
 
 /* SUSSY WUSSSY BAKAS */
 
-
-typedef struct _GP_LOG_NCQ_COMMAND_ERROR {
-    UCHAR   NcqTag          : 5;
-    UCHAR   Reserved0       : 1;
-    UCHAR   UNL             : 1;        // error: IDLE IMMEDIATE with UNLOAD
-    UCHAR   NonQueuedCmd    : 1;
-
-    UCHAR   Reserved1;
-    UCHAR   Status;
-    UCHAR   Error;
-    UCHAR   LBA7_0;
-    UCHAR   LBA15_8;
-    UCHAR   LBA23_16;
-    UCHAR   Device;
-    UCHAR   LBA31_24;
-    UCHAR   LBA39_32;
-    UCHAR   LBA47_40;
-    UCHAR   Reserved2;
-    UCHAR   Count7_0;
-    UCHAR   Count15_8;
-    UCHAR   SenseKey;
-    UCHAR   ASC;
-    UCHAR   ASCQ;
-    UCHAR   Reserved3[239];
-    UCHAR   Vendor[255];
-    UCHAR   Checksum;
-} GP_LOG_NCQ_COMMAND_ERROR, *PGP_LOG_NCQ_COMMAND_ERROR;
-
 typedef enum _AHCI_ETW_EVENT_IDS {
     AhciEtwEventSystemPowerHint = 0,
     AhciEtwEventUnitHybridGetInfo = 6,
